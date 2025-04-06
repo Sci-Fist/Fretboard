@@ -190,11 +190,11 @@ function showNumberCircle(fret, isSecondDigit = false) {
         number.style.animationDelay = `${i * 0.1}s`;
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
-                fret.textContent = num;
+                fret.textContent = num.replace('x', '');
                 showNumberCircle(fret, true);
             } else {
                 if (isSecondDigit) {
-                    fret.textContent = fret.textContent.replace('x', num);
+                    fret.textContent += num;
                 } else {
                     fret.textContent = num;
                 }
