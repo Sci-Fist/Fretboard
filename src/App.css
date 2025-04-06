@@ -1,0 +1,29 @@
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+.tab-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  width: 80%; /* Adjust as needed */
+  margin: 0 auto; /* Center the entire editor horizontally */
+  border: 1px solid #ccc; /* Add a border for visual clarity */
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.tab-display {
+  width: 100%; /* Display will take the full width inside the Tab Editor*/
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+  padding: 10px;
+  min-height: 100px; /* Add a minimum height to see the tab */
+}
+
+.tool-bar {
+  width: 100%;  /* Tool bar will take the full width inside the Tab Editor*/
+  padding: 10px;
+  border: 1px solid #eee;
+}
