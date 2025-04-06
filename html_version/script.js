@@ -133,3 +133,32 @@ function renderTab() {
         tabDisplay.appendChild(measure);
     });
 }
+
+function exportMIDI() {
+    const midiData = [];
+    tabData.measures.forEach((measure, measureIndex) => {
+        const strings = measure.querySelectorAll('.string');
+        strings.forEach((string, stringIndex) => {
+            const frets = string.querySelectorAll('.fret');
+            frets.forEach((fret, fretIndex) => {
+                const fretNumber = parseInt(fret.textContent);
+                if (!isNaN(fretNumber)) {
+                    const note = getNote(stringIndex, fretNumber);
+                    midiData.push({
+                        note: note,
+                        time: measureIndex * 4 + fretIndex * 0.5
+                    });
+                }
+            });
+        });
+    });
+
+    const midiBlob = new Blob([JSON.stringify(midiData)], { type: 'application/json' });
+    const url = URL.createObjectURL(midiBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tab.midi';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
