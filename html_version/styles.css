@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.tab-editor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.tab-display {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    padding: 10px;
+    min-height: 100px;
+    background-color: #f9f9f9;
+}
+
+.tool-bar {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #eee;
+    background-color: #f9f9f9;
+}
