@@ -186,6 +186,7 @@ function showNumberCircle(fret) {
         number.textContent = i;
         number.style.left = `${x}px`;
         number.style.top = `${y}px`;
+        number.style.animationDelay = `${i * 0.1}s`;
         number.onclick = () => {
             fret.textContent = i;
             circle.remove();

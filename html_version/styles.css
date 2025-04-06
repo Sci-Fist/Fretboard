@@ -78,8 +78,8 @@ body {
 
 .number-circle {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -50px;
+    left: -50px;
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -100,4 +100,16 @@ body {
     background-color: #fff;
     border-radius: 50%;
     cursor: pointer;
+    animation: number-animation 1s forwards;
+}
+
+@keyframes number-animation {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
