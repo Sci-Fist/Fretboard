@@ -23,7 +23,7 @@ function addMeasure() {
             fret.className = 'fret';
             fret.contentEditable = true;
             fret.oninput = (e) => {
-                e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
+                e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '').slice(0, 2);
             };
             fret.onclick = (e) => {
                 showNumberCircle(e.target);
@@ -126,7 +126,7 @@ function renderTab() {
                 fret.className = 'fret';
                 fret.contentEditable = true;
                 fret.oninput = (e) => {
-                    e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
+                    e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '').slice(0, 2);
                 };
                 fret.onclick = (e) => {
                     showNumberCircle(e.target);
@@ -172,16 +172,27 @@ function exportMIDI() {
 function showNumberCircle(fret) {
     const circle = document.createElement('div');
     circle.className = 'number-circle';
+    const radius = 50;
+    const centerX = fret.offsetWidth / 2;
+    const centerY = fret.offsetHeight / 2;
+
     for (let i = 0; i <= 9; i++) {
+        const angle = (i / 10) * 2 * Math.PI;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
         const number = document.createElement('div');
         number.className = 'number';
         number.textContent = i;
+        number.style.left = `${x}px`;
+        number.style.top = `${y}px`;
         number.onclick = () => {
             fret.textContent = i;
             circle.remove();
         };
         circle.appendChild(number);
     }
+
     fret.appendChild(circle);
 }
 
