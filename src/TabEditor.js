@@ -17,7 +17,11 @@ function TabEditor() {
   };
 
   const addTab = () => {
-    setTabContent([...tabContent, tabInput || 'Tab']);
+    const lines = tabInput.split('\n');
+    const tab = lines.map((line, index) => (
+      <div key={index} className="tab-line">{line}</div>
+    ));
+    setTabContent([...tabContent, <div className="tab">{tab}</div>]);
     setTabInput('');
   };
 

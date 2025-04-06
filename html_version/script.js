@@ -24,7 +24,14 @@ function addTab() {
     const tabDisplay = document.getElementById('tab-display');
     const tabInput = document.getElementById('tab-input');
     const tab = document.createElement('div');
-    tab.textContent = tabInput.value || 'Tab';
+    tab.className = 'tab';
+    const lines = tabInput.value.split('\n');
+    lines.forEach(line => {
+        const lineDiv = document.createElement('div');
+        lineDiv.className = 'tab-line';
+        lineDiv.textContent = line;
+        tab.appendChild(lineDiv);
+    });
     tabDisplay.appendChild(tab);
     tabInput.value = '';
 }
