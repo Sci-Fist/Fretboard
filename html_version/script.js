@@ -4,14 +4,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function addNote() {
     const tabDisplay = document.getElementById('tab-display');
+    const noteInput = document.getElementById('note-input');
     const note = document.createElement('div');
-    note.textContent = 'Note';
+    note.textContent = noteInput.value || 'Note';
     tabDisplay.appendChild(note);
+    noteInput.value = '';
 }
 
 function addChord() {
     const tabDisplay = document.getElementById('tab-display');
+    const chordInput = document.getElementById('chord-input');
     const chord = document.createElement('div');
-    chord.textContent = 'Chord';
+    chord.textContent = chordInput.value || 'Chord';
     tabDisplay.appendChild(chord);
+    chordInput.value = '';
+}
+
+function clearTab() {
+    const tabDisplay = document.getElementById('tab-display');
+    tabDisplay.innerHTML = '';
 }
