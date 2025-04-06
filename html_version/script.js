@@ -25,6 +25,9 @@ function addMeasure() {
             fret.oninput = (e) => {
                 e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
             };
+            fret.onclick = (e) => {
+                showNumberCircle(e.target);
+            };
             string.appendChild(fret);
         }
         measure.appendChild(string);
@@ -125,6 +128,9 @@ function renderTab() {
                 fret.oninput = (e) => {
                     e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
                 };
+                fret.onclick = (e) => {
+                    showNumberCircle(e.target);
+                };
                 string.appendChild(fret);
             }
             measure.appendChild(string);
@@ -161,4 +167,34 @@ function exportMIDI() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+}
+
+function showNumberCircle(fret) {
+    const circle = document.createElement('div');
+    circle.className = 'number-circle';
+    for (let i = 0; i <= 9; i++) {
+        const number = document.createElement('div');
+        number.className = 'number';
+        number.textContent = i;
+        number.onclick = () => {
+            fret.textContent = i;
+            circle.remove();
+        };
+        circle.appendChild(number);
+    }
+    fret.appendChild(circle);
+}
+
+function add1x() {
+    const selectedFret = document.querySelector('.fret.selected');
+    if (selectedFret) {
+        selectedFret.textContent = '1x';
+    }
+}
+
+function add2x() {
+    const selectedFret = document.querySelector('.fret.selected');
+    if (selectedFret) {
+        selectedFret.textContent = '2x';
+    }
 }
