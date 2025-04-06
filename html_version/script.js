@@ -169,14 +169,14 @@ function exportMIDI() {
     document.body.removeChild(a);
 }
 
-function showNumberCircle(fret) {
+function showNumberCircle(fret, isSecondDigit = false) {
     const circle = document.createElement('div');
     circle.className = 'number-circle';
     const radius = 50;
     const centerX = fret.offsetWidth / 2;
     const centerY = fret.offsetHeight / 2;
 
-    const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '1x', '2x'];
+    const numbers = isSecondDigit ? ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] : ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '1x', '2x'];
     numbers.forEach((num, i) => {
         const angle = (i / numbers.length) * 2 * Math.PI;
         const x = centerX + radius * Math.cos(angle);
@@ -191,8 +191,13 @@ function showNumberCircle(fret) {
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
                 fret.textContent = num;
+                showNumberCircle(fret, true);
             } else {
-                fret.textContent = num;
+                if (isSecondDigit) {
+                    fret.textContent = fret.textContent.replace('x', num);
+                } else {
+                    fret.textContent = num;
+                }
             }
             circle.remove();
         };
@@ -200,18 +205,4 @@ function showNumberCircle(fret) {
     });
 
     fret.appendChild(circle);
-}
-
-function add1x() {
-    const selectedFret = document.querySelector('.fret.selected');
-    if (selectedFret) {
-        selectedFret.textContent = '1x';
-    }
-}
-
-function add2x() {
-    const selectedFret = document.querySelector('.fret.selected');
-    if (selectedFret) {
-        selectedFret.textContent = '2x';
-    }
 }
