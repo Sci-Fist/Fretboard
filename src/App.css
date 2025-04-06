@@ -30,16 +30,19 @@
   border: 1px solid #eee;
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
-.tool-bar input {
+.tool-bar input, .tool-bar textarea {
   padding: 10px;
   font-size: 16px;
   width: 20%;
+  margin-bottom: 10px;
 }
 
 .tool-bar button {
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
+  margin-bottom: 10px;
 }

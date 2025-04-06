@@ -4,6 +4,7 @@ function TabEditor() {
   const [tabContent, setTabContent] = useState([]);
   const [noteInput, setNoteInput] = useState('');
   const [chordInput, setChordInput] = useState('');
+  const [tabInput, setTabInput] = useState('');
 
   const addNote = () => {
     setTabContent([...tabContent, noteInput || 'Note']);
@@ -13,6 +14,11 @@ function TabEditor() {
   const addChord = () => {
     setTabContent([...tabContent, chordInput || 'Chord']);
     setChordInput('');
+  };
+
+  const addTab = () => {
+    setTabContent([...tabContent, tabInput || 'Tab']);
+    setTabInput('');
   };
 
   const clearTab = () => {
@@ -44,6 +50,12 @@ function TabEditor() {
           placeholder="Enter chord"
         />
         <button onClick={addChord}>Add Chord</button>
+        <textarea
+          value={tabInput}
+          onChange={(e) => setTabInput(e.target.value)}
+          placeholder="Enter tab numbers"
+        />
+        <button onClick={addTab}>Add Tab</button>
         <button onClick={clearTab}>Clear Tab</button>
       </div>
     </div>

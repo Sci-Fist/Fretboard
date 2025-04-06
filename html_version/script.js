@@ -20,6 +20,15 @@ function addChord() {
     chordInput.value = '';
 }
 
+function addTab() {
+    const tabDisplay = document.getElementById('tab-display');
+    const tabInput = document.getElementById('tab-input');
+    const tab = document.createElement('div');
+    tab.textContent = tabInput.value || 'Tab';
+    tabDisplay.appendChild(tab);
+    tabInput.value = '';
+}
+
 function clearTab() {
     const tabDisplay = document.getElementById('tab-display');
     tabDisplay.innerHTML = '';
