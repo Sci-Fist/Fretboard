@@ -176,23 +176,28 @@ function showNumberCircle(fret) {
     const centerX = fret.offsetWidth / 2;
     const centerY = fret.offsetHeight / 2;
 
-    for (let i = 0; i <= 9; i++) {
-        const angle = (i / 10) * 2 * Math.PI;
+    const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '1x', '2x'];
+    numbers.forEach((num, i) => {
+        const angle = (i / numbers.length) * 2 * Math.PI;
         const x = centerX + radius * Math.cos(angle);
         const y = centerY + radius * Math.sin(angle);
 
         const number = document.createElement('div');
         number.className = 'number';
-        number.textContent = i;
+        number.textContent = num;
         number.style.left = `${x}px`;
         number.style.top = `${y}px`;
         number.style.animationDelay = `${i * 0.1}s`;
         number.onclick = () => {
-            fret.textContent = i;
+            if (num === '1x' || num === '2x') {
+                fret.textContent = num;
+            } else {
+                fret.textContent = num;
+            }
             circle.remove();
         };
         circle.appendChild(number);
-    }
+    });
 
     fret.appendChild(circle);
 }
