@@ -194,7 +194,7 @@ function showNumberCircle(fret, isSecondDigit = false) {
                 showNumberCircle(fret, true);
             } else {
                 if (isSecondDigit) {
-                    fret.textContent += num;
+                    fret.textContent = fret.textContent.replace('x', '') + num;
                 } else {
                     fret.textContent = num;
                 }
