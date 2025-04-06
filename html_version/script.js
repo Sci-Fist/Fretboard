@@ -1,42 +1,60 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Guitar Tab Editor loaded');
+    addMeasure();
 });
 
-function addNote() {
+function addMeasure() {
     const tabDisplay = document.getElementById('tab-display');
-    const noteInput = document.getElementById('note-input');
-    const note = document.createElement('div');
-    note.textContent = noteInput.value || 'Note';
-    tabDisplay.appendChild(note);
-    noteInput.value = '';
-}
+    const measure = document.createElement('div');
+    measure.className = 'measure';
 
-function addChord() {
-    const tabDisplay = document.getElementById('tab-display');
-    const chordInput = document.getElementById('chord-input');
-    const chord = document.createElement('div');
-    chord.textContent = chordInput.value || 'Chord';
-    tabDisplay.appendChild(chord);
-    chordInput.value = '';
-}
+    for (let i = 0; i < 6; i++) {
+        const string = document.createElement('div');
+        string.className = 'string';
+        for (let j = 0; j < 4; j++) {
+            const fret = document.createElement('div');
+            fret.className = 'fret';
+            fret.contentEditable = true;
+            fret.oninput = (e) => {
+                e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
+            };
+            string.appendChild(fret);
+        }
+        measure.appendChild(string);
+    }
 
-function addTab() {
-    const tabDisplay = document.getElementById('tab-display');
-    const tabInput = document.getElementById('tab-input');
-    const tab = document.createElement('div');
-    tab.className = 'tab';
-    const lines = tabInput.value.split('\n');
-    lines.forEach(line => {
-        const lineDiv = document.createElement('div');
-        lineDiv.className = 'tab-line';
-        lineDiv.textContent = line;
-        tab.appendChild(lineDiv);
-    });
-    tabDisplay.appendChild(tab);
-    tabInput.value = '';
+    tabDisplay.appendChild(measure);
 }
 
 function clearTab() {
     const tabDisplay = document.getElementById('tab-display');
     tabDisplay.innerHTML = '';
+}
+
+function exportTab() {
+    const tabDisplay = document.getElementById('tab-display');
+    const measures = tabDisplay.querySelectorAll('.measure');
+    let tabText = '';
+
+    measures.forEach(measure => {
+        const strings = measure.querySelectorAll('.string');
+        strings.forEach(string => {
+            const frets = string.querySelectorAll('.fret');
+            frets.forEach(fret => {
+                tabText += fret.textContent || '-';
+                tabText += ' ';
+            });
+            tabText += '\n';
+        });
+        tabText += '\n';
+    });
+
+    const blob = new Blob([tabText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tab.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
