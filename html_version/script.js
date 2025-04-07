@@ -270,5 +270,10 @@ function showSecondNumberCircle(fret, firstDigit) {
         circle.appendChild(number);
     });
 
-    fret.appendChild(circle);
+    // Append number circle to the body to avoid clipping, same as first circle
+    document.body.appendChild(circle);
+    // Position the second number circle relative to the fret
+    const fretRect = fret.getBoundingClientRect();
+    circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`; // Adjusted vertical positioning
+    circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`; // Adjusted horizontal positioning
 }
