@@ -13,6 +13,7 @@ let playbackInterval;
 
 let audioContext = Tone.context;
 let fretboardNode;
+
 let bpm = 120; // Default BPM
 
 // Load the AudioWorkletProcessor
@@ -20,10 +21,8 @@ async function setupAudioWorklet() {
     try {
         await audioContext.audioWorklet.addModule('fretboard-processor.js'); // Path to the processor file
         fretboardNode = new AudioWorkletNode(audioContext, 'fretboard-processor'); // Use the processor's registered name
-
         // Connect the AudioWorkletNode to the destination
         fretboardNode.connect(Tone.getDestination());
-        //fretboardNode.parameters.get('detune').value = 0;
     } catch (error) {
         console.error('Failed to initialize AudioWorklet:', error);
         alert('Failed to initialize audio playback.  Please check your browser settings and the console.');
@@ -31,7 +30,7 @@ async function setupAudioWorklet() {
 }
 
 setupAudioWorklet();
-const sixteenthNoteDuration = (60 / 120) / 4; // Default Tempo.  Adjust for the BPM.
+const sixteenthNoteDuration = (60 / bpm) / 4; // Default Tempo.  Adjust for the BPM.
 
 /**
  * Plays a single note using the AudioWorkletNode.
