@@ -1,7 +1,7 @@
-// audio.js
+// src/audio.js
 // This module handles audio playback using the Web Audio API.
 // It provides functions to initialize the audio context, play individual notes,
-// play a complete tab, and stop playback.
+// play a complete tab, and stop playback.  Let's make some noise!
 
 import { getNote } from './tab-data.js'; // Import getNote function
 
@@ -22,7 +22,7 @@ let playbackInterval;
 function playNote(note, duration, startTime = 0) {
     console.log('audio.js: playNote called with', note, duration, startTime);
     if (!audioContext) {
-        console.error('audio.js: Uh oh, audio context not initialized!');
+        console.error('audio.js: Audio context not initialized.');
         return;
     }
 
@@ -75,9 +75,8 @@ function getFrequency(pitch, octave) {
  */
 async function playTab(tabData) {
     console.log('audio.js: playTab called');
-    initializeAudioContext(); // Ensure audio context is initialized
     if (isPlaying) {
-        console.log('audio.js: Already playing, chill out.');
+        console.log('audio.js: Playback already in progress, ignoring.');
         return; // Prevent multiple playbacks
     }
     // Moved audioContext initialization here to address autoplay policy
@@ -86,13 +85,14 @@ async function playTab(tabData) {
             console.log('audio.js: Initializing AudioContext');
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('audio.js: AudioContext initialized successfully');
             } catch (e) {
-                console.error("Error initializing AudioContext:", e);
+                console.error("audio.js: Error initializing AudioContext:", e);
                 alert("AudioContext initialization failed. Audio playback may not work.");
             }
         }
     }
-    //initializeAudioContext(); // Ensure audio context is initialized
+    initializeAudioContext(); // Ensure audio context is initialized
     if (audioContext.state === 'suspended') {
         console.log('audio.js: Trying to resume AudioContext');
         try {
