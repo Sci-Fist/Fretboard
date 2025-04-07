@@ -32,13 +32,6 @@ async function setupApp() {
         return; // Exit if Tone.js is not available
     }
     try {
-        // Resume audio context after user interaction (implicitly handled by DOMContentLoaded here)
-        // In some browsers, resume() must be called within a user gesture event handler.
-        // If issues arise, consider moving resume() to the first button click.
-        if (Tone.context.state !== 'running') {
-            await Tone.context.resume();
-        }
-        console.log('app.js: Tone.js AudioContext resumed/running');
         initializeTabData();
         rendering.renderTab(getTabData());
         setupUI(); // setupUI now also applies config CSS variables
