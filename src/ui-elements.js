@@ -22,7 +22,7 @@ function handleFretInput(e) {
         tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
     }
     setTabData(tabData);
-    renderTab(tabData); // Re-render the tab after the input
+    renderTab(getTabData()); // Re-render the tab after the input
     e.target.textContent = value; // Update the displayed text
 }
 
