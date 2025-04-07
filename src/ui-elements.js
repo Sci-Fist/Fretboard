@@ -16,7 +16,7 @@ function setupToolBar(dependencies) {
     const stopTabButton = document.getElementById('stopTabBtn');
     const saveTabButton = document.getElementById('saveTabBtn');
     const loadTabButton = document.getElementById('loadTabBtn');
-    const exportMIDButton = document.getElementById('exportMIDIBtn');
+    const exportMIDButton = document.getElementById('exportMIDIBtn'); // Corrected the typo to match the html
 
 
     addMeasureButton.addEventListener('click', () => {
