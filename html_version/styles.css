@@ -8,20 +8,20 @@ body {
     color: #fff;
     display: flex;
     justify-content: center;
-    align-items: center; /* Center content vertically on larger screens, adjust for small screens */
+    align-items: flex-start; /* Align to top for better use of vertical space, especially on smaller screens */
     min-height: 98vh; /* Slightly reduced to ensure no scrollbar unless necessary */
     margin: 0;
     font-size: 16px;
 }
 /* General styles for smaller screens (phones in portrait) */
 .tab-editor {
-    width: 95%; /* Take up more width on smaller screens */
+    width: 98%; /* Take up more width, especially in landscape */
 }
 
 .tab-editor {
     display: flex;
     flex-direction: column;
-    width: 95%; /* Default width for smaller screens */
+    width: 98%; /* Default width for smaller screens */
     align-items: center;
     max-width: 1200px; /* Increased max-width for larger screens */
     margin: 10px auto; /* Added margin top/bottom for spacing */
@@ -41,6 +41,7 @@ body {
     background-color: #333;
     display: flex; /* Enable horizontal scrolling for measures */
     overflow-x: auto;
+    overflow-y: auto; /* Enable vertical scrolling for very long tabs if needed */
     color: #fff;
     border-radius: 6px;
 }
@@ -49,7 +50,7 @@ body {
 @media screen and (max-width: 600px) {
     body {
         align-items: flex-start; /* Align to top on very small screens */
-        font-size: 14px; /* Slightly reduce base font size on very small screens */
+        font-size: 13px; /* Further reduce base font size on very small screens */
         padding: 5px; /* Further reduce body padding for very small screens */
     }
     .tab-editor {
@@ -60,14 +61,14 @@ body {
     }
     .tool-bar button {
         padding: 10px 14px; /* Slightly larger button padding for touch */
-        font-size: 14px; /* Reduce button font size */
+        font-size: 13px; /* Further reduce button font size */
         margin-bottom: 5px; /* Reduce button margin */
     }
     .measure {
         padding: 4px; /* Further reduce measure padding */
         margin-right: 2px; /* Further reduce measure margin */
         margin-bottom: 4px; /* Further reduce margin below measures */
-    }
+   }
     .fret {
         width: 35px; /* Further reduce fret width for very small screens */
         height: 35px; /* Further reduce fret height for very small screens */
@@ -81,24 +82,29 @@ body {
 @media screen and (max-width: 768px) and (orientation: landscape) {
     body {
         align-items: center; /* Center in landscape if preferred */
-        flex-direction: row; /* Arrange body elements horizontally */
+        flex-direction: column; /* Keep body direction column in landscape for better vertical scrolling */
+        overflow-y: auto; /* Enable vertical scrolling for body in landscape if content is too long */
     }
     .tab-editor {
         width: 98%; /* Take up almost full width in landscape */
         flex-direction: row; /* Arrange toolbar and tab display horizontally */
         align-items: flex-start; /* Align items to the start in row direction */
-        justify-content: space-between; /* Distribute space between toolbar and tab-display */
-        padding: 10px; /* Slightly reduce padding in landscape */
+        justify-content: flex-start; /* Align toolbar to the start */
+        padding: 5px; /* Further reduce padding in landscape */
+        overflow-y: auto; /* Enable vertical scrolling for tab-editor in landscape if content is too long */
     }
     .tab-display {
-        width: 70%; /* Make tab-display take up most of the width */
+        width: 75%; /* Make tab-display take up more width in landscape */
+        max-height: 80vh; /* Limit tab-display height to ensure toolbar is visible */
         margin-bottom: 0; /* Remove bottom margin in landscape */
     }
     .tool-bar {
         flex-direction: column; /* Vertical toolbar in landscape */
-        width: auto; /* Adjust width to content */
+        width: auto; /* Adjust width to content in landscape toolbar */
         margin-bottom: 0; /* Remove bottom margin for toolbar in landscape */
         margin-right: 10px; /* Add right margin to separate from tab-display */
+        max-height: 80vh; /* Limit toolbar height and enable scrolling if needed */
+        overflow-y: auto; /* Enable vertical scrolling for toolbar in landscape if buttons are too many */
     }
 }
 
@@ -106,7 +112,6 @@ body {
     padding: 10px;
     border: 1.5px solid #333; /* config.toolBarBorder; */
     background-color: #333;
-    display: flex;
     justify-content: flex-start; /* Align buttons to the start */
     flex-wrap: wrap;
     border-radius: 6px;
@@ -132,7 +137,7 @@ body {
 @media screen and (max-width: 768px) and (orientation: landscape) {
     .tool-bar {
         flex-direction: column; /* Vertical toolbar in landscape */
-        width: auto; /* Adjust width to content */
+        width: auto; /* Adjust width to content in landscape toolbar */
     }
 }
 
@@ -150,7 +155,6 @@ body {
 .measure {
     display: flex;
     flex-direction: column; /* Display strings vertically */
-    align-items: center;
     border: 1.5px solid #333;
     padding: 8px; /* Adjusted measure padding */
     margin-right: 10px; /* config.measureMarginBottom; -> margin-right */
