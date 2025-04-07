@@ -46,6 +46,8 @@ export function renderTab(tabData) {
                 fretDiv.dataset.measure = measureIndex;
                 fretDiv.dataset.string = stringIndex;
                 fretDiv.dataset.fret = fretIndex;
+                fretDiv.id = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
+                fretDiv.name = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
                 fretDiv.textContent = measure.strings[stringIndex][fretIndex] || ""; // Set the fret text content
                 stringDiv.appendChild(fretDiv);
             }
