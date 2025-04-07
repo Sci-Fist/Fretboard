@@ -1,5 +1,7 @@
 // audio.js
-// Handles audio playback with the Web Audio API
+// This module handles audio playback using the Web Audio API.
+// It provides functions to initialize the audio context, play individual notes,
+// play a complete tab, and stop playback.
 
 import { getNote } from './tab-data.js'; // Import getNote function
 
