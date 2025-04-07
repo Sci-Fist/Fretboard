@@ -201,7 +201,7 @@ function showNumberCircle(fret) {
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
                 // If 1x or 2x is clicked, show the second number circle
-                console.log('1x or 2x clicked, showing second number wheel');
+                console.log('1x or 2x clicked, showing second number wheel', num); // Log which button was clicked
                 circle.remove();
                 showSecondNumberCircle(fret, num);
             } else {
@@ -264,7 +264,7 @@ function showSecondNumberCircle(fret, firstDigit) {
 
         number.onclick = () => {
             // Replace 'x' with the chosen number in the first digit
-            fret.textContent = firstDigit.replace('x', num);
+            fret.textContent = firstDigit.replace(/x/, num); // Use regex to replace only the first 'x'
             console.log('Second number clicked:', num, 'First digit:', firstDigit, 'Fret:', fret);
             circle.remove();
         };
