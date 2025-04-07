@@ -72,8 +72,10 @@ function exportTab() {
 }
 
 function playTab() {
-    const synth = new Tone.Synth().toDestination();
+    const synth = new Tone.PolySynth(Tone.Synth).toDestination();
     const now = Tone.now();
+    const bpm = tabData.bpm || 120; // Use stored BPM or default to 120
+    const noteLength = (60 / bpm) * 4; // Calculate note length based on BPM
 
     tabData.measures.forEach((measure, measureIndex) => {
         const strings = measure.querySelectorAll('.string');
@@ -83,7 +85,8 @@ function playTab() {
                 const fretNumber = parseInt(fret.textContent);
                 if (!isNaN(fretNumber)) {
                     const note = getNote(stringIndex, fretNumber);
-                    synth.triggerAttackRelease(note, '8n', now + measureIndex * 4 + fretIndex * 0.5);
+                    const time = now + (measureIndex * 4 + fretIndex) * (noteLength / 4); // Corrected timing
+                    synth.triggerAttackRelease(note, noteLength / 4, time); // Play for 1/4 of a measure
                 }
             });
         });
@@ -95,7 +98,8 @@ function getNote(stringIndex, fretNumber) {
     const baseNote = tabData.tuning[stringIndex];
     const baseIndex = notes.indexOf(baseNote);
     const noteIndex = (baseIndex + fretNumber) % 12;
-    return notes[noteIndex];
+    const octave = Math.floor((baseIndex + fretNumber) / 12) + 2; // Determine octave
+    return notes[noteIndex] + octave;
 }
 
 function saveTab() {
