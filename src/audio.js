@@ -99,6 +99,12 @@ function exportMIDI() {
  */
 function playTab(tabData) {
   console.log('audio.js: playTab called');
+
+  // Ensure the AudioContext is running
+  if (audioContext.state === 'suspended') {
+    audioContext.resume();
+  }
+
   if (isPlaying) {
     stopPlayback();
   }
@@ -133,6 +139,10 @@ function playTab(tabData) {
       const fretValue = measure.strings[stringIndex][fretIndex];
       if (fretValue !== '' && fretValue !== undefined) {
         const note = getNote(stringIndex, parseInt(fretValue), tabData.tuning);
+        // Ensure the AudioContext is running before playing each note
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
         playNote(note, sixteenthNoteDuration); // Play the note
       }
     }
