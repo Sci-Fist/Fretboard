@@ -9,6 +9,7 @@ This is a simple web-based guitar tab editor that allows users to create, edit, 
 *   **Tab Creation:** Add measures and frets to create guitar tabs.
 *   **Tab Editing:**  Edit fret numbers directly within the tab display.
 *   **Number Wheel Input:** Use a number wheel to easily input fret numbers, including "1x" and "2x" for bends and slides.
+*   **Click Outside to Close Number Wheel:** Click anywhere outside the number wheel to close it.
 *   **Play Tab:** Play the tab using a built-in synthesizer (Tone.js).
 *   **Export Tab:** Export the tab as a plain text file.
 *   **Export MIDI:** Export the tab as a MIDI file.
