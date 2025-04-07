@@ -4,7 +4,7 @@
 import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from './tab-data.js';
 import { setupToolBar, handleFretInput, showNumberCircle } from './ui-elements.js';
-import { playTab, stopPlayback, exportMIDI } from './audio.js';
+import { playTab, stopPlayback, exportMIDI } from './audio.js'; // Import audio functions
 
 console.log('app.js: Starting app.js');
 
