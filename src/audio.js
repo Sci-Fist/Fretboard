@@ -21,6 +21,11 @@ function resumeAudioContextOnInteraction() {
         Tone.context.resume().then(() => {
             console.log('AudioContext resumed successfully');
         });
+async function resumeAudioContextOnInteraction() {
+    if (Tone.context.state === 'suspended') {
+        await Tone.start(); // Initialize Tone.js
+        console.log('AudioContext resumed successfully');
+        await setupAudioWorklet(); // Call setupAudioWorklet after resuming
     }
 }
 
@@ -42,7 +47,6 @@ async function setupAudioWorklet() {
     }
 }
 
-setupAudioWorklet();
 const sixteenthNoteDuration = (60 / bpm) / 4; // Default Tempo.  Adjust for the BPM.
 
 /**
