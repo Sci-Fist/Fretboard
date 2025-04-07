@@ -1,16 +1,11 @@
-// rendering.js
-// This module handles rendering the guitar tab to the tab display area.
-// It takes tab data as input and dynamically creates HTML elements to represent the tab.
-
-import config from '../config.js'; // Import config
-
-const stringLabels = ["E", "A", "D", "G", "B", "e"]; // String labels
+// src/rendering.js
+// Functions for rendering the tab to the DOM
 
 /**
- * Renders the guitar tab in the tab display area.
+ * Renders the tab data to the tab display.
  * @param {object} tabData - The tab data object.
  */
-function renderTab(tabData) {
+export function renderTab(tabData) {
     const tabDisplay = document.getElementById("tab-display");
     if (!tabDisplay) {
         console.error("rendering.js: tabDisplay element not found!");
@@ -31,21 +26,23 @@ function renderTab(tabData) {
             stringDiv.className = "string";
 
             // Add string label
-            const labelDiv = document.createElement("div");
-            labelDiv.className = "string-label";
-            labelDiv.textContent = stringLabels[stringIndex];
-            stringDiv.appendChild(labelDiv);
+            const stringLabel = document.createElement("div");
+            stringLabel.className = "string-label";
+            stringLabel.textContent = ["E", "A", "D", "G", "B", "e"][stringIndex];
+            stringDiv.appendChild(stringLabel);
 
             // Add visual string representation (horizontal line)
             const stringLine = document.createElement("div");
             stringLine.className = "string-line";
             stringDiv.appendChild(stringLine);
 
-            // Create frets for the current string
             for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
                 const fretDiv = document.createElement("div");
                 fretDiv.className = "fret";
                 fretDiv.contentEditable = true;
+                fretDiv.role = "textbox"; // Accessibility: Identify as text input
+                fretDiv.inputMode = "numeric"; // Accessibility: Suggest numeric keyboard on mobile
+                // fretDiv.pattern = "[0-9]*"; // Pattern doesn't work directly on contentEditable
                 fretDiv.dataset.measure = measureIndex;
                 fretDiv.dataset.string = stringIndex;
                 fretDiv.dataset.fret = fretIndex;
@@ -57,5 +54,3 @@ function renderTab(tabData) {
         tabDisplay.appendChild(measureDiv);
     });
 }
-
-export { renderTab };
