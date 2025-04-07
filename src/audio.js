@@ -58,14 +58,11 @@ function playNote(note, duration) {
   console.log('audio.js: playNote called with', note, duration);
 
   if (!fretboardNode) {
-    console.warn('audio.js: AudioWorkletNode not initialized.');
+    console.warn("audio.js: AudioWorkletNode not initialized.");
     return;
   }
-  if (Tone.context.state === 'suspended') {
-        Tone.context.resume();
-    }
   fretboardNode.port.postMessage({
-    type: 'noteOn',
+    type: "noteOn",
     note: note,
     velocity: 0.75, // Example: Set velocity
   });
