@@ -81,10 +81,24 @@ body {
 @media screen and (max-width: 768px) and (orientation: landscape) {
     body {
         align-items: center; /* Center in landscape if preferred */
-   }
+        flex-direction: row; /* Arrange body elements horizontally */
+    }
     .tab-editor {
         width: 98%; /* Take up almost full width in landscape */
         flex-direction: row; /* Arrange toolbar and tab display horizontally */
+        align-items: flex-start; /* Align items to the start in row direction */
+        justify-content: space-between; /* Distribute space between toolbar and tab-display */
+        padding: 10px; /* Slightly reduce padding in landscape */
+    }
+    .tab-display {
+        width: 70%; /* Make tab-display take up most of the width */
+        margin-bottom: 0; /* Remove bottom margin in landscape */
+    }
+    .tool-bar {
+        flex-direction: column; /* Vertical toolbar in landscape */
+        width: auto; /* Adjust width to content */
+        margin-bottom: 0; /* Remove bottom margin for toolbar in landscape */
+        margin-right: 10px; /* Add right margin to separate from tab-display */
     }
 }
 
