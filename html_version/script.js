@@ -227,9 +227,10 @@ document.addEventListener('click', function(event) {
     if (numberCircle) {
         let isClickInside = numberCircle.contains(event.target);
         let isClickOnFret = event.target.classList.contains('fret');
+        let isSecondCircle = event.target.closest('.second-number-circle');
 
-        if (!isClickInside && !isClickOnFret) {
-            // Add a small delay before removing the number circle
+        if (!isClickInside && !isClickOnFret && !isSecondCircle) {
+            // Add a small delay before removing the number circle, but only if it's NOT the second number circle
             setTimeout(() => {
                 numberCircle.remove();
             }, 100); // 100 milliseconds delay
@@ -268,7 +269,7 @@ function showSecondNumberCircle(fret, firstDigit) {
         number.onclick = () => {
             // Replace 'x' with the chosen number in the first digit
             fret.textContent = firstDigit.replace(/x/, num); // Use regex to replace only the first 'x'
-            circle.remove();
+            circle.remove(); // Remove the second number circle after number selection
         };
 
         circle.appendChild(number);
