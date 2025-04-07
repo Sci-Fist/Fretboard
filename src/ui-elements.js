@@ -1,7 +1,7 @@
 // ui-elements.js
 // Handles UI elements and interactions
 
-import { setTabData, getTabData } from './tab-data.js';
+// import { setTabData, getTabData } from './tab-data.js';
 // import { addMeasure, clearTab } from './tab-data.js'; // Import from tab-data.js
 // import { renderTab } from './rendering.js'; // Import from rendering.js
 // import { exportMIDI, playTab, stopPlayback } from './audio.js'; // Import from audio.js
@@ -17,13 +17,12 @@ function handleFretInput(e) {
     const fretIndex = parseInt(e.target.dataset.fret);
     let value = e.target.textContent.replace(/[^0-9]/g, '').slice(0, 2); // Allow only numbers, max 2 digits
 
-    const tabData = getTabData();
-
-    if (tabData.measures[measureIndex]) {
-        tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
-    }
-    setTabData(tabData);
-    // renderTab(getTabData()); // Re-render the tab after the input
+    // const tabData = getTabData(); // Comment out
+    // if (tabData.measures[measureIndex]) { // Comment out
+    //     tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value; // Comment out
+    // } // Comment out
+    // setTabData(tabData); // Comment out
+    // renderTab(getTabData()); // Re-render the tab after the input // Comment out
     e.target.textContent = value; // Update the displayed text
 }
 
@@ -120,11 +119,11 @@ function showNumberCircle(fret) {
                 const measureIndex = parseInt(fret.dataset.measure);
                 const stringIndex = parseInt(fret.dataset.string);
                 const fretIndex = parseInt(fret.dataset.fret);
-                const tabData = getTabData();
-                if (tabData.measures[measureIndex]) {
-                    tabData.measures[measureIndex].strings[stringIndex][fretIndex] = num;
-                    setTabData(tabData);
-                }
+                // const tabData = getTabData();
+                // if (tabData.measures[measureIndex]) {
+                //     tabData.measures[measureIndex].strings[stringIndex][fretIndex] = num;
+                //     setTabData(tabData);
+                // }
                 circle.remove();
                 // renderTab(tabData);
             }
@@ -198,12 +197,12 @@ function showSecondNumberCircle(fret, firstDigit) {
             const measureIndex = parseInt(fret.dataset.measure);
             const stringIndex = parseInt(fret.dataset.string);
             const fretIndex = parseInt(fret.dataset.fret);
-            const tabData = getTabData();
-            if (tabData.measures[measureIndex]) {
-                tabData.measures[measureIndex].strings[stringIndex][fretIndex] = firstDigit.replace(/x/, num);
-                setTabData(tabData);
-                // renderTab(tabData);
-            }
+            // const tabData = getTabData();
+            // if (tabData.measures[measureIndex]) {
+            //     tabData.measures[measureIndex].strings[stringIndex][fretIndex] = firstDigit.replace(/x/, num);
+            //     setTabData(tabData);
+            //     // renderTab(tabData);
+            // }
             circle.remove(); // Remove the second number circle after number selection
         };
 
@@ -220,27 +219,27 @@ function showSecondNumberCircle(fret, firstDigit) {
 
 function exportTab() {
     console.log('exportTab called from ui-elements.js'); // Modified console log to identify source
-    const tabData = getTabData();
+    // const tabData = getTabData();
 
-    if (!tabData.measures || tabData.measures.length === 0) {
-        alert('No tab data to export.');
-        return;
-    }
+    // if (!tabData.measures || tabData.measures.length === 0) {
+    //     alert('No tab data to export.');
+    //     return;
+    // }
 
-    try {
-        const tabString = generateTabString(tabData);
-        // Create a download link
-        const element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tabString));
-        element.setAttribute('download', 'guitar_tab.txt');
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    } catch (error) {
-        console.error('ui-elements.js: Error during tab export:', error); // Modified console log to identify source
-        alert('Failed to export the tab. Please try again.');
-    }
+    // try {
+    //     const tabString = generateTabString(tabData);
+    //     // Create a download link
+    //     const element = document.createElement('a');
+    //     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tabString));
+    //     element.setAttribute('download', 'guitar_tab.txt');
+    //     element.style.display = 'none';
+    //     document.body.appendChild(element);
+    //     element.click();
+    //     document.body.removeChild(element);
+    // } catch (error) {
+    //     console.error('ui-elements.js: Error during tab export:', error); // Modified console log to identify source
+    //     alert('Failed to export the tab. Please try again.');
+    // }
 }
 
 function generateTabString(tabData) {
@@ -263,13 +262,13 @@ function generateTabString(tabData) {
 
 function showBPMInput() {
     console.log('showBPMInput called from ui-elements.js'); // Modified console log to identify source
-    const tabData = getTabData();
+    // const tabData = getTabData();
 
     // Create the input element
     const input = document.createElement('input');
     input.type = 'number';
     input.id = 'bpmInput';
-    input.value = tabData.bpm; // Set the current BPM as the default value
+    // input.value = tabData.bpm; // Set the current BPM as the default value
     input.min = 40; // Set a minimum BPM value
     input.max = 240; // Set a maximum BPM value
     input.style.width = '50px'; // Adjust width as needed
@@ -281,10 +280,10 @@ function showBPMInput() {
     setBPMButton.onclick = () => {
         const newBPM = parseInt(input.value);
         if (!isNaN(newBPM) && newBPM >= 40 && newBPM <= 240) {
-            tabData.bpm = newBPM;
-            setTabData(tabData);
+            // tabData.bpm = newBPM;
+            // setTabData(tabData);
             // Optionally, provide feedback to the user, e.g., by updating a display element
-            console.log('BPM set to:', getTabData().bpm);
+            console.log('BPM set to:');
             // Remove the input and button after setting the BPM
             bpmInputContainer.remove();
         } else {
@@ -306,26 +305,26 @@ function showBPMInput() {
 
 function saveTab() {
     console.log('saveTab called from ui-elements.js'); // Modified console log to identify source
-    try {
-        localStorage.setItem('tabData', JSON.stringify(getTabData()));
-    } catch (error) {
-        console.error('ui-elements.js: Error saving tab:', error); // Modified console log to identify source
-        alert('Failed to save the tab. Please check your browser settings.');
-    }
+    // try {
+    //     localStorage.setItem('tabData', JSON.stringify(getTabData()));
+    // } catch (error) {
+    //     console.error('ui-elements.js: Error saving tab:', error); // Modified console log to identify source
+    //     alert('Failed to save the tab. Please check your browser settings.');
+    // }
 }
 
 function loadTab() {
     console.log('loadTab called from ui-elements.js'); // Modified console log to identify source
-    try {
-        const savedTabData = localStorage.getItem('tabData');
-        if (savedTabData) {
-            setTabData(JSON.parse(savedTabData));
-            // renderTab(getTabData());
-        }
-    } catch (error) {
-        console.error('ui-elements.js: Error loading tab:', error); // Modified console log to identify source
-        alert('Failed to load the tab. Please check your browser settings.');
-    }
+    // try {
+    //     const savedTabData = localStorage.getItem('tabData');
+    //     if (savedTabData) {
+    //         setTabData(JSON.parse(savedTabData));
+    //         // renderTab(getTabData());
+    //     }
+    // } catch (error) {
+    //     console.error('ui-elements.js: Error loading tab:', error); // Modified console log to identify source
+    //     alert('Failed to load the tab. Please check your browser settings.');
+    // }
 }
 
 export { handleFretInput, showNumberCircle, showSecondNumberCircle, setupToolBar, exportTab, showBPMInput, saveTab, loadTab };
