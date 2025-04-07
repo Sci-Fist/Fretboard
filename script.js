@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadTab(); // Load tab data after Tone.js is ready
     });
     setupUI();
+    addMeasure(); // Call addMeasure to initialize the tab
+    renderTab(); // Call renderTab after addMeasure to render the initial tab
 });
 
 let tabData = {
@@ -48,7 +50,7 @@ function addMeasure() {
     };
     tabData.measures.push(measure);
     console.log('tabData after addMeasure:', tabData); // Log tabData after adding a measure
-    renderTab();
+    //renderTab(); // Removed renderTab call from here, as it's called in the DOMContentLoaded and clearTab
 }
 
 function clearTab() {
@@ -62,33 +64,42 @@ function renderTab() {
     const tabDisplay = document.getElementById('tab-display');
     tabDisplay.innerHTML = '';
 
-    tabData.measures.forEach((measure, measureIndex) => {
-        console.log('Rendering measure:', measureIndex, measure); // Log each measure being rendered
-        const measureDiv = document.createElement('div');
-        measureDiv.className = 'measure';
+    if (!tabData.measures || tabData.measures.length === 0) {
+        console.log('No measures to render.');
+        return; // Exit if there are no measures
+    }
 
-        for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
-            const stringDiv = document.createElement('div');
-            stringDiv.className = 'string';
+    try {
+        tabData.measures.forEach((measure, measureIndex) => {
+            console.log('Rendering measure:', measureIndex, measure); // Log each measure being rendered
+            const measureDiv = document.createElement('div');
+            measureDiv.className = 'measure';
 
-            for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
-                const fretDiv = document.createElement('div');
-                fretDiv.className = 'fret';
-                fretDiv.contentEditable = true;
-                fretDiv.dataset.measure = measureIndex;
-                fretDiv.dataset.string = stringIndex;
-                fretDiv.dataset.fret = fretIndex;
-                fretDiv.textContent = measure.strings[stringIndex][fretIndex] || '';
-                fretDiv.addEventListener('input', handleFretInput);
-                fretDiv.addEventListener('click', (e) => {
-                    showNumberCircle(e.target);
-                });
-                stringDiv.appendChild(fretDiv);
+            for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+                const stringDiv = document.createElement('div');
+                stringDiv.className = 'string';
+
+                for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
+                    const fretDiv = document.createElement('div');
+                    fretDiv.className = 'fret';
+                    fretDiv.contentEditable = true;
+                    fretDiv.dataset.measure = measureIndex;
+                    fretDiv.dataset.string = stringIndex;
+                    fretDiv.dataset.fret = fretIndex;
+                    fretDiv.textContent = measure.strings[stringIndex][fretIndex] || '';
+                    fretDiv.addEventListener('input', handleFretInput);
+                    fretDiv.addEventListener('click', (e) => {
+                        showNumberCircle(e.target);
+                    });
+                    stringDiv.appendChild(fretDiv);
+                }
+                measureDiv.appendChild(stringDiv);
             }
-            measureDiv.appendChild(stringDiv);
-        }
-        tabDisplay.appendChild(measureDiv);
-    });
+            tabDisplay.appendChild(measureDiv);
+        });
+    } catch (error) {
+        console.error('Error rendering tab:', error);
+    }
 }
 
 function handleFretInput(e) {
