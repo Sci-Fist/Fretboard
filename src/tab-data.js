@@ -10,6 +10,9 @@ const defaultTabData = {
 
 let tabData = { ...defaultTabData };
 
+/**
+ * Initializes the tab data to the default values.
+ */
 function initializeTabData() {
     tabData = { ...defaultTabData };
     addMeasure();
