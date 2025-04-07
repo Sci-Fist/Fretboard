@@ -40,6 +40,7 @@ body {
     min-height: 150px; /* config.tabDisplayMinHeight; */
     background-color: #333;
     /* overflow-y: auto; */ /* Change to horizontal scroll if needed */
+    display: flex;
     overflow-x: auto;
     /* max-height: 400px; */ /* No max height needed in horizontal layout */
     color: #fff;
