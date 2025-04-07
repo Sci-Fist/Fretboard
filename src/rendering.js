@@ -1,7 +1,7 @@
 // rendering.js
 // Handles the rendering of the tab
 
-import config from "../../config.js";
+import config from "./config.js";
 
 const stringLabels = ["E", "A", "D", "G", "B", "e"]; // String labels
 
