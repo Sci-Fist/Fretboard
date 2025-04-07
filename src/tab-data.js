@@ -1,12 +1,20 @@
 // tab-data.js
 // Handles the tab data structure and manipulation
 
-let tabData = {
+const defaultTabData = {
     measures: [],
     bpm: 120,
     tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
     capo: 0
 };
+
+let tabData = { ...defaultTabData };
+
+function initializeTabData() {
+    tabData = { ...defaultTabData };
+    addMeasure();
+}
+
 
 /**
  * Adds a new measure to the tab data.
@@ -67,4 +75,4 @@ function getNote(stringIndex, fretNumber, tuning) {
     return notes[noteIndex] + octave;
 }
 
-export { addMeasure, clearTab, getTabData, setTabData, getNote };
+export { addMeasure, clearTab, getTabData, setTabData, getNote, initializeTabData };
