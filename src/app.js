@@ -10,19 +10,6 @@ import * as Tone from 'tone';
 
 console.log('app.js: Starting app.js');
 
-// Add a function to resume the AudioContext on user interaction
-function resumeAudioContextOnInteraction() {
-    if (Tone.context.state === 'suspended') {
-        Tone.context.resume().then(() => {
-            console.log('AudioContext resumed successfully');
-        });
-    }
-}
-
-// Attach the event listeners for user interaction
-document.addEventListener('touchstart', resumeAudioContextOnInteraction, false);
-document.addEventListener('click', resumeAudioContextOnInteraction, false);
-
 /**
  * Sets up the entire application.
  */
@@ -31,7 +18,7 @@ async function setupApp() {
     try {
         initializeTabData();
         rendering.renderTab(getTabData());
-        setupUI(); // setupUI now also applies config CSS variables
+        setupUI();
         // Config variables and log are now inside setupUI.
     } catch (error) {
         console.error('app.js: Error during app setup:', error);

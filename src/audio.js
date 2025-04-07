@@ -1,7 +1,4 @@
 // audio.js
-// This module handles audio playback using Tone.js.
-// It provides functions to initialize the audio context, play individual notes,
-// play a complete tab, and stop playback.
 
 // This module handles audio playback using Tone.js.
 // It provides functions to initialize the audio context, play individual notes,
@@ -20,6 +17,15 @@ let fretboardNode;
 
 let bpm = 120; // Default BPM
 
+// Add a function to resume the AudioContext on user interaction
+function resumeAudioContextOnInteraction() {
+    if (audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+            console.log('AudioContext resumed successfully');
+        });
+    }
+}
+
 // Load the AudioWorkletProcessor
 async function setupAudioWorklet() {
     try {
@@ -35,6 +41,7 @@ async function setupAudioWorklet() {
 }
 
 setupAudioWorklet();
+resumeAudioContextOnInteraction();
 const sixteenthNoteDuration = (60 / bpm) / 4; // Default Tempo.  Adjust for the BPM.
 
 /**
