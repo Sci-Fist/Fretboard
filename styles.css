@@ -16,10 +16,6 @@ body {
 }
 /* General styles for smaller screens (phones in portrait) */
 .tab-editor {
-    width: 98%; /* Take up more width, especially in landscape */
-}
-
-.tab-editor {
     display: flex;
     flex-direction: column;
     width: 98%; /* Default width for smaller screens */
