@@ -2,8 +2,10 @@
 // Handles UI elements and interactions
 
 import { setTabData, getTabData } from './tab-data.js';
-import { stopPlayback, playTab } from './audio.js';
-import { showBPMInput, saveTab, loadTab, exportMIDI, addMeasure, clearTab, renderTab, exportTab } from './app.js'; // Modified import line
+import { addMeasure, clearTab } from './tab-data.js'; // Import from tab-data.js
+import { renderTab } from './rendering.js'; // Import from rendering.js
+import { exportMIDI, playTab, stopPlayback } from './audio.js'; // Import from audio.js
+import { showBPMInput, saveTab, loadTab, exportTab } from './app.js'; // Keep these from app.js for now, if they are truly only in app.js
 
 /**
  * Handles input events on fret elements.
