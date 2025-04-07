@@ -2,10 +2,16 @@ import config from './config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Guitar Tab Editor loaded');
-    Tone.start().then(() => {
-        console.log('Tone.js is ready');
-        loadTab(); // Load tab data after Tone.js is ready
-    });
+    // Initialize Tone.js
+    try {
+        Tone.start().then(() => {
+            console.log('Tone.js is ready');
+            loadTab(); // Load tab data after Tone.js is ready
+        });
+    } catch (error) {
+        console.error('Tone.js initialization failed:', error);
+        alert('Failed to initialize audio engine. Playback will not be available.');
+    }
     setupUI();
     addMeasure(); // Call addMeasure to initialize the tab
     renderTab(); // Call renderTab after addMeasure to render the initial tab
@@ -128,22 +134,28 @@ function startPlayback() {
     isPlaying = true;
     playTabButton.style.display = 'none';
     stopTabButton.style.display = '';
-    synth = new Tone.PolySynth(Tone.Synth).toDestination();
-    const bpm = tabData.bpm || 120;
-    const noteLength = (60 / bpm) * 4;
-    currentMeasureIndex = 0;
-    currentFretIndex = 0;
-    playbackInterval = setInterval(() => {
-        playBeat();
-        currentFretIndex++;
-        if (currentFretIndex >= 4) {
-            currentFretIndex = 0;
-            currentMeasureIndex++;
-            if (currentMeasureIndex >= tabData.measures.length) {
-                stopPlayback();
+    try {
+        synth = new Tone.PolySynth(Tone.Synth).toDestination();
+        const bpm = tabData.bpm || 120;
+        const noteLength = (60 / bpm) * 4;
+        currentMeasureIndex = 0;
+        currentFretIndex = 0;
+        playbackInterval = setInterval(() => {
+            playBeat();
+            currentFretIndex++;
+            if (currentFretIndex >= 4) {
+                currentFretIndex = 0;
+                currentMeasureIndex++;
+                if (currentMeasureIndex >= tabData.measures.length) {
+                    stopPlayback();
+                }
             }
-        }
-    }, noteLength / 4 * 1000); // Convert to milliseconds
+        }, noteLength / 4 * 1000); // Convert to milliseconds
+    } catch (error) {
+        console.error('Playback initialization failed:', error);
+        alert('Failed to initialize audio playback. Please check your browser settings.');
+        stopPlayback(); // Ensure playback stops if initialization fails
+    }
 }
 
 function playBeat() {
@@ -154,7 +166,11 @@ function playBeat() {
         const fretNumber = parseInt(fretValue);
         if (!isNaN(fretNumber)) {
             const note = getNote(stringIndex, fretNumber);
-            synth.triggerAttackRelease(note, '16n'); // Play for a 16th note
+            try {
+                synth.triggerAttackRelease(note, '16n'); // Play for a 16th note
+            } catch (error) {
+                console.error('Error triggering note:', error);
+            }
         }
     }
 }
@@ -167,6 +183,8 @@ function stopPlayback() {
     stopTabButton.style.display = 'none';
     if (synth) {
         synth.releaseAll(); // Stop any lingering notes
+        synth.dispose(); // Dispose of the synth to free up resources
+        synth = null; // Set synth to null to prevent further use
     }
     currentMeasureIndex = 0;
     currentFretIndex = 0;
