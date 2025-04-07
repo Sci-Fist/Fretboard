@@ -174,7 +174,6 @@ function showNumberCircle(fret) {
     let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
         existingCircle.remove();
-        document.removeEventListener('click', closeNumberCircle);
     }
 
     const circle = document.createElement('div');
@@ -207,23 +206,12 @@ function showNumberCircle(fret) {
                 fret.textContent = num;
                 circle.remove();
             }
-            document.removeEventListener('click', closeNumberCircle); // Remove the listener after use
         };
 
         circle.appendChild(number);
     });
 
     fret.appendChild(circle);
-
-    // Add a click listener to close the circle when clicking outside
-    function closeNumberCircle(event) {
-        if (!circle.contains(event.target) && event.target !== fret) {
-            circle.remove();
-            document.removeEventListener('click', closeNumberCircle);
-        }
-    }
-
-    document.addEventListener('click', closeNumberCircle);
 }
 
 function showSecondNumberCircle(fret, firstDigit) {
@@ -231,7 +219,6 @@ function showSecondNumberCircle(fret, firstDigit) {
     let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
         existingCircle.remove();
-        document.removeEventListener('click', closeSecondNumberCircle);
     }
 
     const circle = document.createElement('div');
@@ -258,21 +245,10 @@ function showSecondNumberCircle(fret, firstDigit) {
             // Replace 'x' with the chosen number in the first digit
             fret.textContent = firstDigit.replace('x', num);
             circle.remove();
-            document.removeEventListener('click', closeSecondNumberCircle);
         };
 
         circle.appendChild(number);
     });
 
     fret.appendChild(circle);
-
-    // Add a click listener to close the second number circle
-    function closeSecondNumberCircle(event) {
-        if (!circle.contains(event.target) && event.target !== fret) {
-            circle.remove();
-            document.removeEventListener('click', closeSecondNumberCircle);
-        }
-    }
-
-    document.addEventListener('click', closeSecondNumberCircle);
 }
