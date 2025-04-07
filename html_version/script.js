@@ -201,8 +201,6 @@ function showNumberCircle(fret) {
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
                 // If 1x or 2x is clicked, show the second number circle
-                console.log('First wheel number clicked:', num, ' - about to call showSecondNumberCircle'); // VERIFY THIS LOG IN CONSOLE
-                console.log('1x or 2x clicked, showing second number wheel', num); // Log which button was clicked
                 circle.remove();
                 showSecondNumberCircle(fret, num);
             } else {
@@ -269,30 +267,17 @@ function showSecondNumberCircle(fret, firstDigit) {
 
         number.onclick = () => {
             // Replace 'x' with the chosen number in the first digit
-            console.log('Second wheel number clicked:', num, 'First digit was:', firstDigit);
             fret.textContent = firstDigit.replace(/x/, num); // Use regex to replace only the first 'x'
-            console.log('Second number clicked:', num, 'First digit:', firstDigit, 'Fret:', fret);
             circle.remove();
         };
 
-        number.onerror = (error) => {
-            console.error('Error creating number in second wheel:', error, num, i);
-        };
-        number.onabort = () => {
-            console.log('Number creation aborted in second wheel:', num, i);
-        };
-        number.onload = () => {
-            console.log('Number loaded in second wheel:', num, i);
-        };
         circle.appendChild(number);
     });
 
     // Append number circle to the body to avoid clipping, same as first circle
     document.body.appendChild(circle);
     // Position the second number circle relative to the fret
-    // const fretRect = fret.getBoundingClientRect(); // Comment out original fretRect code
-    // circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`; // Adjusted vertical positioning
-    // circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`; // Adjusted horizontal positioning
-    circle.style.top = `100px`; // TEMPORARY FIXED TOP POSITION
-    circle.style.left = `100px`; // TEMPORARY FIXED LEFT POSITION
+    const fretRect = fret.getBoundingClientRect(); // Comment out original fretRect code
+    circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`; // Adjusted vertical positioning
+    circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`; // Adjusted horizontal positioning
 }
