@@ -8,8 +8,11 @@ let tabData = {
     capo: 0
 };
 
+/**
+ * Adds a new measure to the tab data.
+ */
 function addMeasure() {
-    console.log('addMeasure called'); // Log when addMeasure is called
+    console.log('tab-data.js: addMeasure called');
     const measure = {
         strings: [
             ['', '', '', ''],
@@ -21,25 +24,40 @@ function addMeasure() {
         ]
     };
     tabData.measures.push(measure);
-    console.log('tabData after addMeasure:', tabData); // Log tabData after adding a measure
-    //renderTab(); // Removed renderTab call from here, as it's called in the DOMContentLoaded and clearTab
-    //renderTab(); // Re-render after adding a measure
+    console.log('tab-data.js: tabData after addMeasure:', tabData);
 }
 
+/**
+ * Clears all measures from the tab data.
+ */
 function clearTab() {
-    console.log('clearTab called');
+    console.log('tab-data.js: clearTab called');
     tabData.measures = [];
-    //renderTab();
 }
 
+/**
+ * Returns the current tab data.
+ * @returns {object} The tab data object.
+ */
 function getTabData() {
     return tabData;
 }
 
+/**
+ * Sets the tab data.
+ * @param {object} data - The new tab data object.
+ */
 function setTabData(data) {
     tabData = data;
 }
 
+/**
+ * Gets the note for a given string and fret number, based on the tuning.
+ * @param {number} stringIndex - The index of the string (0-5).
+ * @param {number} fretNumber - The fret number (0-24).
+ * @param {string[]} tuning - The tuning of the guitar (e.g., ['E', 'A', 'D', 'G', 'B', 'E']).
+ * @returns {string} The note name (e.g., "E4", "A3").
+ */
 function getNote(stringIndex, fretNumber, tuning) {
     const notes = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
     const baseNote = tuning[stringIndex];

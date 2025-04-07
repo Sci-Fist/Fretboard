@@ -4,8 +4,12 @@
 import { getTabData, setTabData } from './tab-data.js';
 import { renderTab } from './rendering.js';
 
+/**
+ * Handles input events on fret elements.
+ * @param {Event} e - The input event.
+ */
 function handleFretInput(e) {
-    console.log('handleFretInput called'); // Log when handleFretInput is called
+    console.log('ui-elements.js: handleFretInput called');
     const measureIndex = parseInt(e.target.dataset.measure);
     const stringIndex = parseInt(e.target.dataset.string);
     const fretIndex = parseInt(e.target.dataset.fret);
@@ -21,8 +25,12 @@ function handleFretInput(e) {
     renderTab(getTabData()); // Re-render the tab after the input
 }
 
+/**
+ * Displays the number circle for fret selection.
+ * @param {HTMLElement} fret - The fret element.
+ */
 function showNumberCircle(fret) {
-    console.log('showNumberCircle called'); // Log when showNumberCircle is called
+    console.log('ui-elements.js: showNumberCircle called');
     // Remove any existing number circle before showing a new one
     let existingCircle = fret.querySelector('.number-circle');
     const openNumberCircle = document.querySelector('.number-circle');
@@ -93,8 +101,13 @@ document.addEventListener('click', function(event) {
     }
 });
 
+/**
+ * Displays the second number circle for bends and slides.
+ * @param {HTMLElement} fret - The fret element.
+ * @param {string} firstDigit - The first digit selected (e.g., "1x" or "2x").
+ */
 function showSecondNumberCircle(fret, firstDigit) {
-    console.log('showSecondNumberCircle called'); // Log when showSecondNumberCircle is called
+    console.log('ui-elements.js: showSecondNumberCircle called');
     // Remove any existing number circle
     let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
