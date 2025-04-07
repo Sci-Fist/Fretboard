@@ -28,7 +28,7 @@ function playNote(note, duration, startTime = 0) {
 
     const match = note.match(/([a-gA-G#b]+)(\d+)/);
     if (!match) {
-        console.error(`audio.js: Woah there! Invalid note format in playNote - Note was: ${note}`);
+        console.error(`audio.js: Invalid note format received in playNote - Note was: ${note}`);
         return; // Exit if the note format is not recognized
     }
     const [_, pitch, octaveStr] = match; // Use descriptive names
@@ -37,7 +37,7 @@ function playNote(note, duration, startTime = 0) {
     // Add validation for parsed pitch and octave if necessary, though getFrequency should handle basic note names
     const frequency = getFrequency(pitch, octave);
     if (isNaN(frequency)) {
-        console.error(`audio.js: Dang, couldn't calculate frequency for note ${note}`);
+        console.error(`audio.js: Could not calculate frequency for note ${note}`);
         return;
     }
 
@@ -74,7 +74,8 @@ function getFrequency(pitch, octave) {
  * @param {object} tabData - The tab data object.
  */
 async function playTab(tabData) {
-    console.log('audio.js: Time to play the tab!');
+    console.log('audio.js: playTab called');
+    initializeAudioContext(); // Ensure audio context is initialized
     if (isPlaying) {
         console.log('audio.js: Already playing, chill out.');
         return; // Prevent multiple playbacks
@@ -91,12 +92,12 @@ async function playTab(tabData) {
             }
         }
     }
-    initializeAudioContext(); // Ensure audio context is initialized
+    //initializeAudioContext(); // Ensure audio context is initialized
     if (audioContext.state === 'suspended') {
         console.log('audio.js: Trying to resume AudioContext');
         try {
             await audioContext.resume();
-            console.log('audio.js: AudioContext resumed, sweet!');
+            console.log('audio.js: AudioContext resumed successfully');
         } catch (err) {
             console.error('audio.js: Failed to resume AudioContext:', err);
             alert('Failed to resume audio playback. Please check your browser settings.');
@@ -141,7 +142,7 @@ async function playTab(tabData) {
 function playBeat(tabData, startTime) {
     console.log('audio.js: playBeat called');
     if (!tabData.measures[currentMeasureIndex]) {
-        console.log('audio.js: No measure here, dude.', currentMeasureIndex);
+        console.log('audio.js: No measure at index', currentMeasureIndex);
         return;
     }
     const measure = tabData.measures[currentMeasureIndex];
@@ -154,10 +155,10 @@ function playBeat(tabData, startTime) {
                 try {
                     playNote(note, 0.2, startTime); // Play for 0.2 seconds
                 } catch (error) {
-                    console.error(`audio.js: Uh oh, error triggering note ${note}:`, error);
+                    console.error(`audio.js: Error triggering note ${note}:`, error);
                 }
             } else {
-                 console.warn(`audio.js: Couldn't get note for string ${stringIndex}, fret ${fretNumber}`);
+                 console.warn(`audio.js: Could not get note for string ${stringIndex}, fret ${fretNumber}`);
             }
         }
     }
@@ -169,7 +170,7 @@ function playBeat(tabData, startTime) {
 function stopPlayback() {
     console.log('audio.js: stopPlayback called');
     if (!isPlaying) {
-        console.log('audio.js: Not playing anything, no worries.');
+        console.log('audio.js: No playback in progress, ignoring.');
         return;
     }
     isPlaying = false;
