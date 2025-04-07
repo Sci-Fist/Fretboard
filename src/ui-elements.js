@@ -3,7 +3,7 @@
 
 import { addMeasure, clearTab, renderTab, exportTab } from './app.js';
 import { setTabData, getTabData } from './tab-data.js';
-import { stopPlayback } from './audio.js';
+import { stopPlayback, playTab } from './audio.js';
 import { showBPMInput, saveTab, loadTab, exportMIDI } from './app.js';
 
 /**
