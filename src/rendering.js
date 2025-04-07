@@ -49,7 +49,7 @@ function renderTab(tabData) {
         fretDiv.dataset.measure = measureIndex;
         fretDiv.dataset.string = stringIndex;
         fretDiv.dataset.fret = fretIndex;
-        fretDiv.textContent = measure.strings[stringIndex][fretIndex] || "";
+        fretDiv.textContent = measure.strings[stringIndex][fretIndex] || ""; // Set the fret text content
         stringDiv.appendChild(fretDiv);
       }
       measureDiv.appendChild(stringDiv);
