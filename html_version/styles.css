@@ -98,7 +98,7 @@ body {
     background-color: #fff;
     border-radius: 50%;
     cursor: pointer;
-    animation: number-animation 1s forwards;
+    animation: number-animation 0.5s forwards;
 }
 
 @keyframes number-animation {
