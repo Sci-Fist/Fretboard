@@ -16,8 +16,14 @@ let tabData = { ...defaultTabData };
  * Initializes the tab data to the default values.
  */
 function initializeTabData() {
-    tabData = { ...defaultTabData };
-    addMeasure();
+    // Ensure deep copy for measures array if defaultTabData could be modified elsewhere (though unlikely here)
+    tabData = {
+      ...defaultTabData,
+      measures: [] // Start with empty measures before adding one
+      // If tuning/capo could be modified, deep copy them too:
+      // tuning: [...defaultTabData.tuning]
+    };
+    addMeasure(); // Add the initial measure
 }
 
 
@@ -45,7 +51,9 @@ function addMeasure() {
  */
 function clearTab() {
     console.log('tab-data.js: clearTab called');
-    tabData.measures = [];
+    tabData.measures = []; // Correctly clears measures
+    // Optionally reset other properties if needed, e.g., bpm
+    // tabData.bpm = defaultTabData.bpm;
 }
 
 /**
