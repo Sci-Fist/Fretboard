@@ -6,6 +6,11 @@ body {
     padding: 20px;
     background-color: #121212;
     color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure full viewport height */
+    margin: 0; /* Remove default body margin */
 }
 
 .tab-editor {
@@ -14,11 +19,13 @@ body {
     flex-direction: column;
     align-items: center;
     width: 80%;
+    max-width: 800px; /* Limit maximum width */
     margin: 0 auto;
     border: 1px solid #333;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     background-color: #222;
+    border-radius: 8px; /* Rounded corners */
 }
 
 .tab-display {
@@ -32,6 +39,7 @@ body {
     overflow-y: auto;
     max-height: 300px;
     color: #fff;
+    border-radius: 4px;
 }
 
 .tool-bar {
@@ -43,6 +51,7 @@ body {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    border-radius: 4px;
 }
 
 .tool-bar button {
@@ -70,6 +79,7 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     background-color: #333;
+    border-radius: 4px;
 }
 
 .string {
