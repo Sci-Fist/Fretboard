@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('app.js: Finished DOMContentLoaded');
 });
 
+/**
+ * Sets up the user interface by attaching event listeners to the tool bar buttons.
+ */
 function setupUI() {
     console.log('app.js: setupUI called');
     // Get references to the tool bar buttons
