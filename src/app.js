@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // No Tone.js check needed anymore
     setupUI();
     // addMeasure(); // Call addMeasure to initialize the tab - Removed, as it is called in setupUI
-    renderTab(getTabData()); // Call renderTab after addMeasure to render the initial tab
+    // renderTab(getTabData()); // Call renderTab after addMeasure to render the initial tab - Removed, as it is called in setupUI
     console.log('app.js: Finished DOMContentLoaded');
 });
 
@@ -97,6 +97,7 @@ function setupUI() {
     });
     console.log('app.js: Finished setupUI');
     addMeasure(); // Add a measure when the UI is set up
+    renderTab(getTabData()); // Initial render after setup
 }
 
 function exportTab() {
