@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-import config from './config.js';
+/* import config from './config.js'; */
 
 body {
     font-family: 'Orbitron', sans-serif;
@@ -13,7 +13,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    font-size: config.bodyFontSize;
+    font-size: 16px; /* config.bodyFontSize; */
 }
 
 .tab-editor {
@@ -21,35 +21,35 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: config.tabEditorWidth;
-    max-width: config.tabEditorMaxWidth;
+    width: 85%; /* config.tabEditorWidth; */
+    max-width: 1000px; /* config.tabEditorMaxWidth; */
     margin: 0 auto;
-    border: config.tabEditorBorder;
-    padding: config.tabEditorPadding;
-    box-shadow: config.tabEditorBoxShadow;
+    border: 1.5px solid #333; /* config.tabEditorBorder; */
+    padding: 15px; /* config.tabEditorPadding; */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* config.tabEditorBoxShadow; */
     background-color: #222;
-    border-radius: config.tabEditorBorderRadius;
+    border-radius: 10px; /* config.tabEditorBorderRadius; */
 }
 
 .tab-display {
     font-family: 'Orbitron', sans-serif;
     width: 100%;
-    margin-bottom: config.tabDisplayMarginBottom;
-    border: config.tabDisplayBorder;
-    padding: config.tabDisplayPadding;
-    min-height: config.tabDisplayMinHeight;
+    margin-bottom: 15px; /* config.tabDisplayMarginBottom; */
+    border: 1.5px solid #333; /* config.tabDisplayBorder; */
+    padding: 10px; /* config.tabDisplayPadding; */
+    min-height: 150px; /* config.tabDisplayMinHeight; */
     background-color: #333;
     overflow-y: auto;
-    max-height: config.tabDisplayMaxHeight;
+    max-height: 400px; /* config.tabDisplayMaxHeight; */
     color: #fff;
-    border-radius: config.tabDisplayBorderRadius;
+    border-radius: 6px; /* config.tabDisplayBorderRadius; */
 }
 
 .tool-bar {
     font-family: 'Orbitron', sans-serif;
     width: 100%;
-    padding: config.toolBarPadding;
-    border: config.toolBarBorder;
+    padding: 10px; /* config.toolBarPadding; */
+    border: 1.5px solid #333; /* config.toolBarBorder; */
     background-color: #333;
     display: flex;
     justify-content: space-around;
@@ -59,14 +59,14 @@ body {
 
 .tool-bar button {
     font-family: 'Orbitron', sans-serif;
-    padding: config.toolBarButtonPadding;
-    font-size: config.toolBarButtonFontSize;
+    padding: 12px 16px; /* config.toolBarButtonPadding; */
+    font-size: 16px; /* config.toolBarButtonFontSize; */
     cursor: pointer;
     margin-bottom: 8px;
     background-color: #444;
     color: #fff;
     border: none;
-    border-radius: config.toolBarButtonBorderRadius;
+    border-radius: 6px; /* config.toolBarButtonBorderRadius; */
     transition: background-color 0.2s ease;
 }
 
@@ -79,34 +79,34 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: config.measureBorder;
-    padding: config.measurePadding;
-    margin-bottom: config.measureMarginBottom;
+    border: 1.5px solid #333; /* config.measureBorder; */
+    padding: 10px; /* config.measurePadding; */
+    margin-bottom: 10px; /* config.measureMarginBottom; */
     background-color: #333;
-    border-radius: config.measureBorderRadius;
+    border-radius: 6px; /* config.measureBorderRadius; */
 }
 
 .string {
     font-family: 'Orbitron', sans-serif;
     display: flex;
     width: 100%;
-    border-bottom: config.stringBorderBottom;
-    padding: config.stringPadding;
+    border-bottom: 1.5px solid #333; /* config.stringBorderBottom; */
+    padding: 6px 0; /* config.stringPadding; */
 }
 
 .fret {
-    width: config.fretWidth;
-    height: config.fretHeight;
-    border: config.fretBorder;
-    padding: config.fretPadding;
+    width: 50px; /* config.fretWidth; */
+    height: 50px; /* config.fretHeight; */
+    border: 1.5px solid #555; /* config.fretBorder; */
+    padding: 8px; /* config.fretPadding; */
     text-align: center;
     cursor: pointer;
     position: relative;
-    margin: config.fretMargin;
+    margin: 3px; /* config.fretMargin; */
     background-color: #444;
     color: #fff;
-    border-radius: config.fretBorderRadius;
-    font-size: config.fretFontSize;
+    border-radius: 6px; /* config.fretBorderRadius; */
+    font-size: 20px; /* config.fretFontSize; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -121,20 +121,20 @@ body {
     position: absolute;
     top: -50px;
     left: -50px;
-    width: config.numberCircleWidth;
-    height: config.numberCircleHeight;
+    width: 140px; /* config.numberCircleWidth; */
+    height: 140px; /* config.numberCircleHeight; */
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 10;
-    border-radius: config.numberCircleBorderRadius;
+    border-radius: 50%; /* config.numberCircleBorderRadius; */
 }
 
 .number {
     font-family: 'Orbitron', sans-serif;
     position: absolute;
-    width: config.numberWidth;
-    height: config.numberHeight;
+    width: 40px; /* config.numberWidth; */
+    height: 40px; /* config.numberHeight; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -143,7 +143,7 @@ body {
     cursor: pointer;
     animation: number-animation 0.5s forwards;
     color: #fff;
-    font-size: config.numberFontSize;
+    font-size: 16px; /* config.numberFontSize; */
 }
 
 @keyframes number-animation {
