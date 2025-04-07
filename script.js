@@ -2,6 +2,13 @@ import config from './config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Guitar Tab Editor loaded');
+    // Check if Tone is defined
+    if (typeof Tone !== 'undefined') {
+        console.log('Tone.js loaded successfully');
+    } else {
+        console.error('Tone.js failed to load');
+        alert('Failed to load Tone.js. Playback will not be available.');
+    }
     setupUI();
     addMeasure(); // Call addMeasure to initialize the tab
     renderTab(); // Call renderTab after addMeasure to render the initial tab
