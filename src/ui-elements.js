@@ -1,5 +1,6 @@
 // src/ui-elements.js
-// Handles UI elements and interactions
+// This module handles the user interface elements and their interactions.
+// It sets up the toolbar, handles fret input, and displays the number circle for fret selection.
 
 /**
  * Sets up the tool bar by attaching event listeners to the tool bar buttons.
