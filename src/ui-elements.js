@@ -132,8 +132,10 @@ function showNumberCircle(fret) {
         circle.appendChild(number);
     });
 
-    document.body.appendChild(circle);
-    positionNumberCircle(circle, fret);
+    if (typeof document !== 'undefined') {
+        document.body.appendChild(circle);
+        positionNumberCircle(circle, fret);
+    }
 }
 
 /**
@@ -194,8 +196,10 @@ function showSecondNumberCircle(fret, firstDigit) {
         circle.appendChild(number);
     });
 
-    document.body.appendChild(circle);
-    positionNumberCircle(circle, fret);
+    if (typeof document !== 'undefined') {
+        document.body.appendChild(circle);
+        positionNumberCircle(circle, fret);
+    }
 }
 
 
