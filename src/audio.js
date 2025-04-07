@@ -16,35 +16,35 @@ let fretboardNode;
 let bpm = 120; // Default BPM
 
 // Add a function to resume the AudioContext on user interaction
-function resumeAudioContextOnInteraction() {
-    if (Tone.context.state === 'suspended') {
-        Tone.context.resume().then(() => {
-            console.log('AudioContext resumed successfully');
-        });
 async function resumeAudioContextOnInteraction() {
-    if (Tone.context.state === 'suspended') {
-        await Tone.start(); // Initialize Tone.js
-        console.log('AudioContext resumed successfully');
-        await setupAudioWorklet(); // Call setupAudioWorklet after resuming
-    }
+  if (Tone.context.state === "suspended") {
+    await Tone.start(); // Initialize Tone.js
+    console.log("AudioContext resumed successfully");
+    await setupAudioWorklet(); // Call setupAudioWorklet after resuming
+  }
 }
 
 // Attach the event listeners for user interaction
-document.addEventListener('touchstart', resumeAudioContextOnInteraction, false);
-document.addEventListener('click', resumeAudioContextOnInteraction, false);
+document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
+document.addEventListener("click", resumeAudioContextOnInteraction, false);
 
 // Load the AudioWorkletProcessor
 async function setupAudioWorklet() {
-    try {
-        await Tone.context.audioWorklet.addModule('fretboard-processor.js'); // Path to the processor file
-        fretboardNode = new AudioWorkletNode(Tone.context, 'fretboard-processor'); // Use the processor's registered name
+  try {
+    await Tone.context.audioWorklet.addModule("fretboard-processor.js"); // Path to the processor file
+    fretboardNode = new AudioWorkletNode(
+      Tone.context,
+      "fretboard-processor"
+    ); // Use the processor's registered name
 
-        // Connect the AudioWorkletNode to the destination
-        fretboardNode.connect(Tone.context.destination);
-    } catch (error) {
-        console.error('Failed to initialize AudioWorklet:', error);
-        alert('Failed to initialize audio playback.  Please check your browser settings and the console.');
-    }
+    // Connect the AudioWorkletNode to the destination
+    fretboardNode.connect(Tone.context.destination);
+  } catch (error) {
+    console.error("Failed to initialize AudioWorklet:", error);
+    alert(
+      "Failed to initialize audio playback.  Please check your browser settings and the console."
+    );
+  }
 }
 
 const sixteenthNoteDuration = (60 / bpm) / 4; // Default Tempo.  Adjust for the BPM.
