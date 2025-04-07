@@ -11,13 +11,9 @@ console.log('app.js: Starting app.js');
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('app.js: DOMContentLoaded event fired');
-    // Wait for Tone.js to be loaded before initializing the app
-    if (typeof Tone !== 'undefined') {
-        await setupApp();
-    } else {
-        console.error('app.js: Tone.js not loaded after DOMContentLoaded.');
-        alert('Failed to load Tone.js. Please check your browser console for details.');
-    }
+    // Tone.js is imported via modules, so the check isn't needed here.
+    // Parcel will handle the loading. If 'tone' fails to import, errors will occur elsewhere.
+    await setupApp();
     console.log('app.js: Finished DOMContentLoaded');
 });
 
@@ -26,11 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function setupApp() {
     console.log('app.js: setupApp called');
-    if (typeof Tone === 'undefined') {
-        console.error('app.js: Tone.js is not loaded.');
-        alert('Failed to load Tone.js. Please check your browser console for details.');
-        return; // Exit if Tone.js is not available
-    }
     try {
         initializeTabData();
         rendering.renderTab(getTabData());
