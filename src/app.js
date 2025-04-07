@@ -10,7 +10,13 @@ console.log('app.js: Starting app.js');
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('app.js: DOMContentLoaded event fired');
-    await setupApp();
+    // Wait for Tone.js to be loaded before initializing the app
+    if (typeof Tone !== 'undefined') {
+        await setupApp();
+    } else {
+        console.error('app.js: Tone.js not loaded after DOMContentLoaded.');
+        alert('Failed to load Tone.js. Please check your browser console for details.');
+    }
     console.log('app.js: Finished DOMContentLoaded');
 });
 
