@@ -5,6 +5,7 @@ import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from './tab-data.js';
 import { setupToolBar, handleFretInput, showNumberCircle } from './ui-elements.js';
 import { playTab, stopPlayback, exportMIDI } from './audio.js'; // Import audio functions
+import config from '../config.js'; // Import config
 
 console.log('app.js: Starting app.js');
 
@@ -41,13 +42,6 @@ async function setupApp() {
         initializeTabData();
         rendering.renderTab(getTabData());
         setupUI();
-        // Apply config values as CSS variables *after* setupUI
-        const root = document.documentElement;
-        Object.keys(config).forEach(key => {
-            const cssVarName = `--config-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-            root.style.setProperty(cssVarName, config[key]);
-        });
-        console.log('app.js: CSS variables set from config');
         console.log('app.js: UI setup complete');
     } catch (error) {
         console.error('app.js: Error during app setup:', error);
@@ -77,6 +71,14 @@ function setupUI() {
         setTabData: setTabData
     });
     attachFretEventListeners(); // Attach listeners to frets
+    // Apply config values as CSS variables *after* setupUI
+    const root = document.documentElement;
+    Object.keys(config).forEach(key => {
+        // Convert camelCase to kebab-case for CSS variable names
+        const cssVarName = `--config-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+        root.style.setProperty(cssVarName, config[key]);
+    });
+    console.log('app.js: CSS variables set from config');
     console.log('app.js: setupUI complete');
 }
 
