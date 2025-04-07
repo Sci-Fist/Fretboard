@@ -49,6 +49,8 @@ export function renderTab(tabData) {
                 fretDiv.id = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
                 fretDiv.name = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
                 fretDiv.textContent = measure.strings[stringIndex][fretIndex] || ""; // Set the fret text content
+                fretDiv.setAttribute('tabindex', '0'); // Make the frets focusable
+                fretDiv.setAttribute('aria-label', `Fret ${fretDiv.textContent || 'empty'}`); // Provide accessible label
                 stringDiv.appendChild(fretDiv);
             }
             measureDiv.appendChild(stringDiv);
