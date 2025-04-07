@@ -20,8 +20,6 @@ function initializeTabData() {
     tabData = {
       ...defaultTabData,
       measures: [] // Start with empty measures before adding one
-      // If tuning/capo could be modified, deep copy them too:
-      // tuning: [...defaultTabData.tuning]
     };
     addMeasure(); // Add the initial measure
 }
