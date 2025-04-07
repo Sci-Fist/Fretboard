@@ -14,6 +14,10 @@ body {
     margin: 0;
     font-size: var(--config-body-font-size, 16px);
 }
+
+.number-circle {
+    z-index: 1000; /* Ensure it's on top of other elements */
+}
 /* General styles for smaller screens (phones in portrait) */
 .tab-editor {
     display: flex;
