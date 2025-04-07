@@ -119,13 +119,12 @@ body {
     position: absolute;
     top: -80px;
     left: -80px;
-    width: 160px; /* Increase size */
-    height: 160px; /* Increase size */
+    width: 220px;
+    height: 220px;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     z-index: 10;
-    /* Remove background-color: #222; */
     border-radius: 50%;
 }
 
