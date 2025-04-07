@@ -23,8 +23,19 @@ Welcome to the totally tubular Guitar Tab Editor! This application lets you crea
     git clone [repository URL]
     ```
 
+2.  **Install dependencies:**
 
-2.  **Open `index.html` in your web browser.** No server is required. It's all client-side, baby!
+    ```bash
+    npm install
+    ```
+
+3.  **Run the application:**
+
+    ```bash
+    npm start
+    ```
+
+4.  **Open the application in your web browser.** (usually served at `http://localhost:1234` by Parcel)
 
 ## Usage - How to Rock
 
