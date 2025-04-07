@@ -9,6 +9,7 @@
 function setupToolBar(dependencies) {
     const { addMeasure, clearTab, exportTab, showBPMInput, playTab, stopPlayback, saveTab, loadTab, exportMIDI, renderTab, getTabData, setTabData } = dependencies;
 
+    // Select buttons by their specific IDs
     const addMeasureButton = document.getElementById('addMeasureBtn');
     const clearTabButton = document.getElementById('clearTabBtn');
     const exportTabButton = document.getElementById('exportTabBtn');
@@ -19,48 +20,58 @@ function setupToolBar(dependencies) {
     const loadTabButton = document.getElementById('loadTabBtn');
     const exportMIDButton = document.getElementById('exportMIDIBtn');
 
+    // Add event listeners only if the button exists
+    if (addMeasureButton) {
+        addMeasureButton.addEventListener('click', () => {
+            addMeasure();
+            renderTab(getTabData());
+        });
+    } else { console.error("Button with ID 'addMeasureBtn' not found."); }
 
-    addMeasureButton.addEventListener('click', () => {
-        addMeasure();
-        renderTab(getTabData());
-    });
+    if (clearTabButton) {
+        clearTabButton.addEventListener('click', () => {
+            clearTab();
+            addMeasure(); // Add an initial measure after clearing
+            renderTab(getTabData());
+        });
+    } else { console.error("Button with ID 'clearTabBtn' not found."); }
 
-    clearTabButton.addEventListener('click', () => {
-        clearTab();
-        renderTab(getTabData());
-    });
+    if (exportTabButton) {
+        exportTabButton.addEventListener('click', exportTab);
+    } else { console.error("Button with ID 'exportTabBtn' not found."); }
 
-    exportTabButton.addEventListener('click', () => {
-        exportTab();
-    });
+    if (showBPMInputButton) {
+        showBPMInputButton.addEventListener('click', showBPMInput);
+    } else { console.error("Button with ID 'setBPMBtn' not found."); }
 
-    showBPMInputButton.addEventListener('click', () => {
-        showBPMInput();
-    });
+    if (playTabButton) {
+        playTabButton.addEventListener('click', () => {
+            playTab(getTabData());
+            playTabButton.style.display = 'none';
+            if (stopTabButton) stopTabButton.style.display = 'inline-block';
+        });
+    } else { console.error("Button with ID 'playTabBtn' not found."); }
 
-    playTabButton.addEventListener('click', () => {
-        playTab(getTabData());
-        playTabButton.style.display = 'none';
-        stopTabButton.style.display = 'inline-block';
-    });
+    if (stopTabButton) {
+        stopTabButton.addEventListener('click', () => {
+            stopPlayback();
+            stopTabButton.style.display = 'none';
+            if (playTabButton) playTabButton.style.display = 'inline-block';
+        });
+    } else { console.error("Button with ID 'stopTabBtn' not found."); }
 
-    stopTabButton.addEventListener('click', () => {
-        stopPlayback();
-        stopTabButton.style.display = 'none';
-        playTabButton.style.display = 'inline-block';
-    });
+    if (saveTabButton) {
+        saveTabButton.addEventListener('click', saveTab);
+    } else { console.error("Button with ID 'saveTabBtn' not found."); }
 
-    saveTabButton.addEventListener('click', () => {
-        saveTab();
-    });
+    if (loadTabButton) {
+        loadTabButton.addEventListener('click', loadTab);
+    } else { console.error("Button with ID 'loadTabBtn' not found."); }
 
-    loadTabButton.addEventListener('click', () => {
-        loadTab();
-    });
+    if (exportMIDButton) {
+        exportMIDButton.addEventListener('click', exportMIDI);
+    } else { console.error("Button with ID 'exportMIDIBtn' not found."); }
 
-    exportMIDButton.addEventListener('click', () => {
-        exportMIDI();
-    });
     console.log('ui-elements.js: Toolbar setup complete');
 }
 
