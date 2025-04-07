@@ -199,7 +199,7 @@ function showNumberCircle(fret) {
             if (num === '1x' || num === '2x') {
                 circle.remove();
                 document.removeEventListener('click', closeNumberCircle);
-                showSecondNumberCircle(fret, num.charAt(0));
+                showSecondNumberCircle(fret, num);
             } else {
                 fret.textContent = num;
                 circle.remove();
@@ -248,7 +248,7 @@ function showSecondNumberCircle(fret, firstDigit) {
         number.style.top = `${y}px`;
         number.style.animationDelay = `${i * 0.1}s`;
         number.onclick = () => {
-            fret.textContent = firstDigit + num;
+            fret.textContent = firstDigit.charAt(0) + num;
             circle.remove();
             document.removeEventListener('click', closeNumberCircle);
         };
