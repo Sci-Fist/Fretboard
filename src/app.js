@@ -36,6 +36,13 @@ async function setupApp() {
         initializeTabData();
         rendering.renderTab(getTabData());
         setupUI();
+        // Apply config values as CSS variables *after* setupUI
+        const root = document.documentElement;
+        Object.keys(config).forEach(key => {
+            const cssVarName = `--config-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+            root.style.setProperty(cssVarName, config[key]);
+        });
+        console.log('app.js: CSS variables set from config');
         console.log('app.js: UI setup complete');
     } catch (error) {
         console.error('app.js: Error during app setup:', error);
