@@ -3,7 +3,7 @@
 body {
     font-family: 'Orbitron', sans-serif;
     text-align: center;
-    padding: 20px;
+    padding: 15px; /* Reduced padding */
     background-color: #121212;
     color: #fff;
     display: flex;
@@ -11,7 +11,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    font-size: 18px; /* Reduced base font size */
+    font-size: 16px; /* Reduced base font size */
 }
 
 .tab-editor {
@@ -19,52 +19,52 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90%; /* Reduced width */
-    max-width: 1200px; /* Reduced max-width */
+    width: 85%; /* Reduced width */
+    max-width: 1000px; /* Reduced max-width */
     margin: 0 auto;
-    border: 2px solid #333;
-    padding: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #333; /* Reduced border */
+    padding: 15px; /* Reduced padding */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Reduced shadow */
     background-color: #222;
-    border-radius: 12px;
+    border-radius: 10px; /* Reduced border-radius */
 }
 
 .tab-display {
     font-family: 'Orbitron', sans-serif;
     width: 100%;
-    margin-bottom: 20px;
-    border: 2px solid #333;
-    padding: 15px; /* Reduced padding */
-    min-height: 200px; /* Reduced min-height */
+    margin-bottom: 15px; /* Reduced margin */
+    border: 1.5px solid #333; /* Reduced border */
+    padding: 10px; /* Reduced padding */
+    min-height: 150px; /* Reduced min-height */
     background-color: #333;
     overflow-y: auto;
-    max-height: 500px; /* Reduced max-height */
+    max-height: 400px; /* Reduced max-height */
     color: #fff;
-    border-radius: 8px; /* Reduced border-radius */
+    border-radius: 6px; /* Reduced border-radius */
 }
 
 .tool-bar {
     font-family: 'Orbitron', sans-serif;
     width: 100%;
-    padding: 15px; /* Reduced padding */
-    border: 2px solid #333;
+    padding: 10px; /* Reduced padding */
+    border: 1.5px solid #333; /* Reduced border */
     background-color: #333;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    border-radius: 8px; /* Reduced border-radius */
+    border-radius: 6px; /* Reduced border-radius */
 }
 
 .tool-bar button {
     font-family: 'Orbitron', sans-serif;
-    padding: 15px 20px; /* Reduced padding */
-    font-size: 18px; /* Reduced font size */
+    padding: 12px 16px; /* Reduced padding */
+    font-size: 16px; /* Reduced font size */
     cursor: pointer;
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Reduced margin */
     background-color: #444;
     color: #fff;
     border: none;
-    border-radius: 8px; /* Reduced border-radius */
+    border-radius: 6px; /* Reduced border-radius */
     transition: background-color 0.2s ease;
 }
 
@@ -77,34 +77,34 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 2px solid #333;
-    padding: 15px; /* Reduced padding */
-    margin-bottom: 15px; /* Reduced margin */
+    border: 1.5px solid #333; /* Reduced border */
+    padding: 10px; /* Reduced padding */
+    margin-bottom: 10px; /* Reduced margin */
     background-color: #333;
-    border-radius: 8px; /* Reduced border-radius */
+    border-radius: 6px; /* Reduced border-radius */
 }
 
 .string {
     font-family: 'Orbitron', sans-serif;
     display: flex;
     width: 100%;
-    border-bottom: 2px solid #333;
-    padding: 8px 0; /* Reduced padding */
+    border-bottom: 1.5px solid #333; /* Reduced border */
+    padding: 6px 0; /* Reduced padding */
 }
 
 .fret {
-    width: 60px; /* Reduced width */
-    height: 60px; /* Reduced height */
-    border: 2px solid #555;
-    padding: 10px; /* Reduced padding */
+    width: 50px; /* Reduced width */
+    height: 50px; /* Reduced height */
+    border: 1.5px solid #555; /* Reduced border */
+    padding: 8px; /* Reduced padding */
     text-align: center;
     cursor: pointer;
     position: relative;
-    margin: 4px; /* Reduced margin */
+    margin: 3px; /* Reduced margin */
     background-color: #444;
     color: #fff;
-    border-radius: 8px; /* Reduced border-radius */
-    font-size: 24px; /* Reduced font size */
+    border-radius: 6px; /* Reduced border-radius */
+    font-size: 20px; /* Reduced font size */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -117,10 +117,10 @@ body {
 .number-circle {
     font-family: 'Orbitron', sans-serif;
     position: absolute;
-    top: -60px;
-    left: -60px;
-    width: 160px; /* Reduced width */
-    height: 160px; /* Reduced height */
+    top: -50px;
+    left: -50px;
+    width: 140px; /* Reduced width */
+    height: 140px; /* Reduced height */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -131,8 +131,8 @@ body {
 .number {
     font-family: 'Orbitron', sans-serif;
     position: absolute;
-    width: 50px; /* Reduced width */
-    height: 50px; /* Reduced height */
+    width: 40px; /* Reduced width */
+    height: 40px; /* Reduced height */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -141,7 +141,7 @@ body {
     cursor: pointer;
     animation: number-animation 0.5s forwards;
     color: #fff;
-    font-size: 18px; /* Reduced font size */
+    font-size: 16px; /* Reduced font size */
 }
 
 @keyframes number-animation {
