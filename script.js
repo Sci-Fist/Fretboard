@@ -74,37 +74,46 @@ function renderTab() {
         return; // Exit if there are no measures
     }
 
-    try {
-        tabData.measures.forEach((measure, measureIndex) => {
-            console.log('Rendering measure:', measureIndex, measure); // Log each measure being rendered
-            const measureDiv = document.createElement('div');
-            measureDiv.className = 'measure';
+    const stringLabels = ['E', 'A', 'D', 'G', 'B', 'e']; // String labels
 
-            for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
-                const stringDiv = document.createElement('div');
-                stringDiv.className = 'string';
+    tabData.measures.forEach((measure, measureIndex) => {
+        console.log('Rendering measure:', measureIndex, measure); // Log each measure being rendered
+        const measureDiv = document.createElement('div');
+        measureDiv.className = 'measure';
 
-                for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
-                    const fretDiv = document.createElement('div');
-                    fretDiv.className = 'fret';
-                    fretDiv.contentEditable = true;
-                    fretDiv.dataset.measure = measureIndex;
-                    fretDiv.dataset.string = stringIndex;
-                    fretDiv.dataset.fret = fretIndex;
-                    fretDiv.textContent = measure.strings[stringIndex][fretIndex] || '';
-                    fretDiv.addEventListener('input', handleFretInput);
-                    fretDiv.addEventListener('click', (e) => {
-                        showNumberCircle(e.target);
-                    });
-                    stringDiv.appendChild(fretDiv);
-                }
-                measureDiv.appendChild(stringDiv);
+        for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+            const stringDiv = document.createElement('div');
+            stringDiv.className = 'string';
+
+            // Add string label
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'string-label';
+            labelDiv.textContent = stringLabels[stringIndex];
+            stringDiv.appendChild(labelDiv);
+
+            // Add visual string representation (horizontal line)
+            const stringLine = document.createElement('div');
+            stringLine.className = 'string-line';
+            stringDiv.appendChild(stringLine);
+
+            for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
+                const fretDiv = document.createElement('div');
+                fretDiv.className = 'fret';
+                fretDiv.contentEditable = true;
+                fretDiv.dataset.measure = measureIndex;
+                fretDiv.dataset.string = stringIndex;
+                fretDiv.dataset.fret = fretIndex;
+                fretDiv.textContent = measure.strings[stringIndex][fretIndex] || '';
+                fretDiv.addEventListener('input', handleFretInput);
+                fretDiv.addEventListener('click', (e) => {
+                    showNumberCircle(e.target);
+                });
+                stringDiv.appendChild(fretDiv);
             }
-            tabDisplay.appendChild(measureDiv);
-        });
-    } catch (error) {
-        console.error('Error rendering tab:', error);
-    }
+            measureDiv.appendChild(stringDiv);
+        }
+        tabDisplay.appendChild(measureDiv);
+    });
 }
 
 function handleFretInput(e) {
