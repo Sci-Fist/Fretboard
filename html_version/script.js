@@ -200,9 +200,19 @@ function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
                 }
             }
             circle.remove();
+            document.removeEventListener('click', closeNumberCircle);
         };
         circle.appendChild(number);
     });
 
     fret.appendChild(circle);
+
+    function closeNumberCircle(event) {
+        if (!circle.contains(event.target) && event.target !== fret) {
+            circle.remove();
+            document.removeEventListener('click', closeNumberCircle);
+        }
+    }
+
+    document.addEventListener('click', closeNumberCircle);
 }
