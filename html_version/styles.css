@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-/* import config from './config.js'; */
-
 body {
     font-family: 'Orbitron', sans-serif;
     text-align: center;
@@ -11,9 +9,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center; /* Center content vertically on larger screens, adjust for small screens */
-    min-height: 100vh;
+    min-height: 98vh; /* Slightly reduced to ensure no scrollbar unless necessary */
     margin: 0;
-    font-size: 16px; /* config.bodyFontSize; */
+    font-size: 16px;
 }
 /* General styles for smaller screens (phones in portrait) */
 .tab-editor {
@@ -23,34 +21,28 @@ body {
 .tab-editor {
     display: flex;
     flex-direction: column;
-    /* On larger screens or landscape, use the original width */
-    /* width: 85%; */ /* config.tabEditorWidth; */
-    /* max-width: 1000px; */ /* config.tabEditorMaxWidth; */
-    width: 85%; /* Default width, can be overridden by media queries */
+    width: 95%; /* Default width for smaller screens */
     align-items: center;
-    max-width: 1000px; /* config.tabEditorMaxWidth; */
-    margin: 0 auto;
-    border: 1.5px solid #333; /* config.tabEditorBorder; */
-    padding: 15px; /* config.tabEditorPadding; */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* config.tabEditorBoxShadow; */
+    max-width: 1200px; /* Increased max-width for larger screens */
+    margin: 10px auto; /* Added margin top/bottom for spacing */
+    border: 1.5px solid #333;
+    padding: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     background-color: #222;
-    border-radius: 10px; /* config.tabEditorBorderRadius; */
+    border-radius: 10px;
 }
 
 
 .tab-display {
-    /* width: 100%; */ /* Let width adjust to content */
-    margin-bottom: 15px; /* config.tabDisplayMarginBottom; */
-    border: 1.5px solid #333; /* config.tabDisplayBorder; */
-    padding: 10px; /* config.tabDisplayPadding; */
-    min-height: 150px; /* config.tabDisplayMinHeight; */
+    margin-bottom: 15px;
+    border: 1.5px solid #333;
+    padding: 10px;
+    min-height: 120px; /* Reduced min-height for smaller screens */
     background-color: #333;
-    /* overflow-y: auto; */ /* Change to horizontal scroll if needed */
-    display: flex;
+    display: flex; /* Enable horizontal scrolling for measures */
     overflow-x: auto;
-    /* max-height: 400px; */ /* No max height needed in horizontal layout */
     color: #fff;
-    border-radius: 6px; /* config.tabDisplayBorderRadius; */
+    border-radius: 6px;
 }
 
 /* Media query for screens smaller than 600px (very small phones) */
@@ -58,12 +50,12 @@ body {
     body {
         align-items: flex-start; /* Align to top on very small screens */
         font-size: 14px; /* Slightly reduce base font size on very small screens */
-        padding: 10px; /* Reduce body padding */
+        padding: 5px; /* Further reduce body padding for very small screens */
     }
     .tab-editor {
-        padding: 10px; /* Reduce tab-editor padding */
+        padding: 5px; /* Further reduce tab-editor padding */
         border-radius: 0; /* Square corners on very small screens for more space */
-        border: none; /* Remove border on very small screens for more space */
+        border-left: none; /* Remove left border on very small screens for more space */
         background-color: transparent; /* Make background transparent on very small screens */
     }
     .tool-bar button {
@@ -72,16 +64,16 @@ body {
         margin-bottom: 5px; /* Reduce button margin */
     }
     .measure {
-        padding: 5px; /* Reduce measure padding */
-        margin-right: 5px; /* Reduce measure margin */
-        margin-bottom: 8px; /* Slightly more margin below measures */
+        padding: 4px; /* Further reduce measure padding */
+        margin-right: 2px; /* Further reduce measure margin */
+        margin-bottom: 4px; /* Further reduce margin below measures */
     }
     .fret {
-        width: 45px; /* Slightly larger fret width for touch */
-        height: 45px; /* Slightly larger fret height for touch */
-        padding: 6px; /* Adjust fret padding */
-        font-size: 14px; /* Reduce fret font size */
-        margin-right: 2px; /* Reduce fret margin */
+        width: 35px; /* Further reduce fret width for very small screens */
+        height: 35px; /* Further reduce fret height for very small screens */
+        padding: 4px; /* Further reduce fret padding */
+        font-size: 12px; /* Further reduce fret font size */
+        margin-right: 1px; /* Further reduce fret margin */
     }
 }
 
@@ -97,27 +89,22 @@ body {
 }
 
 .tool-bar {
-    width: auto; /* Adjust width to content */
-    padding: 10px; /* config.toolBarPadding; */
+    padding: 10px;
     border: 1.5px solid #333; /* config.toolBarBorder; */
     background-color: #333;
     display: flex;
     justify-content: flex-start; /* Align buttons to the start */
-    /* In landscape on small screens, make toolbar vertical and on the side */
-    /* flex-direction: column; */
-    /* align-items: flex-start; */
-    /* width: auto; */
     flex-wrap: wrap;
     border-radius: 6px;
 }
 
 .tool-bar button {
-    padding: 14px 20px; /* Larger button padding for touch */
-    font-size: 16px; /* config.toolBarButtonFontSize; */
+    padding: 12px 18px; /* Adjusted button padding */
+    font-size: 16px;
     cursor: pointer;
     margin-bottom: 8px;
     background-color: #444;
-    color: #fff; /* config.toolBarButtonTextColor; */
+    color: #fff;
     border: none;
     border-radius: 6px; /* config.toolBarButtonBorderRadius; */
     transition: background-color 0.2s ease;
@@ -147,11 +134,11 @@ body {
 }
 
 .measure {
-    flex-direction: column; /* Display strings vertically */
     display: flex;
+    flex-direction: column; /* Display strings vertically */
     align-items: center;
-    border: 1.5px solid #333; /* config.measureBorder; */
-    padding: 10px; /* config.measurePadding; */
+    border: 1.5px solid #333;
+    padding: 8px; /* Adjusted measure padding */
     margin-right: 10px; /* config.measureMarginBottom; -> margin-right */
     margin-bottom: 10px; /* keep margin bottom for stacked rows if wrapping */
     background-color: #333;
@@ -160,10 +147,9 @@ body {
 
 .string {
     display: flex;
-    flex-direction: row; /* Display frets horizontally in vertical string */
-    /* width: 100%; */ /* Adjust width as needed */
-    border-bottom: 1.5px solid #333; /* config.stringBorderBottom; */
-    padding: 6px 0; /* config.stringPadding; */
+    flex-direction: row;
+    border-bottom: 1.5px solid #333;
+    padding: 4px 0; /* Reduced string padding */
 }
 
 .fret {
@@ -171,8 +157,8 @@ body {
     height: 55px; /* Slightly larger fret height for touch */
     border: 1.5px solid #555; /* config.fretBorder; */
     padding: 8px; /* config.fretPadding; */
+    margin-right: 3px;
     text-align: center;
-    cursor: pointer;
     position: relative;
     margin-right: 3px; /* config.fretMargin; -> margin-right */
     background-color: #444;
@@ -180,6 +166,7 @@ body {
     border-radius: 6px; /* config.fretBorderRadius; */
     font-size: 16px; /* config.fretFontSize; -> smaller font size */
     display: flex;
+    cursor: pointer; /* Ensure cursor is shown for frets */
     justify-content: center;
     align-items: center;
 }
@@ -190,14 +177,13 @@ body {
 }
 
 .number-circle {
+    display: flex;
     position: absolute;
     top: -50px;
     left: -50px;
-    width: 140px; /* config.numberCircleWidth; */
-    height: 140px; /* config.numberCircleHeight; */
-    display: flex;
+    width: 140px;
+    height: 140px;
     justify-content: space-around;
-    align-items: center;
     z-index: 10;
     border-radius: 50%; /* config.numberCircleBorderRadius; */
 }
@@ -209,10 +195,10 @@ body {
 */
 
 .number {
-    position: absolute;
-    width: 40px; /* config.numberWidth; */
-    height: 40px; /* config.numberHeight; */
     display: flex;
+    position: absolute;
+    width: 40px;
+    height: 40px;
     justify-content: center;
     align-items: center;
     background-color: #555;
