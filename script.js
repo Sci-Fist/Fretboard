@@ -1,7 +1,7 @@
 import config from './config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Guitar Tab Editor loaded');
+    console.log('Fretboard on fire');
     // Check if Tone is defined
     if (typeof Tone !== 'undefined') {
         console.log('Tone.js loaded successfully');
