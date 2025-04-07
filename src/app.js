@@ -1,12 +1,12 @@
 // src/app.js
 // Main app logic - setting things up and making it go!
 
+import * as Tone from 'tone';
 import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from './tab-data.js';
 import { setupToolBar, handleFretInput, showNumberCircle } from './ui-elements.js';
 import { playTab, stopPlayback, exportMIDI } from './audio.js'; // Import audio functions
 import config from '../config.js'; // Import config
-import * as Tone from 'tone';
 
 console.log('app.js: Starting app.js');
 
