@@ -15,11 +15,19 @@ body {
     margin: 0;
     font-size: 16px; /* config.bodyFontSize; */
 }
+/* General styles for smaller screens (phones in portrait) */
+.tab-editor {
+    width: 95%; /* Take up more width on smaller screens */
+}
 
 .tab-editor {
     font-family: 'Orbitron', sans-serif;
     display: flex;
     flex-direction: column;
+    /* On larger screens or landscape, use the original width */
+    /* width: 85%; */ /* config.tabEditorWidth; */
+    /* max-width: 1000px; */ /* config.tabEditorMaxWidth; */
+    width: 85%; /* Default width, can be overridden by media queries */
     align-items: center;
     width: 85%; /* config.tabEditorWidth; */
     max-width: 1000px; /* config.tabEditorMaxWidth; */
@@ -30,6 +38,7 @@ body {
     background-color: #222;
     border-radius: 10px; /* config.tabEditorBorderRadius; */
 }
+
 
 .tab-display {
     font-family: 'Orbitron', sans-serif;
@@ -47,6 +56,18 @@ body {
     border-radius: 6px; /* config.tabDisplayBorderRadius; */
 }
 
+/* Media query for landscape orientation on smaller screens (typical phones) */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    body {
+        align-items: flex-start; /* Align to top in landscape for better use of horizontal space */
+    }
+    .tab-editor {
+        width: 98%; /* Take up almost full width in landscape */
+        max-width: none; /* Remove max-width to use full width */
+        flex-direction: row; /* Arrange toolbar and tab display horizontally */
+    }
+}
+
 .tool-bar {
     font-family: 'Orbitron', sans-serif;
     width: 100%;
@@ -55,6 +76,10 @@ body {
     background-color: #333;
     display: flex;
     justify-content: flex-start; /* Align buttons to the start */
+    /* In landscape on small screens, make toolbar vertical and on the side */
+    /* flex-direction: column; */
+    /* align-items: flex-start; */
+    /* width: auto; */
     flex-wrap: wrap;
     border-radius: 6px;
 }
@@ -74,6 +99,14 @@ body {
 
 .tool-bar button:hover {
     background-color: #555;
+}
+
+/* Landscape specific toolbar styles for small screens */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .tool-bar {
+        flex-direction: column; /* Vertical toolbar in landscape */
+        width: auto; /* Adjust width to content */
+    }
 }
 
 .measure {
