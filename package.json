@@ -9,7 +9,7 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
-    "tone": "^14.7.77"
+    "tone": "^14.9.17"
   },
   "devDependencies": {
     "parcel": "^2.9.3"
