@@ -1,39 +1,19 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Guitar Tab Editor</title>
-        <link rel="stylesheet" href="styles.css" />
-        <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    </head>
-    <body>
-        <script type="module" src="src/app.js"></script>
-        <div class="tab-editor">
-            <!-- Tab Display Area -->
-            <div class="tab-display" id="tab-display">
-                <!-- Tab goes here -->
-            </div>
-
-            <!-- Tool Bar Area -->
-            <div class="tool-bar">
-                <button id="addMeasureBtn">Add Measure</button>
-                <button id="clearTabBtn">Clear Tab</button>
-                <button id="exportTabBtn">Export Tab</button>
-                <button id="setBPMBtn">Set BPM</button>
-                <button id="playTabBtn" aria-pressed="false">Play Tab</button>
-                <button
-                    id="stopTabBtn"
-                    style="display: none"
-                    aria-pressed="false"
-                >
-                    Stop
-                </button>
-                <!-- Initially hidden -->
-                <button id="saveTabBtn">Save Tab</button>
-                <button id="loadTabBtn">Load Tab</button>
-                <button id="exportMIDIBtn">Export MIDI</button>
-            </div>
-        </div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitar Tab App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="tool-bar">
+        <!-- Toolbar content will be added here by JavaScript -->
+    </div>
+    <div id="tab-display">
+        <!-- Tab display will be added here by JavaScript -->
+    </div>
+    <script type="module" src="src/app.js"></script>
+        <!-- Tone.js is imported via the module import in app.js -->
+</body>
 </html>
