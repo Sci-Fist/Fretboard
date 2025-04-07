@@ -1,5 +1,5 @@
 // src/app.js
-// Main application logic - event listeners, initialization
+// Main app logic - setting things up and making it go!
 
 import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from './tab-data.js';
@@ -38,11 +38,11 @@ async function setupApp() {
         if (Tone.context.state !== 'running') {
             await Tone.context.resume();
         }
-        console.log('app.js: Tone.js initialized');
+        console.log('app.js: Tone.js AudioContext resumed/running');
         initializeTabData();
         rendering.renderTab(getTabData());
-        setupUI();
-        console.log('app.js: UI setup complete');
+        setupUI(); // setupUI now also applies config CSS variables
+        // Config variables and log are now inside setupUI.
     } catch (error) {
         console.error('app.js: Error during app setup:', error);
         alert('Failed to initialize the application. Please check the console for details.');
