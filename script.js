@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Guitar Tab Editor loaded');
     addMeasure();
+    // Initialize Tone.js
+    Tone.start();
 });
 
 let tabData = {
@@ -72,6 +74,11 @@ function exportTab() {
 }
 
 function playTab() {
+    // Ensure Tone.js is initialized
+    if (Tone.context.state !== 'running') {
+        Tone.start();
+    }
+
     const synth = new Tone.PolySynth(Tone.Synth).toDestination();
     const now = Tone.now();
     const bpm = tabData.bpm || 120; // Use stored BPM or default to 120
@@ -286,4 +293,43 @@ function showSecondNumberCircle(fret, firstDigit) {
     const fretRect = fret.getBoundingClientRect(); // Comment out original fretRect code
     circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`; // Adjusted vertical positioning
     circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`; // Adjusted horizontal positioning
+}
+
+function showBPMInput() {
+    // Create the input element
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.id = 'bpmInput';
+    input.value = tabData.bpm; // Set the current BPM as the default value
+    input.min = 40; // Set a minimum BPM value
+    input.max = 240; // Set a maximum BPM value
+    input.style.width = '50px'; // Adjust width as needed
+    input.style.marginRight = '10px'; // Add some spacing
+
+    // Create the button to set the BPM
+    const setBPMButton = document.createElement('button');
+    setBPMButton.textContent = 'Set BPM';
+    setBPMButton.onclick = () => {
+        const newBPM = parseInt(input.value);
+        if (!isNaN(newBPM) && newBPM >= 40 && newBPM <= 240) {
+            tabData.bpm = newBPM;
+            // Optionally, provide feedback to the user, e.g., by updating a display element
+            console.log('BPM set to:', tabData.bpm);
+            // Remove the input and button after setting the BPM
+            bpmInputContainer.remove();
+        } else {
+            alert('Please enter a valid BPM between 40 and 240.');
+        }
+    };
+
+    // Create a container for the input and button
+    const bpmInputContainer = document.createElement('div');
+    bpmInputContainer.id = 'bpmInputContainer';
+    bpmInputContainer.style.marginTop = '10px'; // Add some spacing
+    bpmInputContainer.appendChild(input);
+    bpmInputContainer.appendChild(setBPMButton);
+
+    // Append the container to the tool-bar
+    const toolBar = document.querySelector('.tool-bar');
+    toolBar.appendChild(bpmInputContainer);
 }
