@@ -72,13 +72,17 @@ function setupToolBar(dependencies) {
 
     if (stopTabButton) {
         stopTabButton.addEventListener('click', () => {
-            stopPlayback();
-            stopTabButton.style.display = 'none';
-            stopTabButton.setAttribute('aria-pressed', 'false');
-            if (playTabButton) {
-                playTabButton.style.display = 'inline-block';
-                playTabButton.setAttribute('aria-pressed', 'false'); // Ensure play is not pressed
-                playTabButton.focus(); // Move focus back to play button
+            try {
+                stopPlayback();
+            } finally {
+                // Ensure button states are reset regardless of stopPlayback success/failure
+                stopTabButton.style.display = 'none';
+                stopTabButton.setAttribute('aria-pressed', 'false');
+                if (playTabButton) {
+                    playTabButton.style.display = 'inline-block';
+                    playTabButton.setAttribute('aria-pressed', 'false'); // Ensure play is not pressed
+                    playTabButton.focus(); // Move focus back to play button
+                }
             }
         });
     } else { console.error("Button with ID 'stopTabBtn' not found."); }
@@ -173,13 +177,13 @@ function showNumberCircle(fret) {
 
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
-                circle.remove();
+                removeOpenNumberCircle();
                 showSecondNumberCircle(fret, num);
             } else {
                 fret.textContent = num; // Set the text first
                  // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
                 fret.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-                circle.remove(); // Remove the circle after dispatching
+                removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
             }
         };
         circle.appendChild(number);
@@ -246,7 +250,7 @@ function showSecondNumberCircle(fret, firstDigit) {
             fret.textContent = firstDigit.replace(/x/, num); // Set the text first
             // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
             fret.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-            circle.remove(); // Remove the circle after dispatching
+            removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
         };
         circle.appendChild(number);
     });
