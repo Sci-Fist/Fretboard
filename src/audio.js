@@ -3,6 +3,10 @@
 // It provides functions to initialize the audio context, play individual notes,
 // play a complete tab, and stop playback.
 
+// This module handles audio playback using Tone.js.
+// It provides functions to initialize the audio context, play individual notes,
+// play a complete tab, and stop playback.
+
 import { getNote } from './tab-data.js'; // Import getNote function
 import * as Tone from 'tone';
 
