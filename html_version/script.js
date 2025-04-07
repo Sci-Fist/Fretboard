@@ -169,8 +169,9 @@ function exportMIDI() {
     document.body.removeChild(a);
 }
 
-function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
-    const existingCircle = fret.querySelector('.number-circle');
+function showNumberCircle(fret) {
+    // Remove any existing circle
+    let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
         existingCircle.remove();
         document.removeEventListener('click', closeNumberCircle);
@@ -182,7 +183,7 @@ function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
     const centerX = fret.offsetWidth / 2;
     const centerY = fret.offsetHeight / 2;
 
-    const numbers = isSecondDigit ? ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] : ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '1x', '2x'];
+    const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '1x', '2x'];
     numbers.forEach((num, i) => {
         const angle = (i / numbers.length) * 2 * Math.PI;
         const x = centerX + radius * Math.cos(angle);
@@ -196,16 +197,11 @@ function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
         number.style.animationDelay = `${i * 0.1}s`;
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
-                fret.textContent = num;
                 circle.remove();
                 document.removeEventListener('click', closeNumberCircle);
                 showSecondNumberCircle(fret, num.charAt(0));
             } else {
-                if (firstDigit) {
-                    fret.textContent = firstDigit + num;
-                } else {
-                    fret.textContent = num;
-                }
+                fret.textContent = num;
                 circle.remove();
                 document.removeEventListener('click', closeNumberCircle);
             }
@@ -226,7 +222,8 @@ function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
 }
 
 function showSecondNumberCircle(fret, firstDigit) {
-    const existingCircle = fret.querySelector('.number-circle');
+    // Remove any existing circle
+    let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
         existingCircle.remove();
         document.removeEventListener('click', closeNumberCircle);
