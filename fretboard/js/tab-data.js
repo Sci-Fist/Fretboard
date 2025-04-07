@@ -40,4 +40,13 @@ function setTabData(data) {
     tabData = data;
 }
 
-export { addMeasure, clearTab, getTabData, setTabData };
+function getNote(stringIndex, fretNumber, tuning) {
+    const notes = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
+    const baseNote = tuning[stringIndex];
+    const baseIndex = notes.indexOf(baseNote);
+    const noteIndex = (baseIndex + fretNumber) % 12;
+    const octave = Math.floor((baseIndex + fretNumber) / 12) + 2; // Determine octave
+    return notes[noteIndex] + octave;
+}
+
+export { addMeasure, clearTab, getTabData, setTabData, getNote };

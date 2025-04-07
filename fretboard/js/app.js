@@ -5,7 +5,7 @@ import { addMeasure, clearTab, getTabData, setTabData } from './tab-data.js';
 import { renderTab } from './rendering.js';
 import { handleFretInput, showNumberCircle, showSecondNumberCircle } from './ui-elements.js';
 import { exportMIDI } from './audio.js'; // Import the exportMIDI function
-//import { playTab, stopPlayback } from './audio.js'; // Import the playTab and stopPlayback functions
+import { playTab, stopPlayback } from './audio.js'; // Import the playTab and stopPlayback functions
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Fretboard on fire');
@@ -30,7 +30,7 @@ function setupUI() {
     const playTabButton = document.querySelector('.tool-bar button:nth-child(5)');
     const stopTabButton = document.createElement('button');
     stopTabButton.textContent = 'Stop';
-    //stopTabButton.onclick = stopPlayback; // Removed, as stopPlayback is not yet implemented
+    stopTabButton.onclick = stopPlayback;
     stopTabButton.style.display = 'none'; // Initially hidden
     const saveTabButton = document.querySelector('.tool-bar button:nth-child(7)');
     const loadTabButton = document.querySelector('.tool-bar button:nth-child(8)');
@@ -50,8 +50,10 @@ function setupUI() {
     });
     exportTabButton.addEventListener('click', exportTab);
     showBPMInputButton.addEventListener('click', showBPMInput);
-    //playTabButton.addEventListener('click', playTab); // Removed, as playTab is not yet implemented
-    //stopTabButton.addEventListener('click', stopPlayback); // Removed, as stopPlayback is not yet implemented
+    playTabButton.addEventListener('click', () => {
+        playTab(getTabData());
+    });
+    stopTabButton.addEventListener('click', stopPlayback);
     saveTabButton.addEventListener('click', saveTab);
     loadTabButton.addEventListener('click', loadTab);
     exportMIDButton.addEventListener('click', exportMIDI);
@@ -71,8 +73,36 @@ function setupUI() {
 }
 
 function exportTab() {
-    // Placeholder for tab export
-    alert('Tab export not yet implemented.');
+    console.log('exportTab called');
+    const tabData = getTabData();
+    let tabString = '';
+
+    if (!tabData.measures || tabData.measures.length === 0) {
+        alert('No tab data to export.');
+        return;
+    }
+
+    const stringLabels = ['E', 'A', 'D', 'G', 'B', 'e'];
+
+    tabData.measures.forEach(measure => {
+        for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+            tabString += stringLabels[stringIndex] + '|';
+            for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
+                tabString += measure.strings[stringIndex][fretIndex] || '-';
+            }
+            tabString += '|\n';
+        }
+        tabString += '\n'; // Add a blank line between measures
+    });
+
+    // Create a download link
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tabString));
+    element.setAttribute('download', 'guitar_tab.txt');
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
 }
 
 function showBPMInput() {
