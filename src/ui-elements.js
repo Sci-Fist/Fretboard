@@ -18,7 +18,10 @@ function handleFretInput(e) {
     const tabData = getTabData();
 
     if (tabData.measures[measureIndex]) {
+        console.log('ui-elements.js: Updating tabData.measures');
+        console.log('ui-elements.js: Before update, value:', value, 'measureIndex:', measureIndex, 'stringIndex:', stringIndex, 'fretIndex:', fretIndex);
         tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
+        console.log('ui-elements.js: After update, tabData.measures[measureIndex].strings[stringIndex][fretIndex]:', tabData.measures[measureIndex].strings[stringIndex][fretIndex]);
     }
     console.log('ui-elements.js: Setting fret content to:', value);
     e.target.textContent = value; // Update the displayed text
