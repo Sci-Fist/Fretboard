@@ -1,5 +1,6 @@
 // rendering.js
-// Handles the rendering of the tab
+// This module handles rendering the guitar tab to the tab display area.
+// It takes tab data as input and dynamically creates HTML elements to represent the tab.
 
 import config from '../config.js'; // Import config
 
