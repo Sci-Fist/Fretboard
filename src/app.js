@@ -21,6 +21,7 @@ async function setupApp() {
     console.log('app.js: setupApp called');
     try {
         await Tone.start(); // Initialize Tone.js
+        console.log('app.js: Tone.js initialized'); // Add a log to confirm
         initializeTabData(); // Initialize tab data
         rendering.renderTab(getTabData()); // Initial rendering of the tab
         setupUI(); // Setup UI elements and event listeners
