@@ -245,6 +245,7 @@ function showSecondNumberCircle(fret, firstDigit) {
 
     const circle = document.createElement('div');
     circle.className = 'number-circle';
+    circle.classList.add('second-number-circle'); // Add the new class here
     const radius = 50;
     const centerX = fret.offsetWidth / 2;
     const centerY = fret.offsetHeight / 2;
@@ -286,16 +287,9 @@ function showSecondNumberCircle(fret, firstDigit) {
     // Append number circle to the body to avoid clipping, same as first circle
     document.body.appendChild(circle);
     // Position the second number circle relative to the fret
-    const fretRect = fret.getBoundingClientRect();
-
-    // DEBUGGING: Check fretRect values
-    console.log('fretRect:', fretRect);
-    if (!fretRect || !fretRect.top || !fretRect.left) {
-        console.error('fretRect is invalid or missing top/left values!', fretRect);
-    } else {
-        console.log('fretRect.top:', fretRect.top, 'fretRect.left:', fretRect.left);
-    }
-
-    circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`; // Adjusted vertical positioning
-    circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`; // Adjusted horizontal positioning
+    // const fretRect = fret.getBoundingClientRect(); // Comment out original fretRect code
+    // circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`; // Adjusted vertical positioning
+    // circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`; // Adjusted horizontal positioning
+    circle.style.top = `100px`; // TEMPORARY FIXED TOP POSITION
+    circle.style.left = `100px`; // TEMPORARY FIXED LEFT POSITION
 }

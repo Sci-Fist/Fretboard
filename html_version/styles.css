@@ -135,6 +135,10 @@ body {
     border-radius: 50%; /* config.numberCircleBorderRadius; */
 }
 
+.second-number-circle {
+    background-color: rgba(0, 200, 0, 0.5); /* Semi-transparent green background for second wheel */
+}
+
 .number {
     font-family: 'Orbitron', sans-serif;
     position: absolute;
