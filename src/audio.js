@@ -86,82 +86,82 @@ function exportMIDI() {
  * @param {object} tabData - The tab data object.
  */
 function playTab(tabData) {
-    console.log('audio.js: playTab called');
-    if (isPlaying) {
-        stopPlayback();
+  console.log('audio.js: playTab called');
+  if (isPlaying) {
+    stopPlayback();
+  }
+
+  if (!tabData || !tabData.measures || tabData.measures.length === 0) {
+    alert('No tab data to play.');
+    return;
+  }
+
+  bpm = tabData.bpm || 120; // Use tabData BPM or default
+  const sixteenthNoteDuration = (60 / bpm) / 4; // Recalculate based on BPM
+  isPlaying = true;
+  currentMeasureIndex = 0;
+  currentFretIndex = 0;
+
+  function playMeasure(measureIndex) {
+    if (!isPlaying) {
+      return; // Stop if playback is cancelled
     }
 
-    if (!tabData || !tabData.measures || tabData.measures.length === 0) {
-        alert('No tab data to play.');
+    const measure = tabData.measures[measureIndex];
+    if (!measure) {
+      stopPlayback();
+      return;
+    }
+
+    let fretIndex = 0;
+    function playFret(stringIndex) {
+      if (!isPlaying) {
         return;
+      }
+      const fretValue = measure.strings[stringIndex][fretIndex];
+      if (fretValue !== '' && fretValue !== undefined) {
+        const note = getNote(stringIndex, parseInt(fretValue), tabData.tuning);
+        playNote(note, sixteenthNoteDuration); // Play the note
+      }
     }
 
-    bpm = tabData.bpm || 120; // Use tabData BPM or default
-    const sixteenthNoteDuration = (60 / bpm) / 4; // Recalculate based on BPM
-    isPlaying = true;
-    currentMeasureIndex = 0;
-    currentFretIndex = 0;
-
-    function playMeasure(measureIndex) {
-        if (!isPlaying) {
-            return; // Stop if playback is cancelled
-        }
-
-        const measure = tabData.measures[measureIndex];
-        if (!measure) {
-            stopPlayback();
-            return;
-        }
-
-        let fretIndex = 0;
-        function playFret(stringIndex) {
-            if (!isPlaying) {
-                return;
-            }
-            const fretValue = measure.strings[stringIndex][fretIndex];
-            if (fretValue !== '' && fretValue !== undefined) {
-                const note = getNote(stringIndex, parseInt(fretValue), tabData.tuning);
-                playNote(note, sixteenthNoteDuration); // Play the note
-            }
-        }
-
-        function playNextFret() {
-            if (!isPlaying) {
-                return;
-            }
-            if (fretIndex < 3) { // Assuming 4 frets per beat
-                fretIndex++;
-                for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
-                    playFret(stringIndex);
-                }
-                setTimeout(playNextFret, sixteenthNoteDuration * 1000); // Play each fret for the duration
-            } else {
-                currentFretIndex = 0;
-                playNextMeasure();
-            }
-        }
-
-        // Start playing the first fret of the measure
+    function playNextFret() {
+      if (!isPlaying) {
+        return;
+      }
+      if (fretIndex < 4) { // Assuming 4 frets per beat (0,1,2,3)
+        fretIndex++;
         for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
-            playFret(stringIndex);
+          playFret(stringIndex);
         }
         setTimeout(playNextFret, sixteenthNoteDuration * 1000); // Play each fret for the duration
+      } else {
+        currentFretIndex = 0;
+        playNextMeasure();
+      }
     }
 
-    function playNextMeasure() {
-        if (!isPlaying) {
-            return;
-        }
-        currentMeasureIndex++;
-        if (currentMeasureIndex < tabData.measures.length) {
-            playMeasure(currentMeasureIndex);
-        } else {
-            stopPlayback(); // Stop when all measures are played
-        }
+    // Start playing the first fret of the measure
+    for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+      playFret(stringIndex);
     }
+    setTimeout(playNextFret, sixteenthNoteDuration * 1000); // Play each fret for the duration
+  }
 
-    // Start playing the first measure
-    playMeasure(0);
+  function playNextMeasure() {
+    if (!isPlaying) {
+      return;
+    }
+    currentMeasureIndex++;
+    if (currentMeasureIndex < tabData.measures.length) {
+      playMeasure(currentMeasureIndex);
+    } else {
+      stopPlayback(); // Stop when all measures are played
+    }
+  }
+
+  // Start playing the first measure
+  playMeasure(0);
 }
 
 export { playTab, stopPlayback, exportMIDI };
