@@ -1,0 +1,244 @@
+@import "https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap";
+body {
+  text-align: center;
+  color: #fff;
+  min-height: 98vh;
+  font-family: Orbitron, sans-serif;
+  font-size: var(--config-body-font-size, 16px);
+  background-color: #121212;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0;
+  padding: 15px;
+  display: flex;
+}
+
+.tab-editor {
+  width: 98%;
+  max-width: var(--config-tab-editor-max-width, 1200px);
+  border: var(--config-tab-editor-border, 1.5px solid #333);
+  padding: var(--config-tab-editor-padding, 15px);
+  box-shadow: var(--config-tab-editor-box-shadow, 0 0 15px #00000080);
+  border-radius: var(--config-tab-editor-border-radius, 10px);
+  background-color: #222;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px auto;
+  display: flex;
+}
+
+.tab-display {
+  margin-bottom: var(--config-tab-display-margin-bottom, 15px);
+  border: var(--config-tab-display-border, 1.5px solid #333);
+  padding: var(--config-tab-display-padding, 10px);
+  min-height: var(--config-tab-display-min-height, 120px);
+  max-height: var(--config-tab-display-max-height, 400px);
+  color: #fff;
+  border-radius: var(--config-tab-display-border-radius, 6px);
+  background-color: #333;
+  display: flex;
+  overflow: auto;
+}
+
+@media screen and (width <= 600px) {
+  body {
+    align-items: flex-start;
+    padding: 5px;
+    font-size: 13px;
+  }
+
+  .tab-editor {
+    background-color: #0000;
+    border-left: none;
+    border-radius: 0;
+    padding: 5px;
+  }
+
+  .tool-bar button {
+    margin-bottom: 5px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .measure {
+    margin-bottom: 4px;
+    margin-right: 2px;
+    padding: 4px;
+  }
+
+  .fret {
+    width: 35px;
+    height: 35px;
+    margin-right: 1px;
+    padding: 4px;
+    font-size: 12px;
+  }
+}
+
+@media screen and (width <= 768px) and (orientation: landscape) {
+  body {
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  .tab-editor {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 98%;
+    padding: 5px;
+    overflow-y: auto;
+  }
+
+  .tab-display {
+    width: 75%;
+    max-height: 80vh;
+    margin-bottom: 0;
+  }
+
+  .tool-bar {
+    flex-direction: column;
+    width: auto;
+    max-height: 80vh;
+    margin-bottom: 0;
+    margin-right: 10px;
+    overflow-y: auto;
+  }
+}
+
+.tool-bar {
+  padding: var(--config-tool-bar-padding, 10px);
+  border: var(--config-tool-bar-border, 1.5px solid #333);
+  background-color: #333;
+  border-radius: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.tool-bar button {
+  padding: var(--config-tool-bar-button-padding, 12px 18px);
+  font-size: var(--config-tool-bar-button-font-size, 16px);
+  cursor: pointer;
+  color: #fff;
+  border-radius: var(--config-tool-bar-button-border-radius, 6px);
+  background-color: #444;
+  border: none;
+  margin-bottom: 8px;
+  transition: background-color .2s;
+}
+
+.tool-bar button:hover {
+  background-color: #555;
+}
+
+@media screen and (width <= 768px) and (orientation: landscape) {
+  .tool-bar {
+    flex-direction: column;
+    width: auto;
+  }
+}
+
+@media screen and (width >= 769px) {
+  body {
+    align-items: center;
+  }
+
+  .tab-editor {
+    width: var(--config-tab-editor-width, 85%);
+    max-width: var(--config-tab-editor-max-width, 1000px);
+  }
+}
+
+.measure {
+  border: var(--config-measure-border, 1.5px solid #333);
+  padding: var(--config-measure-padding, 8px);
+  margin-right: var(--config-measure-margin-right, 10px);
+  margin-bottom: var(--config-measure-margin-bottom, 10px);
+  border-radius: var(--config-measure-border-radius, 6px);
+  background-color: #333;
+  flex-direction: column;
+  display: flex;
+}
+
+.string {
+  border-bottom: var(--config-string-border-bottom, 1.5px solid #333);
+  padding: var(--config-string-padding, 4px 0);
+  flex-direction: row;
+  display: flex;
+}
+
+.string-label {
+  text-align: right;
+  width: 15px;
+  margin-right: 5px;
+}
+
+.string-line {
+  border-bottom: 1px solid #666;
+  flex-grow: 1;
+  margin-bottom: 4px;
+}
+
+.fret {
+  width: var(--config-fret-width, 55px);
+  height: var(--config-fret-height, 55px);
+  border: var(--config-fret-border, 1.5px solid #555);
+  padding: var(--config-fret-padding, 8px);
+  text-align: center;
+  margin-right: var(--config-fret-margin, 3px);
+  color: #fff;
+  border-radius: var(--config-fret-border-radius, 6px);
+  font-size: var(--config-fret-font-size, 16px);
+  cursor: pointer;
+  background-color: #444;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.string:last-child {
+  border-bottom: none;
+  border-right: none;
+}
+
+.number-circle {
+  width: var(--config-number-circle-width, 140px);
+  height: var(--config-number-circle-height, 140px);
+  z-index: 10;
+  border-radius: var(--config-number-circle-border-radius, 50%);
+  justify-content: space-around;
+  display: flex;
+  position: absolute;
+  top: -50px;
+  left: -50px;
+}
+
+.number {
+  cursor: pointer;
+  color: #fff;
+  background-color: #555;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  animation: .5s forwards number-animation;
+  display: flex;
+  position: absolute;
+}
+
+@keyframes number-animation {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/*# sourceMappingURL=Fretboard.1303bb05.css.map */
