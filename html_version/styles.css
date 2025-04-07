@@ -119,8 +119,8 @@ body {
     position: absolute;
     top: -60px;
     left: -60px;
-    width: 180px; /* Reduced width */
-    height: 180px; /* Reduced height */
+    width: 160px; /* Reduced width */
+    height: 160px; /* Reduced height */
     display: flex;
     justify-content: space-around;
     align-items: center;
