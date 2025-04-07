@@ -229,6 +229,8 @@ function showSecondNumberCircle(fret, firstDigit) {
         existingCircle.remove();
         document.removeEventListener('click', closeNumberCircle);
     }
+    let secondCircleCloseListener;
+ 
 
     const circle = document.createElement('div');
     circle.className = 'number-circle';
@@ -251,7 +253,7 @@ function showSecondNumberCircle(fret, firstDigit) {
         number.onclick = () => {
             fret.textContent = firstDigit + num;
             circle.remove();
-            document.removeEventListener('click', closeNumberCircle);
+            document.removeEventListener('click', secondCircleCloseListener);
         };
         circle.appendChild(number);
     });
@@ -261,9 +263,9 @@ function showSecondNumberCircle(fret, firstDigit) {
     function closeNumberCircle(event) {
         if (!circle.contains(event.target) && event.target !== fret) {
             circle.remove();
-            document.removeEventListener('click', closeNumberCircle);
+            document.removeEventListener('click', secondCircleCloseListener);
         }
     }
-
+    secondCircleCloseListener = closeNumberCircle;
     document.addEventListener('click', closeNumberCircle);
 }
