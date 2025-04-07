@@ -166,3 +166,5 @@ function loadTab() {
         alert('Failed to load the tab. Please check your browser settings.');
     }
 }
+
+export { addMeasure, clearTab, getTabData, setTabData, initializeTabData, renderTab, handleFretInput, showBPMInput, saveTab, loadTab, exportTab, exportMIDI, playTab, stopPlayback };
