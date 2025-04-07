@@ -11,7 +11,7 @@ let currentMeasureIndex = 0;
 let currentFretIndex = 0;
 let playbackInterval;
 
-let audioContext = Tone.context;
+let audioContext = new AudioContext(); // Create a new AudioContext
 let fretboardNode;
 
 let bpm = 120; // Default BPM
@@ -21,8 +21,9 @@ async function setupAudioWorklet() {
     try {
         await audioContext.audioWorklet.addModule('fretboard-processor.js'); // Path to the processor file
         fretboardNode = new AudioWorkletNode(audioContext, 'fretboard-processor'); // Use the processor's registered name
+
         // Connect the AudioWorkletNode to the destination
-        fretboardNode.connect(Tone.getDestination());
+        fretboardNode.connect(audioContext.destination);
     } catch (error) {
         console.error('Failed to initialize AudioWorklet:', error);
         alert('Failed to initialize audio playback.  Please check your browser settings and the console.');
@@ -63,7 +64,7 @@ function stopPlayback() {
     }
     isPlaying = false;
     clearInterval(playbackInterval);
-    Tone.Transport.stop(); // Stop the Tone.js transport if it's running
+    //Tone.Transport.stop(); // Stop the Tone.js transport if it's running
     currentMeasureIndex = 0;
     currentFretIndex = 0;
 
