@@ -248,7 +248,7 @@ function showSecondNumberCircle(fret, firstDigit) {
         number.style.top = `${y}px`;
         number.style.animationDelay = `${i * 0.1}s`;
         number.onclick = () => {
-            fret.textContent = firstDigit.charAt(0) + num;
+            fret.textContent = firstDigit + num;
             circle.remove();
             document.removeEventListener('click', closeNumberCircle);
         };
