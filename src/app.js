@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('app.js: DOMContentLoaded event fired');
     // No Tone.js check needed anymore
     setupUI();
-    //addMeasure(); // Call addMeasure to initialize the tab - REMOVED
+    addMeasure(); // Call addMeasure to initialize the tab
     renderTab(getTabData()); // Call renderTab after addMeasure to render the initial tab
     console.log('app.js: Finished DOMContentLoaded');
 });
