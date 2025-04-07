@@ -1,8 +1,8 @@
 // src/app.js
 // Main application logic - event listeners, initialization
 
+import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from './tab-data.js';
-import { renderTab } from './rendering.js';
 import { setupToolBar, handleFretInput, showNumberCircle } from './ui-elements.js';
 import { playTab, stopPlayback, exportMIDI } from './audio.js';
 
@@ -22,7 +22,7 @@ async function setupApp() {
     try {
         await Tone.start(); // Initialize Tone.js
         initializeTabData(); // Initialize tab data
-        renderTab(getTabData()); // Initial rendering of the tab
+        rendering.renderTab(getTabData()); // Initial rendering of the tab
         setupUI(); // Setup UI elements and event listeners
         console.log('app.js: UI setup complete');
     } catch (error) {
@@ -48,7 +48,7 @@ function setupUI() {
         saveTab: saveTab,
         loadTab: loadTab,
         exportMIDI: exportMIDI,
-        renderTab: renderTab,
+        renderTab: rendering.renderTab,
         getTabData: getTabData,
         setTabData: setTabData
     });
@@ -69,7 +69,7 @@ function attachFretEventListeners() {
 
     tabDisplay.addEventListener('input', (event) => {
         if (event.target.classList.contains('fret')) {
-            handleFretInput(event, getTabData, setTabData, renderTab); // Pass necessary functions
+            handleFretInput(event, getTabData, setTabData, rendering.renderTab); // Pass necessary functions
         }
     });
 
@@ -202,7 +202,7 @@ function loadTab() {
         const savedTabData = localStorage.getItem('tabData');
         if (savedTabData) {
             setTabData(JSON.parse(savedTabData));
-            renderTab(getTabData());
+            rendering.renderTab(getTabData());
             alert('Tab loaded from local storage.');
             console.log('app.js: Tab loaded from local storage');
         } else {
