@@ -64,9 +64,7 @@ function renderTab(tabData) {
         fretDiv.dataset.string = stringIndex;
         fretDiv.dataset.fret = fretIndex;
         const fretValue = measure.strings[stringIndex][fretIndex] || "";
-        fretDiv.textContent = fretValue; // Set the fret text content
-        fretDiv.id = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
-        fretDiv.name = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
+        fretDiv.textContent = fretValue; // Set the fret text content from tabData
         console.log(
           "rendering.js: Created fretDiv:",
           fretDiv,
