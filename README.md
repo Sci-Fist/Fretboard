@@ -23,6 +23,7 @@ Welcome to the totally tubular Guitar Tab Editor!  This application lets you cre
     git clone [repository URL]
     ```
 
+
 2.  **Open `index.html` in your web browser.**  No server is required.  It's all client-side, baby!
 
 ## Usage - How to Rock
