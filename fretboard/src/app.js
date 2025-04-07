@@ -11,13 +11,7 @@ console.log('app.js: Starting app.js'); // Log when app.js starts
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('app.js: DOMContentLoaded event fired');
-    console.log('app.js: Checking if Tone is defined');
-    if (typeof Tone !== 'undefined') {
-        console.log('app.js: Tone.js loaded successfully');
-    } else {
-        console.error('app.js: Tone.js failed to load');
-        alert('Failed to load Tone.js. Playback will not be available.');
-    }
+    // No Tone.js check needed anymore
     setupUI();
     addMeasure(); // Call addMeasure to initialize the tab
     renderTab(getTabData()); // Call renderTab after addMeasure to render the initial tab

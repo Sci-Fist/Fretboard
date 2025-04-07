@@ -1,16 +1,71 @@
 // audio.js
-// Handles audio playback with Tone.js
+// Handles audio playback with the Web Audio API
 
 import { getNote } from './tab-data.js'; // Import getNote function
 
-let synth;
-let playbackInterval;
+let audioContext;
+let oscillator;
+let gainNode;
+let isPlaying = false;
 let currentMeasureIndex = 0;
 let currentFretIndex = 0;
-let isPlaying = false;
+let playbackInterval;
 
 /**
- * Plays the tab data using Tone.js.
+ * Initializes the audio context if it hasn't been initialized already.
+ */
+function initializeAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+/**
+ * Plays a single note.
+ * @param {string} note - The note to play (e.g., "E4").
+ * @param {number} duration - The duration of the note in seconds.
+ * @param {number} [startTime=0] - The start time of the note in seconds.
+ */
+function playNote(note, duration, startTime = 0) {
+    console.log('audio.js: playNote called with', note, duration, startTime);
+    if (!audioContext) {
+        console.error('audio.js: Audio context not initialized.');
+        return;
+    }
+
+    const [pitch, octave] = note.match(/([a-gA-G#b]+)(\d+)/).slice(1);
+    const frequency = getFrequency(pitch, parseInt(octave));
+
+    oscillator = audioContext.createOscillator();
+    oscillator.type = 'sine'; // You can change the waveform here (sine, square, sawtooth, triangle)
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + startTime);
+
+    gainNode = audioContext.createGain();
+    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime + startTime); // Set initial gain
+    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + startTime + duration); // Fade out
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.start(audioContext.currentTime + startTime);
+    oscillator.stop(audioContext.currentTime + startTime + duration);
+}
+
+/**
+ * Converts a note name and octave to a frequency.
+ * @param {string} pitch - The pitch of the note (e.g., "C", "C#").
+ * @param {number} octave - The octave of the note (e.g., 4).
+ * @returns {number} The frequency of the note in Hz.
+ */
+function getFrequency(pitch, octave) {
+    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const noteIndex = notes.indexOf(pitch);
+    const frequency = 440 * Math.pow(2, (noteIndex - 9 + (octave - 4) * 12) / 12);
+    return frequency;
+}
+
+/**
+ * Plays the tab data using the Web Audio API.
  * @param {object} tabData - The tab data object.
  */
 function playTab(tabData) {
@@ -20,20 +75,19 @@ function playTab(tabData) {
         return; // Prevent multiple playbacks
     }
     isPlaying = true;
+    initializeAudioContext(); // Ensure audio context is initialized
+
     try {
-        // Initialize Tone.js
-        if (!synth) {
-            console.log('audio.js: Initializing Tone.js synth');
-            synth = new Tone.PolySynth(Tone.Synth).toDestination();
-        }
         const bpm = tabData.bpm || 120;
         const noteLength = (60 / bpm) * 4; // Duration of a 16th note in seconds
         currentMeasureIndex = 0;
         currentFretIndex = 0;
+        let startTime = 0; // Start time for each note
 
         playbackInterval = setInterval(() => {
-            playBeat(tabData, synth);
+            playBeat(tabData, startTime);
             currentFretIndex++;
+            startTime += noteLength / 4; // Increment start time
             if (currentFretIndex >= 4) {
                 currentFretIndex = 0;
                 currentMeasureIndex++;
@@ -52,9 +106,9 @@ function playTab(tabData) {
 /**
  * Plays a single beat (set of notes) in the tab.
  * @param {object} tabData - The tab data object.
- * @param {Tone.PolySynth} synth - The Tone.js synthesizer.
+ * @param {number} startTime - The start time for the beat in seconds.
  */
-function playBeat(tabData, synth) {
+function playBeat(tabData, startTime) {
     console.log('audio.js: playBeat called');
     if (!tabData.measures[currentMeasureIndex]) {
         console.log('audio.js: No measure at index', currentMeasureIndex);
@@ -67,7 +121,7 @@ function playBeat(tabData, synth) {
         if (!isNaN(fretNumber)) {
             const note = getNote(stringIndex, fretNumber, tabData.tuning);
             try {
-                synth.triggerAttackRelease(note, '16n'); // Play for a 16th note
+                playNote(note, 0.2, startTime); // Play for 0.2 seconds
             } catch (error) {
                 console.error('audio.js: Error triggering note:', error);
             }
@@ -86,12 +140,14 @@ function stopPlayback() {
     }
     isPlaying = false;
     clearInterval(playbackInterval);
-    if (synth) {
-        console.log('audio.js: Releasing all notes');
-        synth.releaseAll(); // Stop any lingering notes
-        console.log('audio.js: Disposing of synth');
-        synth.dispose(); // Dispose of the synth to free up resources
-        synth = null; // Set synth to null to prevent further use
+    if (oscillator) {
+        oscillator.stop(0);
+        oscillator.disconnect();
+        oscillator = null;
+    }
+    if (gainNode) {
+        gainNode.disconnect();
+        gainNode = null;
     }
     currentMeasureIndex = 0;
     currentFretIndex = 0;
