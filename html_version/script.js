@@ -191,13 +191,8 @@ function showNumberCircle(fret, isSecondDigit = false) {
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
                 fret.textContent = num.replace('x', '');
-                showNumberCircle(fret, true);
             } else {
-                if (isSecondDigit) {
-                    fret.textContent = fret.textContent.replace('x', '') + num;
-                } else {
-                    fret.textContent = num;
-                }
+                fret.textContent = num;
             }
             circle.remove();
         };
