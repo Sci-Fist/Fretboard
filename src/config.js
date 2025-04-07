@@ -43,10 +43,6 @@ const config = {
     numberCircleWidth: '140px',
     numberCircleHeight: '140px',
     numberCircleBorderRadius: '50%',
-
-    numberWidth: '40px',
-    numberHeight: '40px',
-    numberFontSize: '16px',
 };
 
 export default config;

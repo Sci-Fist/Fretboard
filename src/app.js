@@ -6,6 +6,7 @@ import { renderTab } from './rendering.js';
 import { handleFretInput, showNumberCircle, showSecondNumberCircle } from './ui-elements.js';
 import { exportMIDI } from './audio.js'; // Import the exportMIDI function
 import { playTab, stopPlayback } from './audio.js'; // Import the playTab and stopPlayback functions
+import config from '../config.js'; // Import the config file
 
 console.log('app.js: Starting app.js'); // Log when app.js starts
 
