@@ -12,7 +12,7 @@ body {
     align-items: flex-start; /* Align to top for better use of vertical space, especially on smaller screens */
     min-height: 98vh; /* Slightly reduced to ensure no scrollbar unless necessary */
     margin: 0;
-    font-size: 16px;
+    font-size: var(--config-body-font-size, 16px);
 }
 /* General styles for smaller screens (phones in portrait) */
 .tab-editor {
@@ -24,27 +24,28 @@ body {
     flex-direction: column;
     width: 98%; /* Default width for smaller screens */
     align-items: center;
-    max-width: 1200px; /* Increased max-width for larger screens */
+    max-width: var(--config-tab-editor-max-width, 1200px); /* Increased max-width for larger screens */
     margin: 10px auto; /* Added margin top/bottom for spacing */
-    border: 1.5px solid #333;
-    padding: 15px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    border: var(--config-tab-editor-border, 1.5px solid #333);
+    padding: var(--config-tab-editor-padding, 15px);
+    box-shadow: var(--config-tab-editor-box-shadow, 0 0 15px rgba(0, 0, 0, 0.5));
     background-color: #222;
-    border-radius: 10px;
+    border-radius: var(--config-tab-editor-border-radius, 10px);
 }
 
 
 .tab-display {
-    margin-bottom: 15px;
-    border: 1.5px solid #333;
-    padding: 10px;
-    min-height: 120px; /* Reduced min-height for smaller screens */
+    margin-bottom: var(--config-tab-display-margin-bottom, 15px);
+    border: var(--config-tab-display-border, 1.5px solid #333);
+    padding: var(--config-tab-display-padding, 10px);
+    min-height: var(--config-tab-display-min-height, 120px); /* Reduced min-height for smaller screens */
+    max-height: var(--config-tab-display-max-height, 400px);
     background-color: #333;
     display: flex; /* Enable horizontal scrolling for measures */
     overflow-x: auto;
     overflow-y: auto; /* Enable vertical scrolling for very long tabs if needed */
     color: #fff;
-    border-radius: 6px;
+    border-radius: var(--config-tab-display-border-radius, 6px);
 }
 
 /* Media query for screens smaller than 600px (very small phones) */
@@ -110,23 +111,23 @@ body {
 }
 
 .tool-bar {
-    padding: 10px;
-    border: 1.5px solid #333; /* config.toolBarBorder; */
+    padding: var(--config-tool-bar-padding, 10px);
+    border: var(--config-tool-bar-border, 1.5px solid #333);
     background-color: #333;
     justify-content: flex-start; /* Align buttons to the start */
     flex-wrap: wrap;
-    border-radius: 6px;
+    border-radius: 6px; /* Use a fixed value or add to config if needed */
 }
 
 .tool-bar button {
-    padding: 12px 18px; /* Adjusted button padding */
-    font-size: 16px;
+    padding: var(--config-tool-bar-button-padding, 12px 18px);
+    font-size: var(--config-tool-bar-button-font-size, 16px);
     cursor: pointer;
     margin-bottom: 8px;
     background-color: #444;
     color: #fff;
     border: none;
-    border-radius: 6px; /* config.toolBarButtonBorderRadius; */
+    border-radius: var(--config-tool-bar-button-border-radius, 6px);
     transition: background-color 0.2s ease;
 }
 
@@ -148,27 +149,27 @@ body {
         align-items: center; /* Center on larger screens */
     }
     .tab-editor {
-        width: 85%; /* Use default width on larger screens */
-        max-width: 1000px; /* Keep max-width for larger screens */
+        width: var(--config-tab-editor-width, 85%);
+        max-width: var(--config-tab-editor-max-width, 1000px);
     }
 }
 
 .measure {
     display: flex;
     flex-direction: column; /* Display strings vertically */
-    border: 1.5px solid #333;
-    padding: 8px; /* Adjusted measure padding */
-    margin-right: 10px; /* config.measureMarginBottom; -> margin-right */
-    margin-bottom: 10px; /* keep margin bottom for stacked rows if wrapping */
+    border: var(--config-measure-border, 1.5px solid #333);
+    padding: var(--config-measure-padding, 8px);
+    margin-right: var(--config-measure-margin-right, 10px);
+    margin-bottom: var(--config-measure-margin-bottom, 10px);
     background-color: #333;
-    border-radius: 6px; /* config.measureBorderRadius; */
+    border-radius: var(--config-measure-border-radius, 6px);
 }
 
 .string {
     display: flex;
     flex-direction: row;
-    border-bottom: 1.5px solid #333;
-    padding: 4px 0; /* Reduced string padding */
+    border-bottom: var(--config-string-border-bottom, 1.5px solid #333); /* Adjusted default */
+    padding: var(--config-string-padding, 4px 0);
 }
 
 .string-label {
@@ -184,23 +185,22 @@ body {
 }
 
 .fret {
-    width: 55px; /* Slightly larger fret width for touch */
-    height: 55px; /* Slightly larger fret height for touch */
-    border: 1.5px solid #555; /* config.fretBorder; */
-    padding: 8px; /* config.fretPadding; */
-    margin-right: 3px;
+    width: var(--config-fret-width, 55px);
+    height: var(--config-fret-height, 55px);
+    border: var(--config-fret-border, 1.5px solid #555);
+    padding: var(--config-fret-padding, 8px);
     text-align: center;
     position: relative;
-    margin-right: 3px; /* config.fretMargin; -> margin-right */
+    margin-right: var(--config-fret-margin, 3px);
     background-color: #444;
     color: #fff;
-    border-radius: 6px; /* config.fretBorderRadius; */
-    font-size: 16px; /* config.fretFontSize; -> smaller font size */
+    border-radius: var(--config-fret-border-radius, 6px);
+    font-size: var(--config-fret-font-size, 16px);
     display: flex;
     cursor: pointer; /* Ensure cursor is shown for frets */
     justify-content: center;
     align-items: center;
-    border: 1px solid #666; /* Add a border to the frets */
+    /* Removed duplicate border */
 }
 
 .string:last-child {
@@ -211,13 +211,13 @@ body {
 .number-circle {
     display: flex;
     position: absolute;
-    top: -50px;
-    left: -50px;
-    width: 140px;
-    height: 140px;
+    top: -50px; /* Relative positioning logic remains */
+    left: -50px; /* Relative positioning logic remains */
+    width: var(--config-number-circle-width, 140px);
+    height: var(--config-number-circle-height, 140px);
     justify-content: space-around;
     z-index: 10;
-    border-radius: 50%; /* config.numberCircleBorderRadius; */
+    border-radius: var(--config-number-circle-border-radius, 50%);
 }
 
 /*
@@ -238,7 +238,7 @@ body {
     cursor: pointer;
     animation: number-animation 0.5s forwards;
     color: #fff;
-    font-size: 16px; /* config.numberFontSize; */
+    font-size: 16px; /* Use config.fretFontSize? */
 }
 
 @keyframes number-animation {
