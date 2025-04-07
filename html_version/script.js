@@ -198,7 +198,6 @@ function showNumberCircle(fret) {
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
                 circle.remove();
-                fret.textContent = num[0];
                 //document.removeEventListener('click', closeNumberCircle);
                 showSecondNumberCircle(fret, num);
             } else {
