@@ -11,6 +11,7 @@ let currentMeasureIndex = 0;
 let currentFretIndex = 0;
 let playbackInterval;
 let synth = new Tone.Synth().toDestination();
+const sixteenthNoteDuration = (60 / 120) / 4; // Default Tempo.  Adjust for the BPM.
 
 /**
  * Plays a single note using Tone.js.
@@ -50,7 +51,7 @@ async function playTab(tabData) {
 
     try {
         const bpm = tabData.bpm || 120;
-        const noteLength = (60 / bpm) * 4; // Duration of a 16th note in seconds
+        const noteLength = (60 / bpm) / 4;  // Duration of a 16th note in seconds
         currentMeasureIndex = 0;
         currentFretIndex = 0;
         let startTime = 0; // Start time for each note
@@ -58,7 +59,7 @@ async function playTab(tabData) {
         playbackInterval = setInterval(() => {
             playBeat(tabData, startTime);
             currentFretIndex++;
-            startTime += noteLength / 4; // Increment start time
+            startTime += noteLength; // Increment start time
             if (currentFretIndex >= 4) {
                 currentFretIndex = 0;
                 currentMeasureIndex++;
@@ -66,7 +67,7 @@ async function playTab(tabData) {
                     stopPlayback();
                 }
             }
-        }, noteLength / 4 * 1000); // Convert to milliseconds
+        }, noteLength * 1000); // Convert to milliseconds
     } catch (error) {
         console.error('audio.js: Playback initialization failed:', error);
         alert('Failed to initialize audio playback. Please check your browser settings.');
@@ -93,7 +94,7 @@ function playBeat(tabData, startTime) {
             const note = getNote(stringIndex, fretNumber, tabData.tuning);
             if (note) { // Check if getNote returned a valid note string
                 try {
-                    playNote(note, 0.2, startTime); // Play for 0.2 seconds
+                    playNote(note, 0.1, startTime); // Play for 0.1 seconds
                 } catch (error) {
                     console.error(`audio.js: Error triggering note ${note}:`, error);
                 }
