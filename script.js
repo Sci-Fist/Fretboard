@@ -51,6 +51,7 @@ function addMeasure() {
     tabData.measures.push(measure);
     console.log('tabData after addMeasure:', tabData); // Log tabData after adding a measure
     //renderTab(); // Removed renderTab call from here, as it's called in the DOMContentLoaded and clearTab
+    renderTab(); // Re-render after adding a measure
 }
 
 function clearTab() {
