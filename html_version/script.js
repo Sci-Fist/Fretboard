@@ -170,6 +170,12 @@ function exportMIDI() {
 }
 
 function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
+    const existingCircle = fret.querySelector('.number-circle');
+    if (existingCircle) {
+        existingCircle.remove();
+        document.removeEventListener('click', closeNumberCircle);
+    }
+
     const circle = document.createElement('div');
     circle.className = 'number-circle';
     const radius = 50;
@@ -193,7 +199,7 @@ function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
                 fret.textContent = num;
                 circle.remove();
                 document.removeEventListener('click', closeNumberCircle);
-                showNumberCircle(fret, true, num.charAt(0));
+                showSecondNumberCircle(fret, num.charAt(0));
             } else {
                 if (firstDigit) {
                     fret.textContent = firstDigit + num;
@@ -203,6 +209,51 @@ function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
                 circle.remove();
                 document.removeEventListener('click', closeNumberCircle);
             }
+        };
+        circle.appendChild(number);
+    });
+
+    fret.appendChild(circle);
+
+    function closeNumberCircle(event) {
+        if (!circle.contains(event.target) && event.target !== fret) {
+            circle.remove();
+            document.removeEventListener('click', closeNumberCircle);
+        }
+    }
+
+    document.addEventListener('click', closeNumberCircle);
+}
+
+function showSecondNumberCircle(fret, firstDigit) {
+    const existingCircle = fret.querySelector('.number-circle');
+    if (existingCircle) {
+        existingCircle.remove();
+        document.removeEventListener('click', closeNumberCircle);
+    }
+
+    const circle = document.createElement('div');
+    circle.className = 'number-circle';
+    const radius = 50;
+    const centerX = fret.offsetWidth / 2;
+    const centerY = fret.offsetHeight / 2;
+
+    const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    numbers.forEach((num, i) => {
+        const angle = (i / numbers.length) * 2 * Math.PI;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
+        const number = document.createElement('div');
+        number.className = 'number';
+        number.textContent = num;
+        number.style.left = `${x}px`;
+        number.style.top = `${y}px`;
+        number.style.animationDelay = `${i * 0.1}s`;
+        number.onclick = () => {
+            fret.textContent = firstDigit + num;
+            circle.remove();
+            document.removeEventListener('click', closeNumberCircle);
         };
         circle.appendChild(number);
     });
