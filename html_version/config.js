@@ -1,0 +1,48 @@
+const config = {
+    bodyFontSize: '16px',
+    tabEditorWidth: '85%',
+    tabEditorMaxWidth: '1000px',
+    tabEditorBorder: '1.5px solid #333',
+    tabEditorPadding: '15px',
+    tabEditorBoxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
+    tabEditorBorderRadius: '10px',
+
+    tabDisplayMarginBottom: '15px',
+    tabDisplayBorder: '1.5px solid #333',
+    tabDisplayPadding: '10px',
+    tabDisplayMinHeight: '150px',
+    tabDisplayMaxHeight: '400px',
+    tabDisplayBorderRadius: '6px',
+
+    toolBarPadding: '10px',
+    toolBarBorder: '1.5px solid #333',
+    toolBarButtonPadding: '12px 16px',
+    toolBarButtonFontSize: '16px',
+    toolBarButtonBorderRadius: '6px',
+
+    measureBorder: '1.5px solid #333',
+    measurePadding: '10px',
+    measureMarginBottom: '10px',
+    measureBorderRadius: '6px',
+
+    stringBorderBottom: '1.5px solid #333',
+    stringPadding: '6px 0',
+
+    fretWidth: '50px',
+    fretHeight: '50px',
+    fretBorder: '1.5px solid #555',
+    fretPadding: '8px',
+    fretMargin: '3px',
+    fretFontSize: '20px',
+    fretBorderRadius: '6px',
+
+    numberCircleWidth: '140px',
+    numberCircleHeight: '140px',
+    numberCircleBorderRadius: '50%',
+
+    numberWidth: '40px',
+    numberHeight: '40px',
+    numberFontSize: '16px',
+};
+
+export default config;
