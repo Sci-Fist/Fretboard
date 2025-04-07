@@ -1,6 +1,6 @@
 # Guitar Tab Editor - RAD!
 
-## Greetings, Guitar Hero!
+## Hey, Guitar Hero!
 
 Welcome to the totally tubular Guitar Tab Editor!  This application lets you create, edit, and jam out to your own guitar tablature.  It's like, totally awesome!
 
