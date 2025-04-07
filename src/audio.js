@@ -82,14 +82,27 @@ function getFrequency(pitch, octave) {
  * Plays the tab data using the Web Audio API.
  * @param {object} tabData - The tab data object.
  */
-function playTab(tabData) {
+async function playTab(tabData) {
     console.log('audio.js: playTab called');
     if (isPlaying) {
         console.log('audio.js: Playback already in progress, ignoring.');
         return; // Prevent multiple playbacks
     }
-    isPlaying = true;
     initializeAudioContext(); // Ensure audio context is initialized
+    if (audioContext.state === 'suspended') {
+        console.log('audio.js: Attempting to resume AudioContext');
+        try {
+            await audioContext.resume();
+            console.log('audio.js: AudioContext resumed successfully');
+        } catch (err) {
+            console.error('audio.js: Failed to resume AudioContext:', err);
+            alert('Failed to resume audio playback. Please check your browser settings.');
+            return;
+        }
+    }
+    console.log('audio.js: AudioContext state:', audioContext.state);
+
+    isPlaying = true;
 
     try {
         const bpm = tabData.bpm || 120;
@@ -164,7 +177,7 @@ function stopPlayback() {
             oscillator.disconnect();
         } catch (e) {
             // Oscillator might already be stopped or disconnected
-            console.warn("audio.js: Error stopping/disconnecting oscillator", e);
+            console.warn("audio.js: Error stopping/disconnecting oscillator:", e.message);
         } finally {
              oscillator = null;
         }
@@ -173,7 +186,7 @@ function stopPlayback() {
         try {
            gainNode.disconnect();
         } catch (e) {
-            console.warn("audio.js: Error disconnecting gainNode", e);
+            console.warn("audio.js: Error disconnecting gainNode:", e.message);
         } finally {
              gainNode = null;
         }
