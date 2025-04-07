@@ -1,7 +1,7 @@
 // app.js
 // Main application logic - event listeners, initialization
 
-import { addMeasure, clearTab, getTabData, setTabData } from './tab-data.js';
+import { addMeasure, clearTab, getTabData, setTabData, getNote } from './tab-data.js';
 import { renderTab } from './rendering.js';
 import { handleFretInput, showNumberCircle, showSecondNumberCircle } from './ui-elements.js';
 import { exportMIDI } from './audio.js'; // Import the exportMIDI function
@@ -10,20 +10,19 @@ import config from './config.js'; // Import the config file
 
 console.log('app.js: Starting app.js'); // Log when app.js starts
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('app.js: DOMContentLoaded event fired');
     // No Tone.js check needed anymore
-    setupUI();
-    // addMeasure(); // Call addMeasure to initialize the tab - Removed, as it is called in setupUI
-    // renderTab(getTabData()); // Call renderTab after addMeasure to render the initial tab - Removed, as it is called in setupUI
+    await setupUI();
     console.log('app.js: Finished DOMContentLoaded');
 });
 
 /**
  * Sets up the user interface by attaching event listeners to the tool bar buttons.
  */
-function setupUI() {
+async function setupUI() {
     console.log('app.js: setupUI called');
+    await Tone.start();
     // Get references to the tool bar buttons
     const addMeasureButton = document.querySelector('.tool-bar button:nth-child(1)');
     console.log('app.js: Add Measure button:', addMeasureButton);
@@ -35,7 +34,7 @@ function setupUI() {
     console.log('app.js: Set BPM button:', showBPMInputButton);
     const playTabButton = document.querySelector('.tool-bar button:nth-child(5)');
     console.log('app.js: Play Tab button:', playTabButton);
-    const stopTabButton = document.createElement('button');
+    const stopTabButton = document.createElement('button'); // Create the stop button
     stopTabButton.textContent = 'Stop';
     stopTabButton.onclick = stopPlayback;
     stopTabButton.style.display = 'none'; // Initially hidden
@@ -44,6 +43,7 @@ function setupUI() {
     const loadTabButton = document.querySelector('.tool-bar button:nth-child(8)');
     console.log('app.js: Load Tab button:', loadTabButton);
     const exportMIDButton = document.querySelector('.tool-bar button:nth-child(9)');
+
     console.log('app.js: Export MIDI button:', exportMIDButton);
 
     const toolBar = document.querySelector('.tool-bar');
@@ -98,6 +98,7 @@ function setupUI() {
     console.log('app.js: Finished setupUI');
     addMeasure(); // Add a measure when the UI is set up
     renderTab(getTabData()); // Initial render after setup
+
 }
 
 function exportTab() {
