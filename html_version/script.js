@@ -231,7 +231,10 @@ document.addEventListener('click', function(event) {
         let isClickOnFret = event.target.classList.contains('fret');
 
         if (!isClickInside && !isClickOnFret) {
-            numberCircle.remove();
+            // Add a small delay before removing the number circle
+            setTimeout(() => {
+                numberCircle.remove();
+            }, 100); // 100 milliseconds delay
         }
     }
 });
