@@ -169,7 +169,7 @@ function exportMIDI() {
     document.body.removeChild(a);
 }
 
-function showNumberCircle(fret, isSecondDigit = false) {
+function showNumberCircle(fret, isSecondDigit = false, firstDigit) {
     const circle = document.createElement('div');
     circle.className = 'number-circle';
     const radius = 50;
@@ -191,9 +191,13 @@ function showNumberCircle(fret, isSecondDigit = false) {
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
                 fret.textContent = num.replace('x', '');
-                showNumberCircle(fret, true);
+                showNumberCircle(fret, true, num.charAt(0));
             } else {
-                fret.textContent = num;
+                if (firstDigit) {
+                    fret.textContent = firstDigit + num;
+                } else {
+                    fret.textContent = num;
+                }
             }
             circle.remove();
         };
