@@ -170,9 +170,11 @@ function exportMIDI() {
 }
 
 function showNumberCircle(fret) {
-    // Remove any existing number circle
+    // Remove any existing number circle before showing a new one
     let existingCircle = fret.querySelector('.number-circle');
-    if (existingCircle) {
+    const openNumberCircle = document.querySelector('.number-circle');
+    if (openNumberCircle) {
+        existingCircle = openNumberCircle; // if another number circle is open, target that one for removal
         existingCircle.remove();
     }
 
