@@ -227,12 +227,13 @@ document.addEventListener('click', function(event) {
     if (numberCircle) {
         let isClickInside = numberCircle.contains(event.target);
         let isClickOnFret = event.target.classList.contains('fret');
-        let isSecondCircle = event.target.closest('.second-number-circle');
 
-        if (!isClickInside && !isClickOnFret && !isSecondCircle) {
+        if (!isClickInside && !isClickOnFret) {
             // Add a small delay before removing the number circle, but only if it's NOT the second number circle
             setTimeout(() => {
-                numberCircle.remove();
+                if (!event.target.closest('.number-circle')) { // Double check if click is still outside any number-circle after delay
+                    numberCircle.remove();
+                }
             }, 100); // 100 milliseconds delay
         }
     }
