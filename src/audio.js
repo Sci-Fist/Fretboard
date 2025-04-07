@@ -35,8 +35,20 @@ function playNote(note, duration, startTime = 0) {
         return;
     }
 
-    const [pitch, octave] = note.match(/([a-gA-G#b]+)(\d+)/).slice(1);
-    const frequency = getFrequency(pitch, parseInt(octave));
+    const match = note.match(/([a-gA-G#b]+)(\d+)/);
+    if (!match) {
+        console.error(`audio.js: Invalid note format received in playNote - ${note}`);
+        return; // Exit if the note format is not recognized
+    }
+    const [_, pitch, octaveStr] = match; // Use descriptive names
+    const octave = parseInt(octaveStr);
+
+    // Add validation for parsed pitch and octave if necessary, though getFrequency should handle basic note names
+    const frequency = getFrequency(pitch, octave);
+    if (isNaN(frequency)) {
+        console.error(`audio.js: Could not calculate frequency for note ${note}`);
+        return;
+    }
 
     oscillator = audioContext.createOscillator();
     oscillator.type = 'sine'; // You can change the waveform here (sine, square, sawtooth, triangle)
@@ -122,10 +134,14 @@ function playBeat(tabData, startTime) {
         const fretNumber = parseInt(fretValue);
         if (!isNaN(fretNumber)) {
             const note = getNote(stringIndex, fretNumber, tabData.tuning);
-            try {
-                playNote(note, 0.2, startTime); // Play for 0.2 seconds
-            } catch (error) {
-                console.error('audio.js: Error triggering note:', error);
+            if (note) { // Check if getNote returned a valid note string
+                try {
+                    playNote(note, 0.2, startTime); // Play for 0.2 seconds
+                } catch (error) {
+                    console.error(`audio.js: Error triggering note ${note}:`, error);
+                }
+            } else {
+                 console.warn(`audio.js: Could not get note for string ${stringIndex}, fret ${fretNumber}`);
             }
         }
     }
@@ -143,13 +159,24 @@ function stopPlayback() {
     isPlaying = false;
     clearInterval(playbackInterval);
     if (oscillator) {
-        oscillator.stop(0);
-        oscillator.disconnect();
-        oscillator = null;
+        try {
+            oscillator.stop(0);
+            oscillator.disconnect();
+        } catch (e) {
+            // Oscillator might already be stopped or disconnected
+            console.warn("audio.js: Error stopping/disconnecting oscillator", e);
+        } finally {
+             oscillator = null;
+        }
     }
     if (gainNode) {
-        gainNode.disconnect();
-        gainNode = null;
+        try {
+           gainNode.disconnect();
+        } catch (e) {
+            console.warn("audio.js: Error disconnecting gainNode", e);
+        } finally {
+             gainNode = null;
+        }
     }
     currentMeasureIndex = 0;
     currentFretIndex = 0;
