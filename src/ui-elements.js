@@ -13,7 +13,7 @@ function handleFretInput(e) {
     const measureIndex = parseInt(e.target.dataset.measure);
     const stringIndex = parseInt(e.target.dataset.string);
     const fretIndex = parseInt(e.target.dataset.fret);
-    const value = e.target.textContent.replace(/[^0-9]/g, '').slice(0, 2); // Allow only numbers, max 2 digits
+    let value = e.target.textContent.replace(/[^0-9]/g, '').slice(0, 2); // Allow only numbers, max 2 digits
 
     const tabData = getTabData();
 
@@ -22,7 +22,7 @@ function handleFretInput(e) {
     }
     e.target.textContent = value; // Update the displayed text
     setTabData(tabData);
-    renderTab(getTabData()); // Re-render the tab after the input
+    renderTab(tabData); // Re-render the tab after the input
 }
 
 /**
