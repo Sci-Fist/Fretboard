@@ -170,7 +170,7 @@ function exportMIDI() {
 }
 
 function showNumberCircle(fret) {
-    // Remove any existing circle
+    // Remove any existing number circle
     let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
         existingCircle.remove();
@@ -184,6 +184,7 @@ function showNumberCircle(fret) {
     const centerY = fret.offsetHeight / 2;
 
     const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '1x', '2x'];
+
     numbers.forEach((num, i) => {
         const angle = (i / numbers.length) * 2 * Math.PI;
         const x = centerX + radius * Math.cos(angle);
@@ -195,22 +196,26 @@ function showNumberCircle(fret) {
         number.style.left = `${x}px`;
         number.style.top = `${y}px`;
         number.style.animationDelay = `${i * 0.1}s`;
+
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
+                // If 1x or 2x is clicked, show the second number circle
                 circle.remove();
-                //document.removeEventListener('click', closeNumberCircle);
                 showSecondNumberCircle(fret, num);
             } else {
+                // Otherwise, just set the fret text to the chosen number
                 fret.textContent = num;
                 circle.remove();
-                document.removeEventListener('click', closeNumberCircle);
             }
+            document.removeEventListener('click', closeNumberCircle); // Remove the listener after use
         };
+
         circle.appendChild(number);
     });
 
     fret.appendChild(circle);
 
+    // Add a click listener to close the circle when clicking outside
     function closeNumberCircle(event) {
         if (!circle.contains(event.target) && event.target !== fret) {
             circle.remove();
@@ -222,14 +227,12 @@ function showNumberCircle(fret) {
 }
 
 function showSecondNumberCircle(fret, firstDigit) {
-    // Remove any existing circle
+    // Remove any existing number circle
     let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
         existingCircle.remove();
-        document.removeEventListener('click', closeNumberCircle);
+        document.removeEventListener('click', closeSecondNumberCircle);
     }
-    let secondCircleCloseListener;
- 
 
     const circle = document.createElement('div');
     circle.className = 'number-circle';
@@ -238,6 +241,7 @@ function showSecondNumberCircle(fret, firstDigit) {
     const centerY = fret.offsetHeight / 2;
 
     const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
     numbers.forEach((num, i) => {
         const angle = (i / numbers.length) * 2 * Math.PI;
         const x = centerX + radius * Math.cos(angle);
@@ -249,23 +253,26 @@ function showSecondNumberCircle(fret, firstDigit) {
         number.style.left = `${x}px`;
         number.style.top = `${y}px`;
         number.style.animationDelay = `${i * 0.1}s`;
+
         number.onclick = () => {
-            console.log("firstDigit:", firstDigit, "num:", num); // Debugging line
+            // Replace 'x' with the chosen number in the first digit
             fret.textContent = firstDigit.replace('x', num);
             circle.remove();
-            document.removeEventListener('click', secondCircleCloseListener);
+            document.removeEventListener('click', closeSecondNumberCircle);
         };
+
         circle.appendChild(number);
     });
 
     fret.appendChild(circle);
 
-    function closeNumberCircle(event) {
+    // Add a click listener to close the second number circle
+    function closeSecondNumberCircle(event) {
         if (!circle.contains(event.target) && event.target !== fret) {
             circle.remove();
-            document.removeEventListener('click', secondCircleCloseListener);
+            document.removeEventListener('click', closeSecondNumberCircle);
         }
     }
-    secondCircleCloseListener = closeNumberCircle;
-    document.addEventListener('click', closeNumberCircle);
+
+    document.addEventListener('click', closeSecondNumberCircle);
 }
