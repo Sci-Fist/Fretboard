@@ -35,6 +35,7 @@ function setupUI() {
 }
 
 function addMeasure() {
+    console.log('addMeasure called'); // Log when addMeasure is called
     const measure = {
         strings: [
             ['', '', '', ''],
@@ -46,6 +47,7 @@ function addMeasure() {
         ]
     };
     tabData.measures.push(measure);
+    console.log('tabData after addMeasure:', tabData); // Log tabData after adding a measure
     renderTab();
 }
 
@@ -55,10 +57,13 @@ function clearTab() {
 }
 
 function renderTab() {
+    console.log('renderTab called'); // Log when renderTab is called
+    console.log('tabData in renderTab:', tabData); // Log tabData at the start of renderTab
     const tabDisplay = document.getElementById('tab-display');
     tabDisplay.innerHTML = '';
 
     tabData.measures.forEach((measure, measureIndex) => {
+        console.log('Rendering measure:', measureIndex, measure); // Log each measure being rendered
         const measureDiv = document.createElement('div');
         measureDiv.className = 'measure';
 
