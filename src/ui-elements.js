@@ -1,7 +1,7 @@
 // ui-elements.js
 // Handles UI elements and interactions
 
-import { addMeasure, clearTab, getTabData, renderTab, exportTab } from './app.js';
+import { addMeasure, clearTab, renderTab, exportTab, getTabData } from './app.js';
 import { setTabData } from './tab-data.js';
 import { stopPlayback } from './audio.js';
 import { showBPMInput, saveTab, loadTab, exportMIDI } from './app.js';
