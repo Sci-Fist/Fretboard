@@ -1,3 +1,6 @@
+// config.js
+// Configuration settings for the Guitar Tab Editor
+
 const config = {
     bodyFontSize: '16px',
     tabEditorWidth: '85%',
@@ -26,7 +29,7 @@ const config = {
     measureMarginBottom: '10px',
     measureBorderRadius: '6px',
 
-    stringBorderBottom: '1.5px solid #333',
+    stringBorderBottom: '1px solid #666',
     stringPadding: '4px 0',
 
     fretWidth: '55px',
