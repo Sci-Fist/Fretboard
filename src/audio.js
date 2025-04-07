@@ -189,4 +189,4 @@ function playTab(tabData) {
   playMeasure(0);
 }
 
-export { playTab, stopPlayback, exportMIDI };
+      export { playTab, stopPlayback, exportMIDI };
