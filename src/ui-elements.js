@@ -200,21 +200,23 @@ function showSecondNumberCircle(fret, firstDigit) {
 
 
 // Close number circle when clicking outside
-document.addEventListener('click', function(event) {
-    const numberCircle = document.querySelector('.number-circle');
-    if (numberCircle) {
-        let isClickInside = numberCircle.contains(event.target);
-        let isClickOnFret = event.target.classList.contains('fret');
+if (typeof document !== 'undefined') {
+    document.addEventListener('click', function(event) {
+        const numberCircle = document.querySelector('.number-circle');
+        if (numberCircle) {
+            let isClickInside = numberCircle.contains(event.target);
+            let isClickOnFret = event.target.classList.contains('fret');
 
-        if (!isClickInside && !isClickOnFret) {
-            setTimeout(() => {
-                if (!event.target.closest('.number-circle')) {
-                    removeOpenNumberCircle(); // Use dedicated function to remove
-                }
-            }, 100);
+            if (!isClickInside && !isClickOnFret) {
+                setTimeout(() => {
+                    if (!event.target.closest('.number-circle')) {
+                        removeOpenNumberCircle(); // Use dedicated function to remove
+                    }
+                }, 100);
+            }
         }
-    }
-});
+    });
+}
 
 
 export { setupToolBar, handleFretInput, showNumberCircle, showSecondNumberCircle };
