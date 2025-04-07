@@ -7,21 +7,25 @@ import { handleFretInput, showNumberCircle, showSecondNumberCircle } from './ui-
 import { exportMIDI } from './audio.js'; // Import the exportMIDI function
 import { playTab, stopPlayback } from './audio.js'; // Import the playTab and stopPlayback functions
 
+console.log('app.js: Starting app.js'); // Log when app.js starts
+
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Fretboard on fire');
-    // Check if Tone is defined
+    console.log('app.js: DOMContentLoaded event fired');
+    console.log('app.js: Checking if Tone is defined');
     if (typeof Tone !== 'undefined') {
-        console.log('Tone.js loaded successfully');
+        console.log('app.js: Tone.js loaded successfully');
     } else {
-        console.error('Tone.js failed to load');
+        console.error('app.js: Tone.js failed to load');
         alert('Failed to load Tone.js. Playback will not be available.');
     }
     setupUI();
     addMeasure(); // Call addMeasure to initialize the tab
     renderTab(getTabData()); // Call renderTab after addMeasure to render the initial tab
+    console.log('app.js: Finished DOMContentLoaded');
 });
 
 function setupUI() {
+    console.log('app.js: setupUI called');
     // Get references to the tool bar buttons
     const addMeasureButton = document.querySelector('.tool-bar button:nth-child(1)');
     const clearTabButton = document.querySelector('.tool-bar button:nth-child(2)');
@@ -40,17 +44,27 @@ function setupUI() {
     toolBar.insertBefore(stopTabButton, playTabButton.nextSibling);
 
     // Attach event listeners to the tool bar buttons
+    console.log('app.js: Attaching event listeners to tool bar buttons');
     addMeasureButton.addEventListener('click', () => {
+        console.log('app.js: Add Measure button clicked');
         addMeasure();
         renderTab(getTabData());
     });
     clearTabButton.addEventListener('click', () => {
+        console.log('app.js: Clear Tab button clicked');
         clearTab();
         renderTab(getTabData());
     });
-    exportTabButton.addEventListener('click', exportTab);
-    showBPMInputButton.addEventListener('click', showBPMInput);
+    exportTabButton.addEventListener('click', () => {
+        console.log('app.js: Export Tab button clicked');
+        exportTab();
+    });
+    showBPMInputButton.addEventListener('click', () => {
+        console.log('app.js: Set BPM button clicked');
+        showBPMInput();
+    });
     playTabButton.addEventListener('click', () => {
+        console.log('app.js: Play Tab button clicked');
         playTab(getTabData());
     });
     stopTabButton.addEventListener('click', stopPlayback);
@@ -59,17 +73,21 @@ function setupUI() {
     exportMIDButton.addEventListener('click', exportMIDI);
 
     // Attach event listeners to fret divs after they are rendered
+    console.log('app.js: Attaching event listeners to fret divs');
     document.getElementById('tab-display').addEventListener('input', (event) => {
         if (event.target.classList.contains('fret')) {
+            console.log('app.js: Fret input event fired');
             handleFretInput(event);
         }
     });
 
     document.getElementById('tab-display').addEventListener('click', (event) => {
         if (event.target.classList.contains('fret')) {
+            console.log('app.js: Fret click event fired');
             showNumberCircle(event.target);
         }
     });
+    console.log('app.js: Finished setupUI');
 }
 
 function exportTab() {
