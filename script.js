@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Guitar Tab Editor loaded');
     // Initialize Tone.js
     try {
+        console.log('Attempting to start Tone.js'); // Log before Tone.start()
         Tone.start().then(() => {
             console.log('Tone.js is ready');
             loadTab(); // Load tab data after Tone.js is ready
@@ -61,6 +62,7 @@ function addMeasure() {
 }
 
 function clearTab() {
+    console.log('clearTab called');
     tabData.measures = [];
     renderTab();
 }
@@ -110,6 +112,7 @@ function renderTab() {
 }
 
 function handleFretInput(e) {
+    console.log('handleFretInput called'); // Log when handleFretInput is called
     const measureIndex = parseInt(e.target.dataset.measure);
     const stringIndex = parseInt(e.target.dataset.string);
     const fretIndex = parseInt(e.target.dataset.fret);
@@ -130,16 +133,19 @@ const playTabButton = document.querySelector('.tool-bar button:nth-child(5)');
 const stopTabButton = document.querySelector('.tool-bar button:nth-child(6)');
 
 function startPlayback() {
+    console.log('startPlayback called'); // Log when startPlayback is called
     if (isPlaying) return; // Prevent multiple playbacks
     isPlaying = true;
     playTabButton.style.display = 'none';
     stopTabButton.style.display = '';
     try {
+        console.log('Attempting to initialize Tone.js synth'); // Log before synth initialization
         synth = new Tone.PolySynth(Tone.Synth).toDestination();
         const bpm = tabData.bpm || 120;
         const noteLength = (60 / bpm) * 4;
         currentMeasureIndex = 0;
         currentFretIndex = 0;
+        console.log('Starting playback interval'); // Log before setInterval
         playbackInterval = setInterval(() => {
             playBeat();
             currentFretIndex++;
@@ -159,6 +165,7 @@ function startPlayback() {
 }
 
 function playBeat() {
+    console.log('playBeat called'); // Log when playBeat is called
     if (!tabData.measures[currentMeasureIndex]) return;
     const measure = tabData.measures[currentMeasureIndex];
     for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
@@ -167,6 +174,7 @@ function playBeat() {
         if (!isNaN(fretNumber)) {
             const note = getNote(stringIndex, fretNumber);
             try {
+                console.log('Triggering note:', note); // Log before triggering the note
                 synth.triggerAttackRelease(note, '16n'); // Play for a 16th note
             } catch (error) {
                 console.error('Error triggering note:', error);
@@ -176,12 +184,14 @@ function playBeat() {
 }
 
 function stopPlayback() {
+    console.log('stopPlayback called'); // Log when stopPlayback is called
     if (!isPlaying) return;
     isPlaying = false;
     clearInterval(playbackInterval);
     playTabButton.style.display = '';
     stopTabButton.style.display = 'none';
     if (synth) {
+        console.log('Disposing of synth'); // Log before disposing of the synth
         synth.releaseAll(); // Stop any lingering notes
         synth.dispose(); // Dispose of the synth to free up resources
         synth = null; // Set synth to null to prevent further use
@@ -200,10 +210,12 @@ function getNote(stringIndex, fretNumber) {
 }
 
 function saveTab() {
+    console.log('saveTab called'); // Log when saveTab is called
     localStorage.setItem('tabData', JSON.stringify(tabData));
 }
 
 function loadTab() {
+    console.log('loadTab called'); // Log when loadTab is called
     const savedTabData = localStorage.getItem('tabData');
     if (savedTabData) {
         tabData = JSON.parse(savedTabData);
@@ -217,6 +229,7 @@ function exportMIDI() {
 }
 
 function showBPMInput() {
+    console.log('showBPMInput called'); // Log when showBPMInput is called
     // Create the input element
     const input = document.createElement('input');
     input.type = 'number';
@@ -256,6 +269,7 @@ function showBPMInput() {
 }
 
 function showNumberCircle(fret) {
+    console.log('showNumberCircle called'); // Log when showNumberCircle is called
     // Remove any existing number circle before showing a new one
     let existingCircle = fret.querySelector('.number-circle');
     const openNumberCircle = document.querySelector('.number-circle');
@@ -326,6 +340,7 @@ document.addEventListener('click', function(event) {
 });
 
 function showSecondNumberCircle(fret, firstDigit) {
+    console.log('showSecondNumberCircle called'); // Log when showSecondNumberCircle is called
     // Remove any existing number circle
     let existingCircle = fret.querySelector('.number-circle');
     if (existingCircle) {
