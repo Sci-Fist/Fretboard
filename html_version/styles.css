@@ -10,7 +10,7 @@ body {
     color: #fff;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Align to top for better small screen layout */
     min-height: 100vh;
     margin: 0;
     font-size: 16px; /* config.bodyFontSize; */
@@ -56,14 +56,41 @@ body {
     border-radius: 6px; /* config.tabDisplayBorderRadius; */
 }
 
+/* Media query for screens smaller than 600px (very small phones) */
+@media screen and (max-width: 600px) {
+    body {
+        font-size: 14px; /* Slightly reduce base font size on very small screens */
+        padding: 10px; /* Reduce body padding */
+    }
+    .tab-editor {
+        padding: 10px; /* Reduce tab-editor padding */
+    }
+    .tool-bar button {
+        padding: 8px 12px; /* Reduce button padding */
+        font-size: 14px; /* Reduce button font size */
+        margin-bottom: 5px; /* Reduce button margin */
+    }
+    .measure {
+        padding: 5px; /* Reduce measure padding */
+        margin-right: 5px; /* Reduce measure margin */
+        margin-bottom: 5px;
+    }
+    .fret {
+        width: 40px; /* Further reduce fret width */
+        height: 40px; /* Further reduce fret height */
+        padding: 5px; /* Reduce fret padding */
+        font-size: 14px; /* Reduce fret font size */
+        margin-right: 2px; /* Reduce fret margin */
+    }
+}
+
 /* Media query for landscape orientation on smaller screens (typical phones) */
 @media screen and (max-width: 768px) and (orientation: landscape) {
     body {
-        align-items: flex-start; /* Align to top in landscape for better use of horizontal space */
+        align-items: center; /* Center in landscape if preferred */
     }
     .tab-editor {
         width: 98%; /* Take up almost full width in landscape */
-        max-width: none; /* Remove max-width to use full width */
         flex-direction: row; /* Arrange toolbar and tab display horizontally */
     }
 }
@@ -109,6 +136,17 @@ body {
     }
 }
 
+/* Media query for tablets and larger screens (min-width: 769px) */
+@media screen and (min-width: 769px) {
+    body {
+        align-items: center; /* Center on larger screens */
+    }
+    .tab-editor {
+        width: 85%; /* Use default width on larger screens */
+        max-width: 1000px; /* Keep max-width for larger screens */
+    }
+}
+
 .measure {
     font-family: 'Orbitron', sans-serif;
     flex-direction: column; /* Display strings vertically */
@@ -132,8 +170,8 @@ body {
 }
 
 .fret {
-    width: 50px; /* config.fretWidth; */
-    height: 50px; /* config.fretHeight; */
+    width: 50px; /* Default fret width */
+    height: 50px; /* Default fret height */
     border: 1.5px solid #555; /* config.fretBorder; */
     padding: 8px; /* config.fretPadding; */
     text-align: center;
