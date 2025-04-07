@@ -2,9 +2,9 @@
 // Handles UI elements and interactions
 
 import { setTabData, getTabData } from './tab-data.js';
-import { addMeasure, clearTab } from './tab-data.js'; // Import from tab-data.js
-import { renderTab } from './rendering.js'; // Import from rendering.js
-import { exportMIDI, playTab, stopPlayback } from './audio.js'; // Import from audio.js
+// import { addMeasure, clearTab } from './tab-data.js'; // Import from tab-data.js
+// import { renderTab } from './rendering.js'; // Import from rendering.js
+// import { exportMIDI, playTab, stopPlayback } from './audio.js'; // Import from audio.js
 // import { showBPMInput, saveTab, loadTab, exportTab } from './app.js'; // Keep these from app.js for now, if they are truly only in app.js
 
 /**
@@ -23,7 +23,7 @@ function handleFretInput(e) {
         tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
     }
     setTabData(tabData);
-    renderTab(getTabData()); // Re-render the tab after the input
+    // renderTab(getTabData()); // Re-render the tab after the input
     e.target.textContent = value; // Update the displayed text
 }
 
@@ -48,26 +48,32 @@ function setupToolBar() {
     toolBar.insertBefore(stopTabButton, playTabButton.nextSibling);
 
     addMeasureButton.addEventListener('click', () => {
-        addMeasure();
-        renderTab(getTabData());
+        // addMeasure(); // Comment out
+        // renderTab(getTabData()); // Comment out
     });
     clearTabButton.addEventListener('click', () => {
-        clearTab();
-        renderTab(getTabData());
+        // clearTab(); // Comment out
+        // renderTab(getTabData()); // Comment out
     });
     exportTabButton.addEventListener('click', () => {
-        exportTab();
+        // exportTab(); // Comment out
     });
     showBPMInputButton.addEventListener('click', () => {
-        showBPMInput();
+        // showBPMInput(); // Comment out
     });
     playTabButton.addEventListener('click', () => {
-        playTab(getTabData());
+        // playTab(getTabData()); // Comment out
     });
-    stopTabButton.addEventListener('click', stopPlayback);
-    saveTabButton.addEventListener('click', saveTab);
-    loadTabButton.addEventListener('click', loadTab);
-    exportMIDButton.addEventListener('click', exportMIDI);
+    stopTabButton.addEventListener('click', /*stopPlayback*/ () => {}); // Keep empty function to avoid error, or comment out line
+    saveTabButton.addEventListener('click', () => {
+        // saveTab(); // Comment out
+    });
+    loadTabButton.addEventListener('click', () => {
+        // loadTab(); // Comment out
+    });
+    exportMIDButton.addEventListener('click', () => {
+        // exportMIDI(); // Comment out
+    });
 }
 
 /**
@@ -120,7 +126,7 @@ function showNumberCircle(fret) {
                     setTabData(tabData);
                 }
                 circle.remove();
-                renderTab(tabData);
+                // renderTab(tabData);
             }
         };
 
@@ -196,7 +202,7 @@ function showSecondNumberCircle(fret, firstDigit) {
             if (tabData.measures[measureIndex]) {
                 tabData.measures[measureIndex].strings[stringIndex][fretIndex] = firstDigit.replace(/x/, num);
                 setTabData(tabData);
-                renderTab(tabData);
+                // renderTab(tabData);
             }
             circle.remove(); // Remove the second number circle after number selection
         };
@@ -314,7 +320,7 @@ function loadTab() {
         const savedTabData = localStorage.getItem('tabData');
         if (savedTabData) {
             setTabData(JSON.parse(savedTabData));
-            renderTab(getTabData());
+            // renderTab(getTabData());
         }
     } catch (error) {
         console.error('ui-elements.js: Error loading tab:', error); // Modified console log to identify source
