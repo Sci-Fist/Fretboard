@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function setupApp() {
     console.log('app.js: setupApp called');
     try {
+        // Ensure Tone.js is loaded before initializing
+        if (typeof Tone === 'undefined') {
+            throw new Error('Tone.js is not loaded');
+        }
         await Tone.start(); // Initialize Tone.js
         console.log('app.js: Tone.js initialized'); // Add a log to confirm
         initializeTabData(); // Initialize tab data
