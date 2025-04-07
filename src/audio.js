@@ -5,7 +5,6 @@
 // play a complete tab, and stop playback.
 
 import { getNote } from './tab-data.js'; // Import getNote function
-import * as Tone from 'tone';
 
 let isPlaying = false;
 let currentMeasureIndex = 0;
@@ -105,8 +104,8 @@ function playTab(tabData) {
   console.log('audio.js: playTab called');
 
   // Ensure the AudioContext is running
-  if (audioContext.state === 'suspended') {
-    audioContext.resume();
+  if (Tone.context.state === 'suspended') {
+    Tone.context.resume();
   }
 
   if (isPlaying) {
