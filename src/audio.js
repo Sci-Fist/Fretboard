@@ -5,7 +5,7 @@
 // play a complete tab, and stop playback.
 
 import { getNote } from './tab-data.js'; // Import getNote function
-import * as Tone from 'tone';
+import * as Tone from './node_modules/tone/Tone.js';
 
 let isPlaying = false;
 let currentMeasureIndex = 0;
