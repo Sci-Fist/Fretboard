@@ -17,6 +17,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('app.js: Finished DOMContentLoaded');
 });
 
+// Add a function to resume the AudioContext on user interaction
+function resumeAudioContextOnInteraction() {
+    if (Tone.context.state === 'suspended') {
+        Tone.context.resume().then(() => {
+            console.log('AudioContext resumed successfully');
+        });
+    }
+}
+
+// Attach the event listeners for user interaction
+document.addEventListener('touchstart', resumeAudioContextOnInteraction, false);
+document.addEventListener('click', resumeAudioContextOnInteraction, false);
 /**
  * Sets up the entire application.
  */
