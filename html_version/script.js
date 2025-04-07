@@ -201,7 +201,7 @@ function showNumberCircle(fret) {
         number.onclick = () => {
             if (num === '1x' || num === '2x') {
                 // If 1x or 2x is clicked, show the second number circle
-                console.log('First wheel number clicked:', num, ' - about to call showSecondNumberCircle');
+                console.log('First wheel number clicked:', num, ' - about to call showSecondNumberCircle'); // VERIFY THIS LOG IN CONSOLE
                 console.log('1x or 2x clicked, showing second number wheel', num); // Log which button was clicked
                 circle.remove();
                 showSecondNumberCircle(fret, num);
@@ -271,6 +271,15 @@ function showSecondNumberCircle(fret, firstDigit) {
             circle.remove();
         };
 
+        number.onerror = (error) => {
+            console.error('Error creating number in second wheel:', error, num, i);
+        };
+        number.onabort = () => {
+            console.log('Number creation aborted in second wheel:', num, i);
+        };
+        number.onload = () => {
+            console.log('Number loaded in second wheel:', num, i);
+        };
         circle.appendChild(number);
     });
 
@@ -278,6 +287,15 @@ function showSecondNumberCircle(fret, firstDigit) {
     document.body.appendChild(circle);
     // Position the second number circle relative to the fret
     const fretRect = fret.getBoundingClientRect();
+
+    // DEBUGGING: Check fretRect values
+    console.log('fretRect:', fretRect);
+    if (!fretRect || !fretRect.top || !fretRect.left) {
+        console.error('fretRect is invalid or missing top/left values!', fretRect);
+    } else {
+        console.log('fretRect.top:', fretRect.top, 'fretRect.left:', fretRect.left);
+    }
+
     circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`; // Adjusted vertical positioning
     circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`; // Adjusted horizontal positioning
 }
