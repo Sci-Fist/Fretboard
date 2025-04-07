@@ -24,10 +24,10 @@ function handleFretInput(e) {
         console.log('ui-elements.js: After update, tabData.measures[measureIndex].strings[stringIndex][fretIndex]:', tabData.measures[measureIndex].strings[stringIndex][fretIndex]);
     }
     console.log('ui-elements.js: Setting fret content to:', value);
-    e.target.textContent = value; // Update the displayed text
     setTabData(tabData);
     console.log('ui-elements.js: Calling renderTab after input');
     renderTab(getTabData()); // Re-render the tab after the input
+    e.target.textContent = value; // Update the displayed text
 }
 
 /**
@@ -78,6 +78,14 @@ function showNumberCircle(fret) {
                 // Otherwise, just set the fret text to the chosen number
                 fret.textContent = num;
                 console.log('ui-elements.js: Setting fret content to:', num);
+                const measureIndex = parseInt(fret.dataset.measure);
+                const stringIndex = parseInt(fret.dataset.string);
+                const fretIndex = parseInt(fret.dataset.fret);
+                const tabData = getTabData();
+                if (tabData.measures[measureIndex]) {
+                    tabData.measures[measureIndex].strings[stringIndex][fretIndex] = num;
+                    setTabData(tabData);
+                }
                 circle.remove();
                 renderTab(getTabData());
             }
@@ -155,6 +163,14 @@ function showSecondNumberCircle(fret, firstDigit) {
         number.onclick = () => {
             // Replace 'x' with the chosen number in the first digit
             fret.textContent = firstDigit.replace(/x/, num); // Use regex to replace only the first 'x'
+            const measureIndex = parseInt(fret.dataset.measure);
+            const stringIndex = parseInt(fret.dataset.string);
+            const fretIndex = parseInt(fret.dataset.fret);
+            const tabData = getTabData();
+            if (tabData.measures[measureIndex]) {
+                tabData.measures[measureIndex].strings[stringIndex][fretIndex] = firstDigit.replace(/x/, num);
+                setTabData(tabData);
+            }
             circle.remove(); // Remove the second number circle after number selection
             renderTab(getTabData());
         };
