@@ -1,5 +1,7 @@
 // tab-data.js
-// Handles the tab data structure and manipulation
+// This module is responsible for managing the tab data structure.
+// It defines the default tab data, provides functions to add, clear, and get tab data,
+// and includes a function to calculate the note based on string and fret.
 
 const defaultTabData = {
     measures: [],
