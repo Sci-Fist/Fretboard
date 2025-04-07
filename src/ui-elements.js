@@ -46,13 +46,26 @@ function setupToolBar(dependencies) {
 
     if (playTabButton) {
         playTabButton.addEventListener('click', () => {
-            playTab(getTabData());
-            playTabButton.style.display = 'none';
-            playTabButton.setAttribute('aria-pressed', 'false');
-            if (stopTabButton) {
-                stopTabButton.style.display = 'inline-block';
-                stopTabButton.setAttribute('aria-pressed', 'true');
-                stopTabButton.focus(); // Move focus to stop button
+            try {
+                playTab(getTabData());
+                playTabButton.style.display = 'none';
+                playTabButton.setAttribute('aria-pressed', 'false');
+                if (stopTabButton) {
+                    stopTabButton.style.display = 'inline-block';
+                    stopTabButton.setAttribute('aria-pressed', 'true');
+                    stopTabButton.focus(); // Move focus to stop button
+                }
+            } catch(err) {
+                 console.error("Error initiating playback:", err);
+                 alert("There was an error playing the tab. Please check the console for more details."); // User-friendly message
+                 // Ensure UI is reset if playTab fails immediately
+                 stopPlayback(); // Call stopPlayback to clean up potentially partially started audio
+                 playTabButton.style.display = 'inline-block';
+                 playTabButton.setAttribute('aria-pressed', 'false');
+                 if (stopTabButton) {
+                     stopTabButton.style.display = 'none';
+                     stopTabButton.setAttribute('aria-pressed', 'false');
+                 }
             }
         });
     } else { console.error("Button with ID 'playTabBtn' not found."); }
