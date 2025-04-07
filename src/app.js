@@ -165,10 +165,10 @@ function showBPMInput() {
     input.type = 'number';
     input.id = 'bpmInput';
     input.value = tabData.bpm; // Set the current BPM as the default value
-    input.min = 40;
-    input.max = 240;
+    input.min = "40"; // HTML attribute standard
+    input.max = "240"; // HTML attribute standard
+    input.step = "1";  // Explicitly set step
     input.style.width = '50px';
-    input.style.marginRight = '10px';
 
     // Create the button to set the BPM
     const setBPMButton = document.createElement('button');
