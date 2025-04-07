@@ -94,6 +94,7 @@ function setupToolBar(dependencies) {
  * @param {function} renderTab - Function to render the tab.
  */
 function handleFretInput(e, getTabData, setTabData, renderTab) {
+    let shouldUpdateDisplay = false;
     const fretElement = e.target;
     const measureIndex = parseInt(fretElement.dataset.measure);
     const stringIndex = parseInt(fretElement.dataset.string);
@@ -102,11 +103,30 @@ function handleFretInput(e, getTabData, setTabData, renderTab) {
 
     const tabData = getTabData();
     if (tabData.measures[measureIndex]) {
-        tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
-        setTabData(tabData);
+        // Only update and re-render if the value actually changed
+        if (tabData.measures[measureIndex].strings[stringIndex][fretIndex] !== value) {
+            tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
+            setTabData(tabData);
+            shouldUpdateDisplay = true;
+        }
     }
-    renderTab(getTabData()); // Re-render the tab after input
-    fretElement.textContent = value; // Update displayed text
+
+    if (shouldUpdateDisplay) {
+       renderTab(getTabData()); // Re-render the tab after data update
+       // Find the specific fret element again after re-render to set its text content
+       const updatedFretElement = document.querySelector(`.fret[data-measure='${measureIndex}'][data-string='${stringIndex}'][data-fret='${fretIndex}']`);
+       if (updatedFretElement) {
+           updatedFretElement.textContent = value; // Update displayed text on the *newly rendered* element
+           // Optionally set focus back if needed
+           // updatedFretElement.focus();
+           // Move cursor to end (complex, might not be needed for simple numeric input)
+       } else {
+           console.warn("handleFretInput: Could not find fret element after re-render.");
+       }
+    } else if (fretElement.textContent !== value) {
+        // If only the display text needs correction (e.g., invalid chars removed)
+        fretElement.textContent = value;
+    }
 }
 
 
@@ -143,12 +163,10 @@ function showNumberCircle(fret) {
                 circle.remove();
                 showSecondNumberCircle(fret, num);
             } else {
-                fret.textContent = num;
-                const measureIndex = parseInt(fret.dataset.measure);
-                const stringIndex = parseInt(fret.dataset.string);
-                const fretIndex = parseInt(fret.dataset.fret);
-                // No need to update tabData here, it's handled in handleFretInput
-                circle.remove();
+                fret.textContent = num; // Set the text first
+                 // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
+                fret.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+                circle.remove(); // Remove the circle after dispatching
             }
         };
         circle.appendChild(number);
@@ -212,8 +230,10 @@ function showSecondNumberCircle(fret, firstDigit) {
         number.style.animationDelay = `${i * 0.1}s`;
 
         number.onclick = () => {
-            fret.textContent = firstDigit.replace(/x/, num);
-            circle.remove();
+            fret.textContent = firstDigit.replace(/x/, num); // Set the text first
+            // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
+            fret.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+            circle.remove(); // Remove the circle after dispatching
         };
         circle.appendChild(number);
     });
