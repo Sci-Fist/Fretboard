@@ -48,7 +48,12 @@ function setupToolBar(dependencies) {
         playTabButton.addEventListener('click', () => {
             playTab(getTabData());
             playTabButton.style.display = 'none';
-            if (stopTabButton) stopTabButton.style.display = 'inline-block';
+            playTabButton.setAttribute('aria-pressed', 'false');
+            if (stopTabButton) {
+                stopTabButton.style.display = 'inline-block';
+                stopTabButton.setAttribute('aria-pressed', 'true');
+                stopTabButton.focus(); // Move focus to stop button
+            }
         });
     } else { console.error("Button with ID 'playTabBtn' not found."); }
 
@@ -56,7 +61,12 @@ function setupToolBar(dependencies) {
         stopTabButton.addEventListener('click', () => {
             stopPlayback();
             stopTabButton.style.display = 'none';
-            if (playTabButton) playTabButton.style.display = 'inline-block';
+            stopTabButton.setAttribute('aria-pressed', 'false');
+            if (playTabButton) {
+                playTabButton.style.display = 'inline-block';
+                playTabButton.setAttribute('aria-pressed', 'false'); // Ensure play is not pressed
+                playTabButton.focus(); // Move focus back to play button
+            }
         });
     } else { console.error("Button with ID 'stopTabBtn' not found."); }
 
