@@ -29,7 +29,7 @@ function initializeAudioContext() {
  * @param {number} [startTime=0] - The start time of the note in seconds.
  */
 function playNote(note, duration, startTime = 0) {
-    console.log('playNote', note, duration, startTime);
+    console.log('playNote called with', note, duration, startTime);
     if (!audioContext) {
         console.error('Audio context not initialized.');
         return;
@@ -199,7 +199,8 @@ function stopPlayback() {
  * Exports the tab data as a MIDI file (placeholder).
  */
 function exportMIDI() {
-    // Placeholder for MIDI export
+    // Placeholder function for MIDI export
+    // In a future version, this function would handle MIDI file generation and download.
     alert('MIDI export not yet implemented.');
 }
 
