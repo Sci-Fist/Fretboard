@@ -31,7 +31,12 @@ async function setupApp() {
         return; // Exit if Tone.js is not available
     }
     try {
-        await Tone.start(); // Initialize Tone.js
+        // Resume audio context after user interaction (implicitly handled by DOMContentLoaded here)
+        // In some browsers, resume() must be called within a user gesture event handler.
+        // If issues arise, consider moving resume() to the first button click.
+        if (Tone.context.state !== 'running') {
+            await Tone.context.resume();
+        }
         console.log('app.js: Tone.js initialized');
         initializeTabData();
         rendering.renderTab(getTabData());
