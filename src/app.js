@@ -25,20 +25,30 @@ function setupUI() {
     console.log('app.js: setupUI called');
     // Get references to the tool bar buttons
     const addMeasureButton = document.querySelector('.tool-bar button:nth-child(1)');
+    console.log('app.js: Add Measure button:', addMeasureButton);
     const clearTabButton = document.querySelector('.tool-bar button:nth-child(2)');
+    console.log('app.js: Clear Tab button:', clearTabButton);
     const exportTabButton = document.querySelector('.tool-bar button:nth-child(3)');
+    console.log('app.js: Export Tab button:', exportTabButton);
     const showBPMInputButton = document.querySelector('.tool-bar button:nth-child(4)');
+    console.log('app.js: Set BPM button:', showBPMInputButton);
     const playTabButton = document.querySelector('.tool-bar button:nth-child(5)');
+    console.log('app.js: Play Tab button:', playTabButton);
     const stopTabButton = document.createElement('button');
     stopTabButton.textContent = 'Stop';
     stopTabButton.onclick = stopPlayback;
     stopTabButton.style.display = 'none'; // Initially hidden
     const saveTabButton = document.querySelector('.tool-bar button:nth-child(7)');
+    console.log('app.js: Save Tab button:', saveTabButton);
     const loadTabButton = document.querySelector('.tool-bar button:nth-child(8)');
+    console.log('app.js: Load Tab button:', loadTabButton);
     const exportMIDButton = document.querySelector('.tool-bar button:nth-child(9)');
+    console.log('app.js: Export MIDI button:', exportMIDButton);
 
     const toolBar = document.querySelector('.tool-bar');
+    console.log('app.js: Tool bar:', toolBar);
     toolBar.insertBefore(stopTabButton, playTabButton.nextSibling);
+    console.log('app.js: Inserted stop button');
 
     // Attach event listeners to the tool bar buttons
     console.log('app.js: Attaching event listeners to tool bar buttons');
