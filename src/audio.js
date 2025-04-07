@@ -11,6 +11,9 @@ let currentMeasureIndex = 0;
 let currentFretIndex = 0;
 let playbackInterval;
 let synth = new Tone.Synth().toDestination();
+
+// Consider using AudioWorkletNode for more advanced audio processing if needed in the future.
+// For now, Tone.js handles the underlying audio nodes, so no specific action is needed here.
 const sixteenthNoteDuration = (60 / 120) / 4; // Default Tempo.  Adjust for the BPM.
 
 /**
