@@ -29,15 +29,15 @@ function initializeAudioContext() {
  * @param {number} [startTime=0] - The start time of the note in seconds.
  */
 function playNote(note, duration, startTime = 0) {
-    console.log('audio.js: playNote called with', note, duration, startTime);
+    console.log('playNote', note, duration, startTime);
     if (!audioContext) {
-        console.error('audio.js: Audio context not initialized.');
+        console.error('Audio context not initialized.');
         return;
     }
 
     const match = note.match(/([a-gA-G#b]+)(\d+)/);
     if (!match) {
-        console.error(`audio.js: Invalid note format received in playNote - ${note}`);
+        console.error(`Invalid note format received in playNote - Note was: ${note}`);
         return; // Exit if the note format is not recognized
     }
     const [_, pitch, octaveStr] = match; // Use descriptive names
@@ -46,7 +46,7 @@ function playNote(note, duration, startTime = 0) {
     // Add validation for parsed pitch and octave if necessary, though getFrequency should handle basic note names
     const frequency = getFrequency(pitch, octave);
     if (isNaN(frequency)) {
-        console.error(`audio.js: Could not calculate frequency for note ${note}`);
+        console.error(`Could not calculate frequency for note ${note}`);
         return;
     }
 
@@ -83,24 +83,24 @@ function getFrequency(pitch, octave) {
  * @param {object} tabData - The tab data object.
  */
 async function playTab(tabData) {
-    console.log('audio.js: playTab called');
+    console.log('playTab called');
     if (isPlaying) {
-        console.log('audio.js: Playback already in progress, ignoring.');
+        console.log('Playback already in progress, ignoring.');
         return; // Prevent multiple playbacks
     }
     initializeAudioContext(); // Ensure audio context is initialized
     if (audioContext.state === 'suspended') {
-        console.log('audio.js: Attempting to resume AudioContext');
+        console.log('Attempting to resume AudioContext');
         try {
             await audioContext.resume();
-            console.log('audio.js: AudioContext resumed successfully');
+            console.log('AudioContext resumed successfully');
         } catch (err) {
-            console.error('audio.js: Failed to resume AudioContext:', err);
+            console.error('Failed to resume AudioContext:', err);
             alert('Failed to resume audio playback. Please check your browser settings.');
             return;
         }
     }
-    console.log('audio.js: AudioContext state:', audioContext.state);
+    console.log('AudioContext state:', audioContext.state);
 
     isPlaying = true;
 
@@ -124,7 +124,7 @@ async function playTab(tabData) {
             }
         }, noteLength / 4 * 1000); // Convert to milliseconds
     } catch (error) {
-        console.error('audio.js: Playback initialization failed:', error);
+        console.error('Playback initialization failed:', error);
         alert('Failed to initialize audio playback. Please check your browser settings.');
         stopPlayback(); // Ensure playback stops if initialization fails
     }
@@ -136,9 +136,9 @@ async function playTab(tabData) {
  * @param {number} startTime - The start time for the beat in seconds.
  */
 function playBeat(tabData, startTime) {
-    console.log('audio.js: playBeat called');
+    console.log('playBeat called');
     if (!tabData.measures[currentMeasureIndex]) {
-        console.log('audio.js: No measure at index', currentMeasureIndex);
+        console.log('No measure at index', currentMeasureIndex);
         return;
     }
     const measure = tabData.measures[currentMeasureIndex];
@@ -151,10 +151,10 @@ function playBeat(tabData, startTime) {
                 try {
                     playNote(note, 0.2, startTime); // Play for 0.2 seconds
                 } catch (error) {
-                    console.error(`audio.js: Error triggering note ${note}:`, error);
+                    console.error(`Error triggering note ${note}:`, error);
                 }
             } else {
-                 console.warn(`audio.js: Could not get note for string ${stringIndex}, fret ${fretNumber}`);
+                 console.warn(`Could not get note for string ${stringIndex}, fret ${fretNumber}`);
             }
         }
     }
@@ -164,9 +164,9 @@ function playBeat(tabData, startTime) {
  * Stops the audio playback.
  */
 function stopPlayback() {
-    console.log('audio.js: stopPlayback called');
+    console.log('stopPlayback called');
     if (!isPlaying) {
-        console.log('audio.js: No playback in progress, ignoring.');
+        console.log('No playback in progress, ignoring.');
         return;
     }
     isPlaying = false;
@@ -177,7 +177,7 @@ function stopPlayback() {
             oscillator.disconnect();
         } catch (e) {
             // Oscillator might already be stopped or disconnected
-            console.warn("audio.js: Error stopping/disconnecting oscillator:", e.message);
+            console.warn("Error stopping/disconnecting oscillator:", e.message);
         } finally {
              oscillator = null;
         }
@@ -186,7 +186,7 @@ function stopPlayback() {
         try {
            gainNode.disconnect();
         } catch (e) {
-            console.warn("audio.js: Error disconnecting gainNode:", e.message);
+            console.warn("Error disconnecting gainNode:", e.message);
         } finally {
              gainNode = null;
         }
