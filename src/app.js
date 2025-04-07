@@ -6,6 +6,7 @@ import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from 
 import { setupToolBar, handleFretInput, showNumberCircle } from './ui-elements.js';
 import { playTab, stopPlayback, exportMIDI } from './audio.js'; // Import audio functions
 import config from '../config.js'; // Import config
+import * as Tone from 'tone'; // Import Tone.js
 
 console.log('app.js: Starting app.js');
 
