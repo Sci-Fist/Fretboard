@@ -33,14 +33,15 @@ body {
 
 .tab-display {
     font-family: 'Orbitron', sans-serif;
-    width: 100%;
+    /* width: 100%; */ /* Let width adjust to content */
     margin-bottom: 15px; /* config.tabDisplayMarginBottom; */
     border: 1.5px solid #333; /* config.tabDisplayBorder; */
     padding: 10px; /* config.tabDisplayPadding; */
     min-height: 150px; /* config.tabDisplayMinHeight; */
     background-color: #333;
-    overflow-y: auto;
-    max-height: 400px; /* config.tabDisplayMaxHeight; */
+    /* overflow-y: auto; */ /* Change to horizontal scroll if needed */
+    overflow-x: auto;
+    /* max-height: 400px; */ /* No max height needed in horizontal layout */
     color: #fff;
     border-radius: 6px; /* config.tabDisplayBorderRadius; */
 }
@@ -76,12 +77,13 @@ body {
 
 .measure {
     font-family: 'Orbitron', sans-serif;
+    flex-direction: row; /* Display strings horizontally */
     display: flex;
-    flex-direction: column;
     align-items: center;
     border: 1.5px solid #333; /* config.measureBorder; */
     padding: 10px; /* config.measurePadding; */
-    margin-bottom: 10px; /* config.measureMarginBottom; */
+    margin-right: 10px; /* config.measureMarginBottom; -> margin-right */
+    margin-bottom: 10px; /* keep margin bottom for stacked rows if wrapping */
     background-color: #333;
     border-radius: 6px; /* config.measureBorderRadius; */
 }
@@ -89,16 +91,17 @@ body {
 .string {
     font-family: 'Orbitron', sans-serif;
     display: flex;
-    width: 100%;
-    border-bottom: 1.5px solid #333; /* config.stringBorderBottom; */
+    flex-direction: column; /* Display frets vertically in horizontal string */
+    /* width: 100%; */ /* Adjust width as needed */
+    border-right: 1.5px solid #333; /* config.stringBorderBottom; -> border-right */
     padding: 6px 0; /* config.stringPadding; */
 }
 
 .fret {
-    width: 50px; /* config.fretWidth; */
-    height: 50px; /* config.fretHeight; */
+    width: 40px; /* config.fretWidth; Adjusted width */
+    height: 30px; /* config.fretHeight; Adjusted height */
     border: 1.5px solid #555; /* config.fretBorder; */
-    padding: 8px; /* config.fretPadding; */
+    padding: 5px; /* config.fretPadding; Adjusted padding */
     text-align: center;
     cursor: pointer;
     position: relative;
@@ -112,8 +115,8 @@ body {
     align-items: center;
 }
 
-.fret:last-child {
-    border-right: none;
+.string:last-child {
+    border-right: none; /* No border for the last string in measure */
 }
 
 .number-circle {
