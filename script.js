@@ -2,17 +2,6 @@ import config from './config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Guitar Tab Editor loaded');
-    // Initialize Tone.js
-    try {
-        console.log('Attempting to start Tone.js'); // Log before Tone.start()
-        Tone.start().then(() => {
-            console.log('Tone.js is ready');
-            loadTab(); // Load tab data after Tone.js is ready
-        });
-    } catch (error) {
-        console.error('Tone.js initialization failed:', error);
-        alert('Failed to initialize audio engine. Playback will not be available.');
-    }
     setupUI();
     addMeasure(); // Call addMeasure to initialize the tab
     renderTab(); // Call renderTab after addMeasure to render the initial tab
@@ -139,24 +128,27 @@ function startPlayback() {
     playTabButton.style.display = 'none';
     stopTabButton.style.display = '';
     try {
-        console.log('Attempting to initialize Tone.js synth'); // Log before synth initialization
-        synth = new Tone.PolySynth(Tone.Synth).toDestination();
-        const bpm = tabData.bpm || 120;
-        const noteLength = (60 / bpm) * 4;
-        currentMeasureIndex = 0;
-        currentFretIndex = 0;
-        console.log('Starting playback interval'); // Log before setInterval
-        playbackInterval = setInterval(() => {
-            playBeat();
-            currentFretIndex++;
-            if (currentFretIndex >= 4) {
-                currentFretIndex = 0;
-                currentMeasureIndex++;
-                if (currentMeasureIndex >= tabData.measures.length) {
-                    stopPlayback();
+        console.log('Attempting to start Tone.js'); // Log before Tone.start()
+        Tone.start().then(() => { // Moved Tone.start() here
+            console.log('Tone.js is ready');
+            synth = new Tone.PolySynth(Tone.Synth).toDestination();
+            const bpm = tabData.bpm || 120;
+            const noteLength = (60 / bpm) * 4;
+            currentMeasureIndex = 0;
+            currentFretIndex = 0;
+            console.log('Starting playback interval'); // Log before setInterval
+            playbackInterval = setInterval(() => {
+                playBeat();
+                currentFretIndex++;
+                if (currentFretIndex >= 4) {
+                    currentFretIndex = 0;
+                    currentMeasureIndex++;
+                    if (currentMeasureIndex >= tabData.measures.length) {
+                        stopPlayback();
+                    }
                 }
-            }
-        }, noteLength / 4 * 1000); // Convert to milliseconds
+            }, noteLength / 4 * 1000); // Convert to milliseconds
+        });
     } catch (error) {
         console.error('Playback initialization failed:', error);
         alert('Failed to initialize audio playback. Please check your browser settings.');
