@@ -170,9 +170,9 @@ function showSecondNumberCircle(fret, firstDigit) {
             if (tabData.measures[measureIndex]) {
                 tabData.measures[measureIndex].strings[stringIndex][fretIndex] = firstDigit.replace(/x/, num);
                 setTabData(tabData);
+                renderTab(getTabData());
             }
             circle.remove(); // Remove the second number circle after number selection
-            renderTab(getTabData());
         };
 
         circle.appendChild(number);
