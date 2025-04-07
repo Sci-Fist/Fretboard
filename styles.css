@@ -191,6 +191,7 @@ body {
     cursor: pointer; /* Ensure cursor is shown for frets */
     justify-content: center;
     align-items: center;
+    border: 1px solid #666; /* Add a border to the frets */
 }
 
 .string:last-child {
