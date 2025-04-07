@@ -27,7 +27,7 @@ function handleFretInput(e) {
     e.target.textContent = value; // Update the displayed text
     setTabData(tabData);
     console.log('ui-elements.js: Calling renderTab after input');
-    renderTab(tabData); // Re-render the tab after the input
+    renderTab(getTabData()); // Re-render the tab after the input
 }
 
 /**
