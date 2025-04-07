@@ -25,16 +25,17 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function setupApp() {
     console.log('app.js: setupApp called');
+    if (typeof Tone === 'undefined') {
+        console.error('app.js: Tone.js is not loaded.');
+        alert('Failed to load Tone.js. Please check your browser console for details.');
+        return; // Exit if Tone.js is not available
+    }
     try {
-        // Ensure Tone.js is loaded before initializing
-        if (typeof Tone === 'undefined') {
-            throw new Error('Tone.js is not loaded');
-        }
         await Tone.start(); // Initialize Tone.js
-        console.log('app.js: Tone.js initialized'); // Add a log to confirm
-        initializeTabData(); // Initialize tab data
-        rendering.renderTab(getTabData()); // Initial rendering of the tab
-        setupUI(); // Setup UI elements and event listeners
+        console.log('app.js: Tone.js initialized');
+        initializeTabData();
+        rendering.renderTab(getTabData());
+        setupUI();
         console.log('app.js: UI setup complete');
     } catch (error) {
         console.error('app.js: Error during app setup:', error);
