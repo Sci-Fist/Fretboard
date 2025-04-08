@@ -1,3 +1,4 @@
+import { AudioWorkletProcessor } from 'tone';
 // fretboard-processor.js
 class FretboardProcessor extends AudioWorkletProcessor {
   static get parameterDescriptors() {
