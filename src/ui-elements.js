@@ -144,11 +144,38 @@ function setupToolBar(dependencies) {
   } else {
     console.error("Button with ID 'loadTabBtn' not found.");
   }
+  // Implement Load Tab button
+  if (loadTabButton) {
+    loadTabButton.addEventListener('click', () => {
+      const savedTab = localStorage.getItem('guitarTab');
+      if (savedTab) {
+        try {
+          const tabData = JSON.parse(savedTab);
+          setTabData(tabData);
+          renderTab(getTabData());
+          alert('Tab loaded from local storage!');
+        } catch (error) {
+          console.error('Error loading tab from local storage:', error);
+          alert('Error loading tab.  Check the console for more details.');
+        }
+      } else {
+        alert('No tab found in local storage.');
+      }
+    });
+  }
 
   if (exportMIDButton) {
     exportMIDButton.addEventListener("click", exportMIDI);
   } else {
     console.error("Button with ID 'exportMIDIBtn' not found.");
+  }
+  // Implement Save Tab button
+  if (saveTabButton) {
+    saveTabButton.addEventListener('click', () => {
+      const tabData = getTabData();
+      localStorage.setItem('guitarTab', JSON.stringify(tabData));
+      alert('Tab saved to local storage!');
+    });
   }
   // Implement Save Tab button
   if (saveTabButton) {
