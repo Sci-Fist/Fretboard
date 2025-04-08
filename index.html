@@ -4,36 +4,40 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Guitar Tab App</title>
-        <link rel="stylesheet" href="styles.css"> <!-- Ensure CSS is linked -->
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <div class="tool-bar">
-            <!-- Add buttons with expected IDs -->
-            <button id="addMeasureBtn">Add Measure</button>
-            <button id="clearTabBtn">Clear Tab</button>
-            <label for="bpmInput">BPM:</label> <!-- Label for BPM input -->
-            <input type="number" id="bpmInput" value="120" min="1" max="300"> <!-- BPM Input Field -->
-            <button id="playTabBtn">Play</button> <!-- Play/Resume Button -->
-            <button id="pauseTabBtn" style="display: none;">Pause</button>
-            <button id="stopTabBtn" style="display: none;">Stop</button>
-            <button id="saveTabBtn">Save Tab</button>
-            <button id="loadTabBtn">Load Tab</button>
-            <button id="exportTabBtn">Export Tab</button>
-            <button id="exportMIDIBtn">Export MIDI</button>
+        <header>
+            <h1>Guitar Tab App</h1>
+        </header>
+        <nav class="tool-bar">
+            <button id="addMeasureBtn" aria-label="Add Measure">Add Measure</button>
+            <button id="clearTabBtn" aria-label="Clear Tab">Clear Tab</button>
+            <label for="bpmInput">BPM:</label>
+            <input type="number" id="bpmInput" value="120" min="1" max="300" aria-label="BPM Input">
+            <button id="playTabBtn" aria-label="Play Tab">Play</button>
+            <button id="pauseTabBtn" style="display: none;" aria-label="Pause Tab">Pause</button>
+            <button id="stopTabBtn" style="display: none;" aria-label="Stop Playback">Stop</button>
+            <button id="saveTabBtn" aria-label="Save Tab">Save Tab</button>
+            <button id="loadTabBtn" aria-label="Load Tab">Load Tab</button>
+            <button id="exportTabBtn" aria-label="Export Tab">Export Tab</button>
+            <button id="exportMIDIBtn" aria-label="Export MIDI">Export MIDI</button>
             <button id="rotateMeasureBtn" aria-label="Rotate Measure">Rotate Measure</button>
 
-            <!-- Time Signature Selection -->
-            <select id="timeSignatureSelect">
+            <select id="timeSignatureSelect" aria-label="Select Time Signature">
                 <option value="4/4">4/4</option>
                 <option value="3/4">3/4</option>
                 <option value="2/4">2/4</option>
                 <option value="6/8">6/8</option>
                 <!-- Add more time signatures as needed -->
             </select>
-        </div>
-        <div id="tab-display">
+        </nav>
+        <main id="tab-display">
             <!-- Tab display will be added here by JavaScript -->
-        </div>
+        </main>
+        <footer>
+            <p> 2025 Your Name</p>
+        </footer>
         <script type="module" src="src/app.js"></script>
     </body>
 </html>
