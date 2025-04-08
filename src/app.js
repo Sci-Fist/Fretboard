@@ -420,20 +420,22 @@ function handleArrowKeyNavigation(key, currentFret) {
 function handleAddMeasureWithInput() {
     console.log("app.js: handleAddMeasureWithInput called");
     const tabData = getTabData();
-    const numMeasures = prompt("Enter the number of measures to add:", "1"); // Prompt for number of measures
-    const numMeasuresParsed = parseInt(numMeasures, 10);
+    const timeSignature = prompt("Enter time signature for the new measure (e.g., 4/4, 6/8):", "4/4"); // Prompt for time signature
+    if (!timeSignature) {
+        return; // User cancelled
+    }
 
-    if (isNaN(numMeasuresParsed) || numMeasuresParsed <= 0) {
-        alert("Invalid input. Please enter a number greater than 0.");
+    const [beats, noteValue] = timeSignature.split('/').map(Number);
+
+    if (isNaN(beats) || isNaN(noteValue) || beats <= 0 || noteValue <= 0) {
+        alert("Invalid time signature. Please use the format 'X/Y' where X and Y are positive numbers.");
         return;
     }
 
-    for (let i = 0; i < numMeasuresParsed; i++) {
-        const newMeasure = {
-            strings: Array(6).fill(Array(4).fill('-')) // Initialize with default values
-        };
-        tabData.measures.push(newMeasure);
-    }
+    const newMeasure = {
+        strings: Array(6).fill(Array(4).fill('-')) // Initialize with default values
+    };
+    tabData.measures.push(newMeasure);
 
     setTabData(tabData);
     rendering.renderTab(getTabData());
