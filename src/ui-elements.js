@@ -155,4 +155,4 @@ function handleFretInput(event, getTabData, setTabData, renderTab) {
     renderTab(tabData);
 }
 
-export { setupToolBar, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass, toggleMeasureRotation, handleFretInput };
+export { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass, toggleMeasureRotation };
