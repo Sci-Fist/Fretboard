@@ -174,10 +174,9 @@ function handleTimeSignatureChange(event) {
     // Update the number of frets in each measure
     tabData.measures.forEach(measure => {
         const [beats] = newTimeSignature.split('/').map(Number);
-        measure.strings = measure.strings.map(string => {
+        measure.strings.forEach((string, stringIndex) => {
             // Ensure the string has the correct number of frets, padding with '-' if needed
-            const newFrets = Array(beats).fill('-');
-            return newFrets;
+            measure.strings[stringIndex] = Array(beats).fill('-');
         });
     });
 
