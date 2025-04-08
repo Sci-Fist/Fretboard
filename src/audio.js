@@ -1,6 +1,6 @@
 // audio.js
 
-// This module handles audio playback.
+// This module handles audio playback using AudioWorkletNode.
 // It provides functions to initialize the audio context, play individual notes,
 // play a complete tab, and stop playback.
 
@@ -11,31 +11,16 @@ let currentMeasureIndex = 0;
 let currentFretIndex = 0;
 let playbackInterval;
 
-let fretboardNode;
+let actx; // Audio context
+let fretboardNode; // AudioWorkletNode
 
 let bpm = 120; // Default BPM
+const NUMBER_OF_STRINGS = 6;
 
-// Add a function to resume the AudioContext on user interaction
-let audioContextInitialized = false;
-async function resumeAudioContextOnInteraction() {
-  if (Tone.context.state === "suspended") {
-    await Tone.start(); // Initialize Tone.js
-    console.log("AudioContext resumed successfully");
-    await setupAudioWorklet(); // Call setupAudioWorklet after resuming
-  }
-}
-
-// Attach the event listeners for user interaction
-document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
-document.addEventListener("click", resumeAudioContextOnInteraction, false);
-document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
-document.removeEventListener("touchstart", resumeAudioContextOnInteraction);
-document.removeEventListener("click", resumeAudioContextOnInteraction);
-document.removeEventListener("keydown", resumeAudioContextOnInteraction);
-
-// Load the AudioWorkletProcessor
-async function setupAudioWorklet() {
+// Initialize audio context and AudioWorklet
+async function initializeAudio() {
   try {
+    actx = new AudioContext();
     await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
     fretboardNode = new AudioWorkletNode(
       actx,
@@ -44,17 +29,37 @@ async function setupAudioWorklet() {
 
     // Connect the AudioWorkletNode to the destination
     fretboardNode.connect(actx.destination);
+
+    console.log("Audio initialized successfully");
   } catch (error) {
-    console.error("Failed to initialize AudioWorklet:", error);
+    console.error("Failed to initialize audio:", error);
     alert(
       "Failed to initialize audio playback. Please check your browser settings and the console.",
     );
   }
 }
 
-setupAudioWorklet();
-const sixteenthNoteDuration = 60 / bpm / 4; // Default Tempo.  Adjust for the BPM.
-const NUMBER_OF_STRINGS = 6;
+// Add a function to resume the AudioContext on user interaction
+async function resumeAudioContextOnInteraction() {
+  if (actx.state === "suspended") {
+    await actx.resume();
+    console.log("AudioContext resumed successfully");
+  }
+}
+
+// Attach the event listeners for user interaction
+document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
+document.addEventListener("click", resumeAudioContextOnInteraction, false);
+document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
+
+/**
+ * Loads a sound (not currently used).
+ */
+async function loadSound() {
+  // Placeholder function for loading a sound
+  // In a future version, this function would handle loading a sound file.
+  alert("Sound loading not yet implemented.");
+}
 
 /**
  * Plays a single note using the AudioWorkletNode.
@@ -65,12 +70,10 @@ function playNote(note, duration) {
   //console.log("audio.js: playNote called with", note, duration);
 
   if (!fretboardNode) {
-    console.warn("audio.js: AudioWorkletNode not initialized.");
+    console.warn("AudioWorkletNode not initialized.");
     return;
   }
-  if (Tone.context.state === "suspended") {
-    await Tone.start();
-  }
+
   fretboardNode.port.postMessage({
     type: "noteOn",
     note: note,
@@ -79,17 +82,25 @@ function playNote(note, duration) {
 }
 
 /**
+ * Plays a sound (not currently used).
+ */
+function playSound() {
+  // Placeholder function for playing a sound
+  // In a future version, this function would handle playing a sound.
+  alert("Sound playing not yet implemented.");
+}
+
+/**
  * Stops the audio playback.
  */
 function stopPlayback() {
   console.log("audio.js: stopPlayback called");
   if (!isPlaying) {
-    console.log("audio.js: No playback in progress, ignoring.");
+    console.log("No playback in progress, ignoring.");
     return;
   }
   isPlaying = false;
   clearInterval(playbackInterval);
-  //Tone.Transport.stop(); // Stop the Tone.js transport if it's running
   currentMeasureIndex = 0;
   currentFretIndex = 0;
 
@@ -115,8 +126,8 @@ function playTab(tabData) {
   console.log("audio.js: playTab called");
 
   // Ensure the AudioContext is running
-  if (Tone.context.state === "suspended") {
-    await Tone.start();
+  if (actx.state === "suspended") {
+    await actx.resume();
   }
 
   if (isPlaying) {
