@@ -29,7 +29,7 @@ class FretboardProcessor extends AudioWorkletProcessor {
     if (!channel) {
       return true;
     }
-    // Check for "allNotesOff" message
+    // Check for messages from the main thread
     while (this.port.hasMessage()) {
       const message = this.port.getMessage();
       if (message.type === "allNotesOff") {
@@ -42,6 +42,7 @@ class FretboardProcessor extends AudioWorkletProcessor {
         this.note = message.note;
         this.velocity = message.velocity;
         this.allNotesOff = false;
+        this.oscillatorType = message.oscillatorType || "sine"; // Optionally set oscillator type from message
       }
     }
 
