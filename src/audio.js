@@ -1,6 +1,6 @@
 // audio.js
 
-// This module handles audio playback using Tone.js.
+// This module handles audio playback.
 // It provides functions to initialize the audio context, play individual notes,
 // play a complete tab, and stop playback.
 
