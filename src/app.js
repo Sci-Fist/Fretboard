@@ -197,8 +197,13 @@ function setupUI() {
 async function setupApp() {
   console.log("app.js: setupApp called");
   try {
+    console.log("app.js: Calling initializeTabData...");
     initializeTabData();
-    rendering.renderTab(getTabData());
+    console.log("app.js: initializeTabData finished.");
+    const currentTabData = getTabData();
+    console.log("app.js: Calling renderTab with data:", JSON.stringify(currentTabData)); // Log the data being passed
+    rendering.renderTab(currentTabData);
+    console.log("app.js: renderTab finished.");
     setupUI();
     // Initialize Audio after UI setup (or ensure context is resumed on interaction)
     await initializeAudio();

@@ -6,6 +6,7 @@
  * @param {object} tabData - The tab data object.
  */
 export function renderTab(tabData) {
+    console.log("rendering.js: renderTab called with data:", JSON.stringify(tabData)); // Log entry and data
     const tabDisplay = document.getElementById("tab-display");
     if (!tabDisplay) {
         console.error("rendering.js: tabDisplay element not found!");

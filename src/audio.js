@@ -49,10 +49,11 @@ export async function initializeAudio() { // Added export
 
 // Add a function to resume the AudioContext on user interaction
 async function resumeAudioContextOnInteraction() {
+  console.log("resumeAudioContextOnInteraction called. actx is:", actx); // Add this log
   // Check if actx is initialized *and* suspended before resuming
   if (actx && actx.state === "suspended") {
     try {
-      console.log("Attempting to resume AudioContext..."); // Added for debugging
+      console.log("Attempting to resume AudioContext...");
       await actx.resume();
       console.log("AudioContext resumed successfully");
     } catch (error) {
