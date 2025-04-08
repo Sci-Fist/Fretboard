@@ -8,49 +8,43 @@ const defaultTabData = {
 
 let tabData = { ...defaultTabData };
 
-function initializeTabData() {
+export function initializeTabData() {
     tabData = { ...defaultTabData, measures: [] };
     addMeasure({ timeSignature: '4/4', name: 'Measure 1' });
 }
 
-function addMeasure(options = {}) {
-    console.log('tab-data.js: addMeasure called with options:', options);
-    const measureTimeSignature = options.timeSignature || '4/4';
-    const measureName = options.name || `Measure ${tabData.measures.length + 1}`;
-    const beatsPerMeasure = parseInt(measureTimeSignature.split('/')[0], 10);
+export function addMeasure(options = {}) {
+    const timeSignature = options.timeSignature || '4/4';
+    const name = options.name || `Measure ${tabData.measures.length + 1}`;
+    const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10);
     const measure = {
-        name: measureName,
-        timeSignature: measureTimeSignature,
+        name,
+        timeSignature,
         strings: Array(6).fill(Array(beatsPerMeasure).fill('-'))
     };
     tabData.measures.push(measure);
     setTabData(tabData);
-    console.log('tab-data.js: tabData after addMeasure:', tabData);
 }
 
-function clearTab() {
-    console.log('tab-data.js: clearTab called');
+export function clearTab() {
     tabData.measures = [];
     addMeasure({ timeSignature: '4/4', name: 'Measure 1' });
     setTabData(tabData);
 }
 
-function getTabData() {
+export function getTabData() {
     return tabData;
 }
 
-function setTabData(data) {
+export function setTabData(data) {
     tabData = data;
-    console.log('tab-data.js: setTabData called, new tabData:', tabData);
 }
 
-function getNote(stringIndex, fretNumber, tuning) {
-    const notes = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
+export function getNote(stringIndex, fretNumber, tuning) {
+    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const baseNote = tuning[stringIndex];
     const baseIndex = notes.indexOf(baseNote);
     const noteIndex = (baseIndex + fretNumber) % 12;
     const octave = Math.floor((baseIndex + fretNumber) / 12) + 2;
-    return notes[noteIndex] + octave;
+    return `${notes[noteIndex]}${octave}`;
 }
-
-export { addMeasure, clearTab, getTabData, setTabData, getNote, initializeTabData };
