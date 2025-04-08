@@ -61,6 +61,10 @@ body {
         border-left: none; /* Remove left border on very small screens for more space */
         background-color: transparent; /* Make background transparent on very small screens */
     }
+    .tool-bar {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        align-items: center; /* Center buttons */
+    }
     .tool-bar button {
         padding: 10px 14px; /* Slightly larger button padding for touch */
         font-size: 13px; /* Further reduce button font size */
