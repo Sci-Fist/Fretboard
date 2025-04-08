@@ -95,7 +95,7 @@ function generateTablature(tabData) {
     const stringLabels = ["E", "A", "D", "G", "B", "e"];
 
     tabData.measures.forEach((measure, measureIndex) => {
-        tabString += `Measure ${measureIndex + 1}:\n`;
+        tabString += `Measure ${measureIndex + 1} (${measure.name}, ${measure.timeSignature}):\n`; // Include measure name and time signature
         const strings = measure.strings && measure.strings.length === 6 ? measure.strings : Array(6).fill(['-', '-', '-', '-']);
 
         for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
@@ -112,7 +112,7 @@ function generateTablature(tabData) {
     });
 
     tabString += `BPM: ${tabData.bpm || 120}\n`;
-    tabString += `Time Signature: ${tabData.timeSignature || '4/4'}\n`;
+    // Time Signature is now per measure, so removing from here.
 
     return tabString;
 }
@@ -196,16 +196,16 @@ function updatePlayPauseStopButtons() {
 }
 
 /**
- * Handles the time signature change.
+ * Handles the time signature change for the *entire tab* (currently unused as time signature is per measure).
  * @param {Event} event - The change event.
  */
 function handleTimeSignatureChange(event) {
     const newTimeSignature = event.target.value;
-    console.log(`app.js: Time signature changed to: ${newTimeSignature}`);
+    console.log(`app.js: Global time signature changed to: ${newTimeSignature}`);
     const tabData = getTabData();
     tabData.timeSignature = newTimeSignature;
 
-    // Update the number of frets in each measure
+    // Update the number of frets in *all* measures to match the new global time signature - this might not be desired anymore.
     tabData.measures.forEach(measure => {
         const [beats] = newTimeSignature.split('/').map(Number);
         for (let stringIndex = 0; stringIndex < measure.strings.length; stringIndex++) {
@@ -237,7 +237,7 @@ function startPlaybackHighlight() {
         }
 
         const millisecondsPerBeat = 60000 / bpm;
-        const millisecondsPerMeasure = millisecondsPerBeat * 4; // Default to 4 beats/measure
+        const millisecondsPerMeasure = millisecondsPerBeat * 4; // Default to 4 beats/measure - TODO: Use measure's time signature for duration
 
         playbackIntervalId = setInterval(() => {
             if (currentMeasureIndex < measures.length) {
@@ -247,7 +247,7 @@ function startPlaybackHighlight() {
                 stopPlaybackHighlight();
                 handleStop();
             }
-        }, millisecondsPerMeasure);
+        }, millisecondsPerMeasure); // TODO: Adjust interval based on measure time signature
     }
 }
 
@@ -294,12 +294,12 @@ function setupUI() {
     // Apply config (example - could be more extensive)
     document.body.style.fontSize = config.bodyFontSize;
 
-    // Get time signature select element
+    // Get time signature select element - this is now for global time signature, might be removed later.
     const timeSignatureSelect = document.getElementById('timeSignatureSelect');
     if (timeSignatureSelect) {
         timeSignatureSelect.addEventListener('change', handleTimeSignatureChange);
     } else {
-        console.error("app.js: timeSignatureSelect element not found.");
+        console.warn("app.js: timeSignatureSelect element not found. This is expected if time signature is now per-measure.");
     }
 
     // Get BPM input element
@@ -337,6 +337,9 @@ function setupUI() {
     addMeasureModal.style.borderRadius = '5px';
     addMeasureModal.innerHTML = `
         <h2>Add Measure</h2>
+        <label for="measureName">Measure Name:</label>
+        <input type="text" id="measureName" value="" placeholder="Measure Name">
+        <br><br>
         <label for="timeSignature">Time Signature:</label>
         <select id="timeSignature">
             <option value="4/4">4/4</option>
@@ -354,11 +357,14 @@ function setupUI() {
     const addMeasureModalSubmit = document.getElementById('addMeasureModalSubmit');
     const addMeasureModalCancel = document.getElementById('addMeasureModalCancel');
     const timeSignatureSelectModal = document.getElementById('timeSignature');
+    const measureNameInputModal = document.getElementById('measureName'); // New input for measure name
+
 
     if (addMeasureModalSubmit) {
         addMeasureModalSubmit.addEventListener('click', () => {
             const selectedTimeSignature = timeSignatureSelectModal.value;
-            handleAddMeasureWithInput(selectedTimeSignature);
+            const measureName = measureNameInputModal.value; // Get measure name from input
+            handleAddMeasureWithInput(selectedTimeSignature, measureName); // Pass measure name to handler
             closeAddMeasureModal();
         });
     } else {
@@ -373,6 +379,7 @@ function setupUI() {
 
     function openAddMeasureModal() {
         addMeasureModal.style.display = 'block';
+        measureNameInputModal.value = ''; // Clear measure name input when opening modal
     }
 
     function closeAddMeasureModal() {
@@ -517,11 +524,12 @@ function handleArrowKeyNavigation(key, currentFret) {
 }
 
 /**
- * Handles adding a measure with user input for time signature.
+ * Handles adding a measure with user input for time signature and measure name.
  * @param {string} timeSignature - The time signature to use for the new measure.
+ * @param {string} measureName - The name of the measure.
  */
-function handleAddMeasureWithInput(timeSignature) {
-    console.log("app.js: handleAddMeasureWithInput called");
+function handleAddMeasureWithInput(timeSignature, measureName) {
+    console.log("app.js: handleAddMeasureWithInput called with timeSignature:", timeSignature, "and measureName:", measureName);
     const tabData = getTabData();
 
     // Validate time signature format
@@ -538,12 +546,12 @@ function handleAddMeasureWithInput(timeSignature) {
         return;
     }
 
-    // Create a new measure with the specified time signature
-    const newMeasure = {
-        strings: Array(6).fill(Array(beats).fill('-')) // Initialize with '-' for each fret based on beats
+    // Create a new measure with the specified time signature and name
+    const newMeasureOptions = {
+        timeSignature: timeSignature,
+        name: measureName
     };
-    tabData.measures.push(newMeasure);
-    tabData.timeSignature = timeSignature; // Set the time signature for the new measure
+    addMeasure(newMeasureOptions);
 
     setTabData(tabData);
     rendering.renderTab(getTabData());

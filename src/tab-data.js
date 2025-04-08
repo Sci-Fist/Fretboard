@@ -8,7 +8,7 @@ const defaultTabData = {
     bpm: 120,
     tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
     capo: 0,
-    timeSignature: '4/4' // Added time signature to default data
+    timeSignature: '4/4' // Default time signature for the entire tab (initially)
 };
 
 let tabData = { ...defaultTabData };
@@ -23,18 +23,25 @@ function initializeTabData() {
       measures: [], // Start with empty measures before adding one
       timeSignature: defaultTabData.timeSignature // Initialize time signature
     };
-    addMeasure(); // Add the initial measure with default time signature
+    addMeasure({ timeSignature: defaultTabData.timeSignature, name: 'Measure 1' }); // Add the initial measure with default time signature and name
 }
 
 
 /**
- * Adds a new measure to the tab data with default '-' values.
+ * Adds a new measure to the tab data.
+ * @param {object} options - Options for the new measure.
+ * @param {string} [options.timeSignature] - The time signature for the measure (e.g., '4/4'). Defaults to tab's timeSignature if not provided.
+ * @param {string} [options.name] - The name of the measure. Defaults to 'Measure X'.
  */
-function addMeasure() {
-    console.log('tab-data.js: addMeasure called');
-    const timeSignature = tabData.timeSignature;
-    const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10); // Get numerator
+function addMeasure(options = {}) {
+    console.log('tab-data.js: addMeasure called with options:', options);
+    const measureTimeSignature = options.timeSignature || tabData.timeSignature; // Default to tab's timeSignature if not provided
+    const measureName = options.name || `Measure ${tabData.measures.length + 1}`; // Default measure name
+
+    const beatsPerMeasure = parseInt(measureTimeSignature.split('/')[0], 10); // Get numerator
     const measure = {
+        name: measureName, // Add measure name
+        timeSignature: measureTimeSignature, // Add measure time signature
         strings: Array(6).fill(Array(beatsPerMeasure).fill('-')) // Use beatsPerMeasure for fret count, default '-'
     };
     tabData.measures.push(measure);
@@ -48,7 +55,7 @@ function clearTab() {
     console.log('tab-data.js: clearTab called');
     tabData.measures = []; // Correctly clears measures
     tabData.timeSignature = defaultTabData.timeSignature; // Reset time signature to default
-    addMeasure(); // Add an initial measure with default time signature after clearing
+    addMeasure({ timeSignature: defaultTabData.timeSignature, name: 'Measure 1' }); // Add an initial measure with default time signature and name after clearing
     // Optionally reset other properties if needed, e.g., bpm
     // tabData.bpm = defaultTabData.bpm;
 }
