@@ -40,28 +40,8 @@ function setupToolBar(dependencies) {
       addMeasure();
       renderTab(getTabData());
     });
-  } else {
-    console.error("Button with ID 'addMeasureBtn' not found.");
   }
-  // Implement Load Tab button
-  if (loadTabButton) {
-    loadTabButton.addEventListener('click', () => {
-      const savedTab = localStorage.getItem('guitarTab');
-      if (savedTab) {
-        try {
-          const tabData = JSON.parse(savedTab);
-          setTabData(tabData);
-          renderTab(getTabData());
-          alert('Tab loaded from local storage!');
-        } catch (error) {
-          console.error('Error loading tab from local storage:', error);
-          alert('Error loading tab.  Check the console for more details.');
-        }
-      } else {
-        alert('No tab found in local storage.');
-      }
-    });
-  }
+  // Removed duplicate Load Tab button logic block
 
   if (clearTabButton) {
     clearTabButton.addEventListener("click", () => {
@@ -76,10 +56,14 @@ function setupToolBar(dependencies) {
   if (exportTabButton) {
     exportTabButton.addEventListener("click", exportTab);
   } else {
+    // Use the passed exportTab function directly
+    exportTabButton.addEventListener("click", exportTab);
+  } else {
     console.error("Button with ID 'exportTabBtn' not found.");
   }
 
   if (showBPMInputButton) {
+    // Use the passed showBPMInput function directly
     showBPMInputButton.addEventListener("click", showBPMInput);
   } else {
     console.error("Button with ID 'setBPMBtn' not found.");
@@ -137,102 +121,65 @@ function setupToolBar(dependencies) {
   if (saveTabButton) {
     saveTabButton.addEventListener("click", saveTab);
   } else {
+    // Use the passed saveTab function directly
+    saveTabButton.addEventListener("click", saveTab);
+  } else {
     console.error("Button with ID 'saveTabBtn' not found.");
   }
 
   if (loadTabButton) {
+    // Use the passed loadTab function directly
     loadTabButton.addEventListener("click", loadTab);
   } else {
     console.error("Button with ID 'loadTabBtn' not found.");
   }
-  // Implement Load Tab button
-  if (loadTabButton) {
-    loadTabButton.addEventListener('click', () => {
-      const savedTab = localStorage.getItem('guitarTab');
-      if (savedTab) {
-        try {
-          const tabData = JSON.parse(savedTab);
-          setTabData(tabData);
-          renderTab(getTabData());
-          alert('Tab loaded from local storage!');
-        } catch (error) {
-          console.error('Error loading tab from local storage:', error);
-          alert('Error loading tab.  Check the console for more details.');
-        }
-      } else {
-        alert('No tab found in local storage.');
-      }
-    });
-  }
+  // Removed duplicate Load Tab button logic block
 
   if (exportMIDButton) {
     exportMIDButton.addEventListener("click", exportMIDI);
   } else {
+    // Use the passed exportMIDI function directly
+    exportMIDButton.addEventListener("click", exportMIDI);
+  } else {
     console.error("Button with ID 'exportMIDIBtn' not found.");
   }
-  // Implement Save Tab button
-  if (saveTabButton) {
-    saveTabButton.addEventListener('click', () => {
-      const tabData = getTabData();
-      localStorage.setItem('guitarTab', JSON.stringify(tabData));
-      alert('Tab saved to local storage!');
-    });
-  }
-  // Implement Save Tab button
-  if (saveTabButton) {
-    saveTabButton.addEventListener('click', () => {
-      const tabData = getTabData();
-      localStorage.setItem('guitarTab', JSON.stringify(tabData));
-      alert('Tab saved to local storage!');
-    });
-  }
-
-  // Implement Export Tab button
-  if (exportTabButton) {
-    exportTabButton.addEventListener("click", () => {
-      const tabData = getTabData();
-      const tabText = generateTablature(tabData);
-      const blob = new Blob([tabText], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "guitar_tab.txt";
-      document.body.appendChild(a); // Required for Firefox
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-  }
+  // Removed duplicate Save Tab button logic blocks
+  // Removed inline Export Tab button logic block (now uses dependency)
 
   console.log("ui-elements.js: Toolbar setup complete");
 }
 
+// Moved generateTablature outside setupToolBar - ideally move to tab-data.js or utils
 function generateTablature(tabData) {
-  if (!tabData || !tabData.measures || tabData.measures.length === 0) {
-    return "No tab data.";
-  }
-
-  let tabString = "";
-  const tuning = tabData.tuning;
-  const stringLabels = tuning
-    .map((_, i) => ["E", "A", "D", "G", "B", "e"][i] || "")
-    .join("\n");
-
-  tabData.measures.forEach((measure, measureIndex) => {
-    tabString += `${measureIndex + 1}. Measure:\n`;
-    for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
-      tabString += `${stringLabels.split("\n")[stringIndex]}|`;
-      for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
-        tabString += measure.strings[stringIndex][fretIndex] || "-";
-        tabString += "|";
-      }
-      tabString += "\n";
+    if (!tabData || !tabData.measures || tabData.measures.length === 0) {
+        return "No tab data.";
     }
-    tabString += "\n";
-  });
 
-  return tabString;
+    let tabString = "";
+    const tuning = tabData.tuning || ['E', 'A', 'D', 'G', 'B', 'E']; // Default tuning if not present
+    const stringLabels = ["E", "A", "D", "G", "B", "e"]; // Standard tuning labels
+
+    tabData.measures.forEach((measure, measureIndex) => {
+        tabString += `Measure ${measureIndex + 1}:\n`;
+        // Ensure measure.strings exists and has the correct length
+        const strings = measure.strings && measure.strings.length === 6 ? measure.strings : Array(6).fill(['-', '-', '-', '-']);
+
+        for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+            tabString += `${stringLabels[stringIndex]}|`;
+            // Ensure the string array exists and has the correct length
+            const frets = strings[stringIndex] && strings[stringIndex].length === 4 ? strings[stringIndex] : ['-', '-', '-', '-'];
+            for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
+                tabString += (frets[fretIndex] !== undefined && frets[fretIndex] !== '' ? frets[fretIndex] : "-").padEnd(2); // Pad for alignment
+                tabString += "|";
+            }
+            tabString += "\n";
+        }
+        tabString += "\n";
+    });
+
+    return tabString;
 }
+
 
 /**
  * Handles input events on fret elements.

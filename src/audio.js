@@ -18,7 +18,7 @@ let bpm = 120; // Default BPM
 const NUMBER_OF_STRINGS = 6;
 
 // Initialize audio context and AudioWorklet
-async function initializeAudio() {
+export async function initializeAudio() { // Added export
   try {
     actx = new AudioContext();
     await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
@@ -55,7 +55,7 @@ document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
 /**
  * Loads a sound (not currently used).
  */
-async function loadSound() {
+export async function loadSound() { // Added export
   // Placeholder function for loading a sound
   // In a future version, this function would handle loading a sound file.
   alert("Sound loading not yet implemented.");
@@ -84,7 +84,7 @@ function playNote(note, duration) {
 /**
  * Plays a sound (not currently used).
  */
-function playSound() {
+export function playSound() { // Added export
   // Placeholder function for playing a sound
   // In a future version, this function would handle playing a sound.
   alert("Sound playing not yet implemented.");
@@ -93,7 +93,7 @@ function playSound() {
 /**
  * Stops the audio playback.
  */
-function stopPlayback() {
+export function stopPlayback() { // Added export
   console.log("audio.js: stopPlayback called");
   if (!isPlaying) {
     console.log("No playback in progress, ignoring.");
@@ -112,7 +112,7 @@ function stopPlayback() {
 /**
  * Exports the tab data as a MIDI file (placeholder).
  */
-function exportMIDI() {
+export function exportMIDI() { // Added export
   // Placeholder function for MIDI export
   // In a future version, this function would handle MIDI file generation and download.
   alert("MIDI export not yet implemented.");
@@ -212,4 +212,4 @@ async function playTab(tabData) { // Added async here
   playMeasure(0);
 }
 
-export { initializeAudio, loadSound, playSound, playTab, stopPlayback, exportMIDI };
+// Removed combined export block at the end
