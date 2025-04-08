@@ -7,7 +7,7 @@ import { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle
 import { initializeAudio, playTab, stopPlayback } from './audio.js';
 import config from '../config.js';
 
-console.log("app.js: Starting app.js");
+console.log("app.js: Starting Fretboard app.js");
 
 // Application State
 let isMeasureRotated = false;
