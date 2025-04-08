@@ -7,6 +7,11 @@ let audioContext;
 let fretboardProcessorNode;
 let resumeListenersAttached = false; // Flag to track if listeners are attached
 let tabData; // To hold tab data for playback
+let isPlaying = false; // Track playback state
+let currentMeasureIndex = 0;
+let currentStringIndex = 0;
+let currentFretIndex = 0;
+let playbackIntervalId = null;
 
 /**
  * Initializes the audio context and processor.
@@ -73,41 +78,87 @@ async function setupAudioWorklet() {
  */
 function playTab() {
     console.log("audio.js: playTab called");
+    if (isPlaying) {
+        console.log("audio.js: Already playing, ignoring playTab call.");
+        return; // Prevent multiple playbacks
+    }
+    isPlaying = true;
     tabData = getTabData(); // Get tab data directly from module
     if (!tabData || !tabData.measures || tabData.measures.length === 0) {
         console.warn("audio.js: No tab data to play or tabData is invalid.");
         alert("No tab data available to play. Please add measures and notes.");
+        isPlaying = false; // Reset the flag
         return;
     }
 
     console.log("audio.js: playTab - Tab data received:", tabData); // Log tabData
 
-    // --- Simple Playback Logic (for debugging - plays only first note) ---
-    if (tabData.measures[0] && tabData.measures[0].strings[0][0] !== '-' && tabData.measures[0].strings[0][0] !== '') {
-        const fretValue = tabData.measures[0].strings[0][0];
-        const note = getNote(0, parseInt(fretValue), tabData.tuning); // Play first note of first string, first fret
+    // --- Playback Logic ---
+    currentMeasureIndex = 0;
+    currentStringIndex = 0;
+    currentFretIndex = 0;
+    playMeasure(currentMeasureIndex);
+}
+
+function playMeasure(measureIndex) {
+    if (!isPlaying) {
+        return; // Stop if playback has been stopped
+    }
+
+    if (measureIndex >= tabData.measures.length) {
+        stopPlayback();
+        return;
+    }
+
+    const measure = tabData.measures[measureIndex];
+    const timeSignature = tabData.timeSignature || '4/4';
+    const [beats] = timeSignature.split('/').map(Number);
+    const bpm = tabData.bpm || 120;
+    const millisecondsPerBeat = 60000 / bpm;
+    const millisecondsPerMeasure = millisecondsPerBeat * beats;
+
+    let fretValue = measure.strings[currentStringIndex][currentFretIndex];
+    if (fretValue !== '-' && fretValue !== '') {
+        const note = getNote(currentStringIndex, parseInt(fretValue), tabData.tuning);
         if (note) {
-            console.log("audio.js: playTab - Playing note:", note); // Log note to be played
+            console.log(`audio.js: Playing note ${note} at measure ${measureIndex}, string ${currentStringIndex}, fret ${currentFretIndex}`);
             if (fretboardProcessorNode) {
                 fretboardProcessorNode.port.postMessage({
                     type: 'noteOn',
                     note: note,
                     velocity: 0.8,
-                    // oscillatorType: 'sine' // Oscillator type removed for now to use default
                 });
-                 // Stop note after a short duration (for debugging)
-                 setTimeout(() => {
-                    stopPlayback();
-                }, 1000); // Stop after 1 second
-            } else {
-                console.error("audio.js: AudioWorkletNode is not initialized.");
-                alert("Audio system not ready. Please refresh the page.");
             }
         }
-    } else {
-        console.log("audio.js: playTab - No note to play in the first fret.");
-        alert("No note to play in the first fret of the first measure."); // More specific alert
     }
+
+    // Move to the next fret
+    currentFretIndex++;
+    if (currentFretIndex >= beats) {
+        currentFretIndex = 0;
+        currentStringIndex++;
+        if (currentStringIndex >= 6) {
+            currentStringIndex = 0;
+            // Move to the next measure
+            currentMeasureIndex++;
+            if (currentMeasureIndex < tabData.measures.length) {
+                setTimeout(() => {
+                    playMeasure(currentMeasureIndex);
+                }, millisecondsPerMeasure);
+                return; // Exit to prevent immediate next fret playback
+            } else {
+                stopPlayback();
+                return;
+            }
+        }
+    }
+
+    // Play the next fret immediately
+    setTimeout(() => {
+        if (isPlaying) {
+            playMeasure(measureIndex);
+        }
+    }, millisecondsPerBeat);
 }
 
 /**
@@ -117,6 +168,14 @@ function stopPlayback() {
     console.log("audio.js: stopPlayback called");
     if (fretboardProcessorNode) {
         fretboardProcessorNode.port.postMessage({ type: 'allNotesOff' });
+    }
+    isPlaying = false; // Reset the flag
+    currentMeasureIndex = 0;
+    currentStringIndex = 0;
+    currentFretIndex = 0;
+    if (playbackIntervalId) {
+        clearInterval(playbackIntervalId);
+        playbackIntervalId = null;
     }
     // Additional stop logic if needed (e.g., clearing intervals, UI reset)
 }
