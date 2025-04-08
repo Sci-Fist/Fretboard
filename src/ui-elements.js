@@ -42,7 +42,7 @@ function setupToolBar(dependencies) {
   if (addMeasureButton) {
     addMeasureButton.addEventListener("click", () => {
       addMeasure(); // Now calls handleAddMeasureWithInput from app.js
-      renderTab(getTabData());
+      // renderTab(getTabData()); // Render is now handled in app.js
     });
   }
   // Removed duplicate Load Tab button logic block
