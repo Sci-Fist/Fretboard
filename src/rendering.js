@@ -58,4 +58,13 @@ export function renderTab(tabData) {
         }
         tabDisplay.appendChild(measureDiv);
     });
+
+    // After rendering, re-apply active-fret class if needed (e.g., after re-render on input)
+    const activeFretId = localStorage.getItem('activeFretId');
+    if (activeFretId) {
+        const activeFret = document.getElementById(activeFretId);
+        if (activeFret) {
+            activeFret.classList.add('active-fret');
+        }
+    }
 }

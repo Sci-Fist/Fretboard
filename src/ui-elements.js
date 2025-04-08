@@ -232,6 +232,14 @@ function showNumberCircle(fret) {
   // Remove any existing number circle
   removeOpenNumberCircle();
 
+  // Remove active class from any previously active fret
+  removeActiveFretClass();
+  // Add active class to the currently focused fret
+  fret.classList.add('active-fret');
+  // Store the active fret's ID in localStorage so it can be re-applied after re-render
+  localStorage.setItem('activeFretId', fret.id);
+
+
   const circle = document.createElement("div");
   circle.className = "number-circle";
   const radius = 50;
@@ -276,6 +284,7 @@ function showNumberCircle(fret) {
           new Event("input", { bubbles: true, cancelable: true }),
         );
         removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
+        fret.focus(); // Re-focus the fret after input
       }
     };
     circle.appendChild(number);
@@ -296,6 +305,17 @@ function removeOpenNumberCircle() {
     openCircle.remove();
   }
 }
+
+/**
+ * Removes the 'active-fret' class from any fret that has it.
+ */
+function removeActiveFretClass() {
+    document.querySelectorAll('.fret.active-fret').forEach(fret => {
+        fret.classList.remove('active-fret');
+    });
+    localStorage.removeItem('activeFretId'); // Clear stored active fret ID
+}
+
 
 /**
  * Positions the number circle relative to the fret element.
@@ -344,6 +364,7 @@ function showSecondNumberCircle(fret, firstDigit) {
         new Event("input", { bubbles: true, cancelable: true }),
       );
       removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
+      fret.focus(); // Re-focus the fret after input
     };
     circle.appendChild(number);
   });
@@ -371,7 +392,15 @@ if (typeof document !== "undefined") {
       }
     }
   });
+
+  // Remove active fret class when clicking outside of frets
+  document.addEventListener('click', function(event) {
+    if (!event.target.classList.contains('fret')) {
+      removeActiveFretClass();
+    }
+  });
 }
+
 
 export {
   setupToolBar,
@@ -379,4 +408,5 @@ export {
   showNumberCircle,
   showSecondNumberCircle,
   removeOpenNumberCircle, // Add this export
+  removeActiveFretClass // Export the function
 };

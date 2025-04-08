@@ -5,7 +5,7 @@
 
 import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab, getNote } from './tab-data.js'; // Added getNote
-import { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle } from './ui-elements.js'; // Added more UI imports
+import { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass } from './ui-elements.js'; // Added more UI imports
 import { initializeAudio, playTab, stopPlayback, exportMIDI } from './audio.js'; // Adjusted audio imports for individual exports
 import config from '../config.js';
 
@@ -143,7 +143,15 @@ function setupUI() {
     if (tabDisplay) {
         tabDisplay.addEventListener('click', (e) => {
             if (e.target.classList.contains('fret')) {
+                // Remove active class from any previously active fret
+                removeActiveFretClass();
+                // Add active class to the currently focused fret
+                e.target.classList.add('active-fret');
+                // Store the active fret's ID in localStorage so it can be re-applied after re-render
+                localStorage.setItem('activeFretId', e.target.id);
                 showNumberCircle(e.target);
+            } else {
+                removeActiveFretClass(); // Remove highlight if clicking outside frets
             }
         });
 
@@ -154,7 +162,7 @@ function setupUI() {
             }
         });
 
-        // Add keydown handling for navigation/deletion (optional enhancement)
+        // Add keydown handling for navigation/deletion
         tabDisplay.addEventListener('keydown', (e) => {
             if (e.target.classList.contains('fret')) {
                 // Basic example: Clear fret on backspace/delete
@@ -163,8 +171,10 @@ function setupUI() {
                     e.target.textContent = '';
                     // Trigger input event to update data model
                     e.target.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault(); // Prevent default scrolling
+                    handleArrowKeyNavigation(e.key, e.target);
                 }
-                // TODO: Add arrow key navigation between frets
             }
         });
     } else {
@@ -190,6 +200,60 @@ function setupUI() {
 
     console.log("app.js: UI setup complete.");
 }
+
+/**
+ * Handles arrow key navigation between frets.
+ * @param {string} key - The arrow key pressed.
+ * @param {HTMLElement} currentFret - The currently focused fret element.
+ */
+function handleArrowKeyNavigation(key, currentFret) {
+    const measureIndex = parseInt(currentFret.dataset.measure);
+    const stringIndex = parseInt(currentFret.dataset.string);
+    const fretIndex = parseInt(currentFret.dataset.fret);
+
+    let nextFret;
+
+    switch (key) {
+        case 'ArrowLeft':
+            if (fretIndex > 0) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex - 1}`);
+            } else if (measureIndex > 0) {
+                // Move to the last fret of the previous measure on the same string
+                nextFret = document.getElementById(`fret-${measureIndex - 1}-${stringIndex}-3`);
+            }
+            break;
+        case 'ArrowRight':
+            if (fretIndex < 3) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex + 1}`);
+            } else {
+                // Move to the first fret of the next measure on the same string
+                // For now, let's just stay on the last fret if it's the last measure
+                const nextMeasureIndex = measureIndex + 1;
+                if (document.querySelector(`.fret[data-measure='${nextMeasureIndex}'][data-string='${stringIndex}'][data-fret='0']`)) {
+                    nextFret = document.getElementById(`fret-${nextMeasureIndex}-${stringIndex}-0`);
+                }
+            }
+            break;
+        case 'ArrowUp':
+            if (stringIndex > 0) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex - 1}-${fretIndex}`);
+            }
+            break;
+        case 'ArrowDown':
+            if (stringIndex < 5) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex + 1}-${fretIndex}`);
+            }
+            break;
+    }
+
+    if (nextFret) {
+        currentFret.classList.remove('active-fret'); // Remove from current
+        nextFret.classList.add('active-fret'); // Add to next
+        nextFret.focus();
+        localStorage.setItem('activeFretId', nextFret.id); // Update stored active fret ID
+    }
+}
+
 
 /**
  * Sets up the entire application.
