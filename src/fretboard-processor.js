@@ -38,6 +38,8 @@ class FretboardProcessor extends AudioWorkletProcessor {
   }
 
   process(inputs, outputs, parameters) {
+    console.log("fretboard-processor.js: process function is running"); // ADDED CONSOLE LOG
+
     const output = outputs[0];
     const channel = output[0];
 
