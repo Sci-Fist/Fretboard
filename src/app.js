@@ -432,8 +432,9 @@ function handleAddMeasureWithInput() {
         return;
     }
 
+    // Create a new measure with the specified time signature
     const newMeasure = {
-        strings: Array(6).fill(Array(4).fill('-')) // Initialize with default values
+        strings: Array(6).fill(Array(beats).fill('-')) // Initialize with '-' for each fret based on beats
     };
     tabData.measures.push(newMeasure);
 
