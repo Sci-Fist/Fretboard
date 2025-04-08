@@ -127,7 +127,7 @@ function toggleMeasureRotation() {
  * @param {function} setTabData - Function to set the tab data.
  * @param {function} renderTab - Function to re-render the tab.
  */
-export function handleFretInput(event, getTabData, setTabData, renderTab) {
+function handleFretInput(event, getTabData, setTabData, renderTab) {
     const fretElement = event.target;
     const measureIndex = parseInt(fretElement.dataset.measure, 10);
     const stringIndex = parseInt(fretElement.dataset.string, 10);
