@@ -22,9 +22,9 @@ canvas {
 
 #tab-display {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Adjust as needed */
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px;
-    border-collapse: collapse; /* Added for better table-like appearance */
+    border-collapse: collapse;
 }
 
 .measure {
@@ -39,7 +39,7 @@ canvas {
 
 .tab-string {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Adjust as needed */
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px;
 }
 
@@ -47,8 +47,8 @@ canvas {
     border: 1px solid #ccc;
     text-align: center;
     padding: 5px;
-    width: 30px; /* Adjust width as needed */
-    height: 30px; /* Adjust height as needed */
+    width: 30px;
+    height: 30px;
 }
 
 .number-circle {
@@ -65,11 +65,11 @@ canvas {
 }
 
 .playing-measure {
-    background-color: lightblue; /* Highlight playing measure */
+    background-color: lightblue;
 }
 
 .active-fret {
-    background-color: yellow; /* Highlight active fret */
+    background-color: yellow;
 }
 
 .context-menu {

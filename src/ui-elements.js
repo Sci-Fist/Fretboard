@@ -1,14 +1,8 @@
 // ui-elements.js
-import config from '../config.js'; // Import config
+import config from '../config.js';
 
-// --- Number Circle Functions ---
-
-// Array to store number circle elements for later clearing.
 let numberCircleElements = [];
 
-/**
- * Clears all number circle elements from the document.
- */
 function clearNumberCircles() {
     numberCircleElements.forEach(element => {
         element.remove();
@@ -16,25 +10,15 @@ function clearNumberCircles() {
     numberCircleElements = [];
 }
 
-/**
- * Creates and displays a number circle at the specified position.
- * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
- * @param {number} x - The x-coordinate of the center of the circle.
- * @param {number} y - The y-coordinate of the center of the circle.
- * @param {string[]} numbers - An array of numbers (as strings) to display in the circle.
- * @param {function} onClick - A callback function to execute when a number is clicked.
- */
 export function createNumberCircle(ctx, x, y, numbers, onClick) {
     const circleRadius = 20;
-    const numberSpacing = 1.2; // Adjust for spacing between numbers
+    const numberSpacing = 1.2;
     const angleIncrement = (2 * Math.PI) / numbers.length;
     const centerX = x;
     const centerY = y;
 
-    // Clear any existing number circles before creating a new one.
     clearNumberCircles();
 
-    // Create and append number elements to the DOM.
     const numberElements = [];
 
     numbers.forEach((number, index) => {
@@ -45,28 +29,75 @@ export function createNumberCircle(ctx, x, y, numbers, onClick) {
         const numberElement = document.createElement('div');
         numberElement.textContent = number;
         numberElement.style.position = 'absolute';
-        numberElement.style.left = `${numberX - parseFloat(config.numberCircleSize) / 2}px`; // Adjust for text width
-        numberElement.style.top = `${numberY - parseFloat(config.numberCircleSize) / 2}px`; // Adjust for text height
-        numberElement.style.width = config.numberCircleSize; // Use config for size
-        numberElement.style.height = config.numberCircleSize; // Use config for size
+        numberElement.style.left = `${numberX - parseFloat(config.numberCircleSize) / 2}px`;
+        numberElement.style.top = `${numberY - parseFloat(config.numberCircleSize) / 2}px`;
+        numberElement.style.width = config.numberCircleSize;
+        numberElement.style.height = config.numberCircleSize;
         numberElement.style.borderRadius = '50%';
-        numberElement.style.backgroundColor = config.numberCircleBackgroundColor; // Use config for background color
-        numberElement.style.color = config.numberCircleTextColor; // Use config for text color
+        numberElement.style.backgroundColor = config.numberCircleBackgroundColor;
+        numberElement.style.color = config.numberCircleTextColor;
         numberElement.style.textAlign = 'center';
-        numberElement.style.lineHeight = config.numberCircleSize; // Use config for line height
+        numberElement.style.lineHeight = config.numberCircleSize;
         numberElement.style.cursor = 'pointer';
-        numberElement.style.fontSize = config.numberCircleFont; // Use config for font size
-        numberElement.classList.add('number-circle'); // Add class for styling
+        numberElement.style.fontSize = config.numberCircleFont;
+        numberElement.classList.add('number-circle');
 
         numberElement.addEventListener('click', () => {
             onClick(number);
-            clearNumberCircles(); // Clear the number circles after a click
+            clearNumberCircles();
         });
 
         document.body.appendChild(numberElement);
         numberElements.push(numberElement);
     });
 
-    // Store the number elements for later clearing.
     numberCircleElements = numberElements;
 }
+
+export function handleFretInput(event) {
+    const fretElement = event.target;
+    const measureIndex = parseInt(fretElement.dataset.measure);
+    const stringIndex = parseInt(fretElement.dataset.string);
+    const fretIndexInMeasure = parseInt(fretElement.dataset.fret);
+    const newFretValue = fretElement.textContent;
+
+    if (isNaN(measureIndex) || isNaN(stringIndex) || isNaN(fretIndexInMeasure)) {
+        console.error("Data attributes missing or invalid on fret element.");
+        return;
+    }
+
+    let tabData = getTabData();
+
+    if (!tabData || !tabData.measures[measureIndex] || !tabData.measures[measureIndex].strings[stringIndex]) {
+        console.error("TabData structure is invalid or measure/string is out of bounds.");
+        return;
+    }
+
+    tabData.measures[measureIndex].strings[stringIndex][fretIndexInMeasure] = newFretValue;
+    setTabData(tabData);
+    renderTab(tabData);
+}
+
+export function removeActiveFretClass() {
+    document.querySelectorAll('.fret.active-fret').forEach(fret => fret.classList.remove('active-fret'));
+}
+
+export function showNumberCircle(fretElement) {
+    const rect = fretElement.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top - 60;
+
+    createNumberCircle(ctx, x, y, [
+        '0', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9',
+        '1x', '2x'
+    ], (value) => {
+        handleNumberCircleClickForDOMFret(fretElement, value);
+    });
+}
+
+function handleNumberCircleClickForDOMFret(fretElement, value) {
+    fretElement.textContent = value;
+    handleFretInput({ target: fretElement });
+}
+

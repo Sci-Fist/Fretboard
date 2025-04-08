@@ -194,7 +194,7 @@ function handleArrowKeyNavigation(key, currentFret) {
             if (fretIndex > 0) {
                 nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex - 1}`);
             } else if (measureIndex > 0) {
-                nextFret = document.getElementById(`fret-${measureIndex - 1}-${stringIndex}-${getTabData().measures[measureIndex-1].strings[stringIndex].length -1}`);
+                nextFret = document.getElementById(`fret-${measureIndex - 1}-${stringIndex}-${getTabData().measures[measureIndex - 1].strings[stringIndex].length - 1}`);
             }
             break;
         case 'ArrowRight':
