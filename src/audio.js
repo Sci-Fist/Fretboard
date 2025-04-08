@@ -25,19 +25,6 @@ async function resumeAudioContextOnInteraction() {
   }
 }
 
-    // Attach the event listeners for user interaction
-    document.addEventListener(
-      "touchstart",
-      resumeAudioContextOnInteraction,
-      false,
-    );
-    document.addEventListener("click", resumeAudioContextOnInteraction, false);
-    document.removeEventListener("touchstart", resumeAudioContextOnInteraction);
-    document.removeEventListener("click", resumeAudioContextOnInteraction);
-    document.removeEventListener("keydown", resumeAudioContextOnInteraction);
-  }
-}
-
 // Attach the event listeners for user interaction
 document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
 document.addEventListener("click", resumeAudioContextOnInteraction, false);
