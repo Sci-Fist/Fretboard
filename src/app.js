@@ -356,6 +356,22 @@ function setupUI() {
     // --- End Context Menu Setup ---
 
     console.log("app.js: UI setup complete.");
+
+    // Call setupToolBar *after* the tab display is rendered and the buttons are in the DOM
+    setupToolBar({
+        addMeasure: handleAddMeasureWithInput,
+        clearTab: clearTab,
+        exportTab: exportTab,
+        playTab: handlePlay,
+        pauseTab: handlePause,
+        stopPlayback: stopPlayback,
+        saveTab: saveTab,
+        loadTab: loadTab,
+        renderTab: rendering.renderTab,
+        getTabData: getTabData,
+        setTabData: setTabData,
+        toggleMeasureRotation: toggleMeasureRotation,
+    });
 }
 
 /**
