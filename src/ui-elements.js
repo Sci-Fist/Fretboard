@@ -36,13 +36,17 @@ function setupToolBar(dependencies) {
 
   // Add event listeners only if the button exists
   if (addMeasureButton) {
-    addMeasureButton.addEventListener("click", addMeasure);
+    addMeasureButton.addEventListener("click", () => {
+      console.log("Add Measure button clicked"); // DEBUG LOG
+      addMeasure();
+    });
     addMeasureButton.title = "Add a new measure (Ctrl+M)"; // Tooltip
   }
   // Removed duplicate Load Tab button logic block
 
   if (clearTabButton) {
     clearTabButton.addEventListener("click", () => {
+      console.log("Clear Tab button clicked"); // DEBUG LOG
       clearTab();
       addMeasure(); // Add an initial measure after clearing
       renderTab(getTabData());
@@ -54,14 +58,20 @@ function setupToolBar(dependencies) {
 
   if (exportTabButton) {
     // Use the passed exportTab function directly
-    exportTabButton.addEventListener("click", exportTab);
+    exportTabButton.addEventListener("click", () => {
+      console.log("Export Tab button clicked"); // DEBUG LOG
+      exportTab();
+    });
     exportTabButton.title = "Export tab as text file (Ctrl+E)"; // Tooltip
   } else {
     console.error("Button with ID 'exportTabBtn' not found.");
   }
 
   if (playTabButton) {
-    playTabButton.addEventListener("click", playTab); // Use the playTab function passed as dependency
+    playTabButton.addEventListener("click", () => {
+      console.log("Play Tab button clicked"); // DEBUG LOG
+      playTab(); // Use the playTab function passed as dependency
+    });
     playTabButton.title = "Play the tab (Spacebar)"; // Tooltip
   } else {
     console.error("Button with ID 'playTabBtn' not found.");
@@ -69,6 +79,7 @@ function setupToolBar(dependencies) {
 
   if (pauseTabButton) { // Event listener for PAUSE button
     pauseTabButton.addEventListener("click", () => {
+      console.log("Pause Tab button clicked"); // DEBUG LOG
       if (pauseTab) {
         pauseTab(); // Call the pauseTab function passed as dependency
       }
@@ -81,6 +92,7 @@ function setupToolBar(dependencies) {
 
   if (stopTabButton) {
     stopTabButton.addEventListener("click", () => {
+      console.log("Stop Tab button clicked"); // DEBUG LOG
       if (stopPlayback) {
         stopPlayback(); // Use the stopPlayback function passed as dependency
       }
@@ -92,7 +104,10 @@ function setupToolBar(dependencies) {
 
   if (saveTabButton) {
     // Use the passed saveTab function directly
-    saveTabButton.addEventListener("click", saveTab);
+    saveTabButton.addEventListener("click", () => {
+      console.log("Save Tab button clicked"); // DEBUG LOG
+      saveTab();
+    });
     saveTabButton.title = "Save tab to local storage (Ctrl+S)"; // Tooltip
   } else {
     console.error("Button with ID 'saveTabBtn' not found.");
@@ -100,7 +115,10 @@ function setupToolBar(dependencies) {
 
   if (loadTabButton) {
     // Use the passed loadTab function directly
-    loadTabButton.addEventListener("click", loadTab);
+    loadTabButton.addEventListener("click", () => {
+      console.log("Load Tab button clicked"); // DEBUG LOG
+      loadTab();
+    });
     loadTabButton.title = "Load tab from local storage (Ctrl+O)"; // Tooltip
   } else {
     console.error("Button with ID 'loadTabBtn' not found.");
@@ -109,6 +127,7 @@ function setupToolBar(dependencies) {
 
   if (rotateMeasureButton) {
     rotateMeasureButton.addEventListener("click", () => {
+      console.log("Rotate Measure button clicked"); // DEBUG LOG
       toggleMeasureRotation(); // Call the toggle function from dependencies
       renderTab(getTabData()); // Re-render to apply/remove rotation
     });
@@ -118,7 +137,7 @@ function setupToolBar(dependencies) {
   }
 
 
-  console.log("ui-elements.js: Toolbar setup complete");
+  console.log("ui-elements.js: Toolbar setup complete"); // DEBUG LOG
 }
 
 

@@ -251,7 +251,7 @@ function resetMeasureHighlight() {
  * Sets up UI elements and event listeners.
  */
 function setupUI() {
-    console.log("app.js: setupUI called");
+    console.log("app.js: setupUI called"); // DEBUG LOG
 
     // Apply config (example - could be more extensive)
     document.body.style.fontSize = config.bodyFontSize;
