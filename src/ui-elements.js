@@ -1,6 +1,16 @@
 // ui-elements.js
 import config from '../config.js'; // Import config
 
+// Function to clear number circles
+let numberCircleElements = [];
+
+function clearNumberCircles() {
+    numberCircleElements.forEach(element => {
+        element.remove();
+    });
+    numberCircleElements = [];
+}
+
 // Function to create a number circle
 export function createNumberCircle(ctx, x, y, numbers, onClick) {
     const circleRadius = 20;
@@ -22,8 +32,8 @@ export function createNumberCircle(ctx, x, y, numbers, onClick) {
         const numberElement = document.createElement('div');
         numberElement.textContent = number;
         numberElement.style.position = 'absolute';
-        numberElement.style.left = `${numberX - 10}px`; // Adjust for text width
-        numberElement.style.top = `${numberY - 10}px`; // Adjust for text height
+        numberElement.style.left = `${numberX - parseFloat(config.numberCircleSize) / 2}px`; // Adjust for text width
+        numberElement.style.top = `${numberY - parseFloat(config.numberCircleSize) / 2}px`; // Adjust for text height
         numberElement.style.width = config.numberCircleSize; // Use config for size
         numberElement.style.height = config.numberCircleSize; // Use config for size
         numberElement.style.borderRadius = '50%';
@@ -46,13 +56,4 @@ export function createNumberCircle(ctx, x, y, numbers, onClick) {
 
     // Store the number elements for later clearing
     numberCircleElements = numberElements;
-}
-
-// Function to clear number circles
-let numberCircleElements = [];
-function clearNumberCircles() {
-    numberCircleElements.forEach(element => {
-        element.remove();
-    });
-    numberCircleElements = [];
 }
