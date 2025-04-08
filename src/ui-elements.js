@@ -132,6 +132,23 @@ function setupToolBar(dependencies) {
     console.error("Button with ID 'exportMIDIBtn' not found.");
   }
 
+  // Implement Export Tab button
+  if (exportTabButton) {
+    exportTabButton.addEventListener("click", () => {
+      const tabData = getTabData();
+      const tabText = generateTablature(tabData);
+      const blob = new Blob([tabText], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "guitar_tab.txt";
+      document.body.appendChild(a); // Required for Firefox
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
   console.log("ui-elements.js: Toolbar setup complete");
 }
 
