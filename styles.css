@@ -2,6 +2,7 @@
 body {
     font-family: sans-serif;
     font-size: 16px; /* Ensure body font-size is applied */
+    background-color: #f0f0f0; /* Added basic body background color to check if stylesheet is loading */
 }
 
 canvas {
