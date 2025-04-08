@@ -433,6 +433,7 @@ function setupUI() {
         getTabData: getTabData,
         setTabData: setTabData,
         toggleMeasureRotation: toggleMeasureRotation,
+        handleFretInput: handleFretInput, // Add handleFretInput to the setupToolBar options
     });
 }
 
