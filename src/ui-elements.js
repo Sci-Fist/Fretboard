@@ -61,13 +61,7 @@ function setupToolBar(dependencies) {
   }
 
   if (playTabButton) {
-    playTabButton.addEventListener("click", () => {
-      playTab(); // Use the playTab function passed as dependency
-      // playTabButton.style.display = "none"; // Removed display changes
-      // pauseTabButton.style.display = "inline-block";
-      // stopButton.style.display = "inline-block";
-      // playTabButton.textContent = 'Resume';
-    });
+    playTabButton.addEventListener("click", playTab); // Use the playTab function passed as dependency
     playTabButton.title = "Play the tab (Spacebar)"; // Tooltip
   } else {
     console.error("Button with ID 'playTabBtn' not found.");
@@ -78,9 +72,6 @@ function setupToolBar(dependencies) {
       if (pauseTab) {
         pauseTab(); // Call the pauseTab function passed as dependency
       }
-      // Update button states for pause
-      // pauseTabButton.style.display = "none";
-      // playTabButton.style.display = "inline-block";
     });
     pauseTabButton.title = "Pause the tab (Spacebar)"; // Tooltip
   } else {
@@ -93,12 +84,6 @@ function setupToolBar(dependencies) {
       if (stopPlayback) {
         stopPlayback(); // Use the stopPlayback function passed as dependency
       }
-      // Update button states for stop
-      // stopTabButton.style.display = "none";
-      // if (pauseTabButton) {
-      //   pauseTabButton.style.display = "none";
-      // }
-      // playTabButton.style.display = "inline-block";
     });
     stopTabButton.title = "Stop playback (Esc)"; // Tooltip
   } else {
