@@ -1,7 +1,8 @@
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab, getNote } from './tab-data.js';
-import { setupToolBar, handleFretInput, removeActiveFretClass, toggleMeasureRotation } from './ui-elements.js';
+import { handleFretInput, removeActiveFretClass, toggleMeasureRotation } from './ui-elements.js';
 import { initializeAudio, playTab, stopPlayback } from './audio.js';
 import config from '../config.js';
+import { renderTab } from './rendering.js'; // Import renderTab
 
 console.log("app.js: Starting Fretboard app.js");
 
@@ -63,7 +64,7 @@ function loadTab() {
                 try {
                     const tabData = JSON.parse(e.target.result);
                     setTabData(tabData);
-                    rendering.renderTab(getTabData());
+                    renderTab(getTabData());
                     alert('Tab loaded from file!');
                 } catch (error) {
                     console.error('Error loading tab from file:', error);
@@ -106,7 +107,7 @@ function handleAddMeasureWithInput(timeSignature, measureName) {
     addMeasure(newMeasureOptions);
 
     setTabData(tabData);
-    rendering.renderTab(getTabData());
+    renderTab(getTabData());
 }
 
 /**
@@ -228,7 +229,7 @@ function handleTimeSignatureChange(event) {
     });
 
     setTabData(tabData);
-    rendering.renderTab(getTabData());
+    renderTab(getTabData());
     // TODO: Implement logic to change playback behavior based on time signature
 }
 
@@ -303,7 +304,7 @@ function resetMeasureHighlight() {
 /**
  * Sets up UI elements and event listeners.
  */
-function setupUI() {
+async function setupUI() {
     console.log("app.js: setupUI called"); // DEBUG LOG
 
     // Apply config (example - could be more extensive)
@@ -416,21 +417,21 @@ function setupUI() {
     console.log("app.js: UI setup complete.");
 
     // Call setupToolBar *after* the tab display is rendered and the buttons are in the DOM
-    setupToolBar({
-        addMeasure: openAddMeasureModal, // Changed to openAddMeasureModal
-        clearTab: clearTab,
-        exportTab: exportTab,
-        playTab: handlePlay,
-        pauseTab: handlePause,
-        stopPlayback: handleStop,
-        saveTab: saveTab,
-        loadTab: loadTab,
-        renderTab: rendering.renderTab,
-        getTabData: getTabData,
-        setTabData: setTabData,
-        toggleMeasureRotation: toggleMeasureRotation,
-        handleFretInput: handleFretInput, // Add handleFretInput to the setupToolBar options
-    });
+    // setupToolBar({  // Removed setupToolBar call
+    //     addMeasure: openAddMeasureModal, // Changed to openAddMeasureModal
+    //     clearTab: clearTab,
+    //     exportTab: exportTab,
+    //     playTab: handlePlay,
+    //     pauseTab: handlePause,
+    //     stopPlayback: handleStop,
+    //     saveTab: saveTab,
+    //     loadTab: loadTab,
+    //     renderTab: rendering.renderTab,
+    //     getTabData: getTabData,
+    //     setTabData: setTabData,
+    //     toggleMeasureRotation: toggleMeasureRotation,
+    //     handleFretInput: handleFretInput, // Add handleFretInput to the setupToolBar options
+    // });
 }
 
 /**
@@ -454,9 +455,9 @@ function showFretContextMenu(e) {
 
     // Add menu items
     const menuItems = [
-        { text: 'Clear Fret', action: () => { fretElement.textContent = ''; handleFretInput({ target: fretElement }, getTabData, setTabData, rendering.renderTab); } },
-        { text: 'Set to 0', action: () => { fretElement.textContent = '0'; handleFretInput({ target: fretElement }, getTabData, setTabData, rendering.renderTab); } },
-        { text: 'Set to 1', action: () => { fretElement.textContent = '1'; handleFretInput({ target: fretElement }, getTabData, setTabData, rendering.renderTab); } },
+        { text: 'Clear Fret', action: () => { fretElement.textContent = ''; handleFretInput({ target: fretElement }, getTabData, setTabData, renderTab); } },
+        { text: 'Set to 0', action: () => { fretElement.textContent = '0'; handleFretInput({ target: fretElement }, getTabData, setTabData, renderTab); } },
+        { text: 'Set to 1', action: () => { fretElement.textContent = '1'; handleFretInput({ target: fretElement }, getTabData, setTabData, renderTab); } },
         // Add more menu items as needed
     ];
 
@@ -550,7 +551,7 @@ async function setupApp() {
         console.log("app.js: initializeTabData finished.");
         const currentTabData = getTabData();
         console.log("app.js: Calling renderTab with data:", JSON.stringify(currentTabData)); // Log the data being passed
-        rendering.renderTab(currentTabData);
+        renderTab(currentTabData);
         console.log("app.js: renderTab finished.");
         setupUI();
         console.log("app.js: setupUI finished.");

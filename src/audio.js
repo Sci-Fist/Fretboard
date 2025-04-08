@@ -2,8 +2,23 @@ export { initializeAudio, playTab, stopPlayback, setOscillatorType, resumeTab, p
 /**
  * Initializes the audio context and other audio-related components.
  */
-function initializeAudio() {
+async function initializeAudio() {
     // Implementation details for initializing audio
+    try {
+        // Check if the AudioContext is supported
+        if (!window.AudioContext && !window.webkitAudioContext) {
+            alert('Web Audio API is not supported in this browser');
+            return;
+        }
+
+        // Create an audio context
+        window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        console.log('AudioContext initialized:', window.audioContext);
+
+    } catch (e) {
+        console.error('Error initializing audio context:', e);
+        alert('Error initializing audio. Check the console for details.');
+    }
 }
 /**
  * Plays the tab at a specified tempo.
