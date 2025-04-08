@@ -251,3 +251,60 @@ body {
         transform: scale(1);
     }
 }
+
+/* Rotated Measure Styles */
+.rotated-measure {
+    display: flex;
+    flex-direction: row; /* Arrange strings horizontally in rotated mode */
+    border: var(--config-rotated-measure-border, 1.5px solid #333);
+    padding: var(--config-rotated-measure-padding, 8px);
+    margin-bottom: var(--config-rotated-measure-margin-bottom, 10px);
+    background-color: #333;
+    border-radius: var(--config-rotated-measure-border-radius, 6px);
+    /* Adjust width and height as needed for rotated layout */
+    width: auto; /* Adjust width to content */
+    height: auto; /* Adjust height to content */
+}
+
+.rotated-string {
+    display: flex;
+    flex-direction: column; /* Arrange frets vertically in rotated string */
+    border-right: var(--config-rotated-string-border-right, 1.5px solid #333); /* Vertical separator */
+    padding: var(--config-rotated-string-padding, 0 8px);
+    /* Adjust width and height for rotated string */
+    width: auto; /* Adjust width to content */
+    height: auto; /* Adjust height to content */
+}
+
+.rotated-string-label {
+    width: auto; /* Adjust width as needed for rotated label */
+    height: 15px; /* Height to align with fret in rotated mode */
+    text-align: center; /* Center align rotated string labels */
+    margin-bottom: 5px; /* Margin below rotated string label */
+}
+
+.rotated-string-line {
+    display: none; /* Hide string line in rotated mode */
+}
+
+.rotated-fret {
+    width: var(--config-rotated-fret-width, 40px); /* Adjust fret width for rotated mode */
+    height: var(--config-rotated-fret-height, 40px); /* Adjust fret height for rotated mode */
+    border: var(--config-rotated-fret-border, 1.5px solid #555);
+    padding: var(--config-rotated-fret-padding, 6px);
+    text-align: center;
+    position: relative;
+    margin-bottom: var(--config-rotated-fret-margin-bottom, 2px); /* Margin below rotated fret */
+    background-color: #444;
+    color: #fff;
+    border-radius: var(--config-rotated-fret-border-radius, 6px);
+    font-size: var(--config-rotated-fret-font-size, 14px); /* Adjust font size for rotated frets */
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}
+
+.rotated-string:last-child {
+    border-right: none; /* No border for the last rotated string */
+}
