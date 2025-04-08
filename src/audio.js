@@ -1,5 +1,5 @@
 // src/audio.js
-import * as Tone from '../node_modules/tone/build/esm/index.js';
+import * as Tone from 'tone';
 
 let audioContext;
 let fretboardSynth;
