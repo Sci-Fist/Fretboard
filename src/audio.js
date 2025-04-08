@@ -1,6 +1,6 @@
 // src/audio.js
-import * as Tone from '../node_modules/tone/build/esm/index.js';
-import { createAudioContext } from 'standardized-audio-context';
+import * as Tone from 'tone';
+import { createAudioContext } from '../node_modules/standardized-audio-context/dist/index.js';
 
 let audioContext;
 let fretboardSynth;
