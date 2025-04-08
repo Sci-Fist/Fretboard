@@ -10,19 +10,25 @@ function nextNote() {
   nextNoteTime += secondsPerBeat / 2;
 }
 
-function scheduleNote(beatNumber, time, frequency) {
-  const osc = actx.createOscillator();
-  osc.type = "sine";
-  osc.frequency.value = frequency;
-  osc.connect(actx.destination);
+function playNote(note, duration) {
+  console.log("audio.js: playNote called with", note, duration);
 
-  osc.start(time);
-  osc.stop(time + 0.5);
+  if (!fretboardNode) {
+    console.warn("audio.js: AudioWorkletNode not initialized.");
+    return;
+  }
+  if (actx.state === "suspended") {
+    actx.resume();
+  }
+  fretboardNode.port.postMessage({
+    type: "noteOn",
+    note: note,
+    velocity: 0.75, // Example: Set velocity
+  });
 }
 
-function playNote(frequency) {
-  scheduleNote(0, nextNoteTime, frequency);
-  nextNote();
+function scheduleNote(beatNumber, time, frequency) {
+  //This function is no longer used
 }
 
 function playTab(tabData) {
@@ -40,6 +46,9 @@ function playTab(tabData) {
 
 function stopPlayback() {
   clearInterval(timerID);
+  if (fretboardNode) {
+    fretboardNode.port.postMessage({ type: "noteOff" });
+  }
 }
 
 function exportMIDI(tabData) {
@@ -53,8 +62,19 @@ function handleExport(tabData) {
 }
 
 async function setupAudioWorklet() {
-  // Placeholder function
-  console.log("setupAudioWorklet called");
+  try {
+    await actx.audioWorklet.addModule("fretboard-processor.js"); // Path to the processor file
+    fretboardNode = new AudioWorkletNode(actx, "fretboard-processor", {
+      parameterData: { detune: 0 }, // Initialize detune parameter
+    }); // Use the processor's registered name
+    // Connect the AudioWorkletNode to the destination
+    fretboardNode.connect(actx.destination);
+  } catch (error) {
+    console.error("Failed to initialize AudioWorklet:", error);
+    alert(
+      "Failed to initialize audio playback. Please check your browser settings and the console.",
+    );
+  }
 }
 
 setupAudioWorklet();

@@ -13,40 +13,31 @@ class FretboardProcessor extends AudioWorkletProcessor {
 
   constructor() {
     super();
-    this.note = null; // Current note being played
-    this.velocity = 1.0; // Default velocity
-    this.oscillator = {
-      frequency: 440, // Default frequency
-      type: "sine", // Default oscillator type
-    };
-    this.detune = 0; // In cents.
-
-    this.port.onmessage = (event) => {
-      if (event.data.type === "noteOn") {
-        this.note = event.data.note;
-        this.velocity = event.data.velocity || 1.0;
-      } else if (event.data.type === "noteOff") {
-        this.note = null; // Stop playing the note
-      } else if (event.data.type === "setOscillatorType") {
-        this.oscillator.type = event.data.oscillatorType;
-      }
-    };
+    this.note = null;
+    this.velocity = 0.0; // Initialize to 0 for smooth start
+    this.oscillatorType = "sine";
+    this.frequency = 440;
+    this.phase = 0;
+    this.detune = 0;
   }
 
   process(inputs, outputs, parameters) {
     const output = outputs[0];
-    if (!output) {
-      return false; // No output, bail
-    }
-
-    const channel = output[0]; // Assuming mono output
+    const channel = output[0];
 
     if (!channel) {
-      return false;
+      return true;
     }
 
+    const detune = parameters.detune[0]; // Get detune value
+
     if (this.note === null) {
-      // Write silence if no note is playing
+      this.velocity = Math.max(0, this.velocity - 0.01); // Fade out
+    } else {
+      this.velocity = Math.min(1.0, this.velocity + 0.01); // Fade in
+    }
+
+    if (this.velocity === 0) {
       for (let i = 0; i < channel.length; i++) {
         channel[i] = 0;
       }
@@ -56,60 +47,54 @@ class FretboardProcessor extends AudioWorkletProcessor {
     //--- Get the note and frequency ---
     const A4 = 440;
     const semitoneRatio = 2 ** (1 / 12);
-    const noteNumber = this.note.match(/([a-gA-G#b]+)(\d+)/); // parse note like "E4", "A#3"
-    if (!noteNumber) {
-      for (let i = 0; i < channel.length; i++) {
-        channel[i] = 0;
-      }
-      return true; // Continue processing
-    }
-    let noteName = noteNumber[1];
-    let octave = parseInt(noteNumber[2]);
+    const noteNumber = this.note ? this.note.match(/([a-gA-G#b]+)(\d+)/) : null;
     let noteValue = 0;
 
-    const noteMap = {
-      C: 0,
-      "C#": 1,
-      D: 2,
-      "D#": 3,
-      E: 4,
-      F: 5,
-      "F#": 6,
-      G: 7,
-      "G#": 8,
-      A: 9,
-      "A#": 10,
-      B: 11,
-    };
+    if (noteNumber) {
+      const noteName = noteNumber[1];
+      const octave = parseInt(noteNumber[2]);
 
-    if (noteName && octave) {
+      const noteMap = {
+        C: 0,
+        "C#": 1,
+        D: 2,
+        "D#": 3,
+        E: 4,
+        F: 5,
+        "F#": 6,
+        G: 7,
+        "G#": 8,
+        A: 9,
+        "A#": 10,
+        B: 11,
+      };
+
       noteValue = noteMap[noteName] + (octave - 4) * 12;
     }
 
-    const frequency = A4 * semitoneRatio ** noteValue;
+    this.frequency = A4 * semitoneRatio ** noteValue;
     //--- Get the frequency---
 
-    const phaseIncrement = (frequency * 2 * Math.PI) / sampleRate;
-    let phase = 0;
+    const phaseIncrement = (this.frequency * 2 * Math.PI) / sampleRate;
 
     for (let i = 0; i < channel.length; i++) {
       let sample = 0;
 
       // Oscillator selection
-      if (this.oscillator.type === "sine") {
-        sample = Math.sin(phase) * this.velocity;
-      } else if (this.oscillator.type === "square") {
-        sample = phase < Math.PI ? this.velocity : -this.velocity;
-      } else if (this.oscillator.type === "sawtooth") {
-        sample = 2 * (phase / (2 * Math.PI)) - 1;
-      } else if (this.oscillator.type === "triangle") {
-        sample = (2 / Math.PI) * Math.asin(Math.sin(phase));
+      if (this.oscillatorType === "sine") {
+        sample = Math.sin(this.phase);
+      } else if (this.oscillatorType === "square") {
+        sample = this.phase < Math.PI ? 1 : -1;
+      } else if (this.oscillatorType === "sawtooth") {
+        sample = 2 * (this.phase / (2 * Math.PI)) - 1;
+      } else if (this.oscillatorType === "triangle") {
+        sample = (2 / Math.PI) * Math.asin(Math.sin(this.phase));
       }
 
-      channel[i] = sample;
-      phase += phaseIncrement;
-      if (phase > 2 * Math.PI) {
-        phase -= 2 * Math.PI;
+      channel[i] = sample * this.velocity;
+      this.phase += phaseIncrement;
+      if (this.phase > 2 * Math.PI) {
+        this.phase -= 2 * Math.PI;
       }
     }
 
