@@ -397,7 +397,7 @@ function setupUI() {
 
     // Call setupToolBar *after* the tab display is rendered and the buttons are in the DOM
     setupToolBar({
-        addMeasure: handleAddMeasureWithInput,
+        addMeasure: openAddMeasureModal, // Changed to openAddMeasureModal
         clearTab: clearTab,
         exportTab: exportTab,
         playTab: handlePlay,
