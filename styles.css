@@ -1,31 +1,90 @@
 /* styles.css */
 body {
     font-family: sans-serif;
-    font-size: 16px; /* Ensure body font-size is applied */
-    background-color: #f0f0f0; /* Added basic body background color to check if stylesheet is loading */
+    font-size: 16px;
+    background-color: #f0f0f0;
 }
 
 canvas {
     border: 1px solid black;
 }
 
-#controls button { /* Style for buttons in controls div */
-    margin-top: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
+#controls {
+    margin-bottom: 10px;
+}
+
+#controls button {
+    margin-right: 5px;
+    padding: 8px 15px;
+    font-size: 14px;
     cursor: pointer;
 }
 
-/* Add styles for the number circle */
+#tab-display {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust as needed */
+    grid-gap: 5px;
+    border-collapse: collapse; /* Added for better table-like appearance */
+}
+
+.measure {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.measure-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.tab-string {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust as needed */
+    grid-gap: 5px;
+}
+
+.fret {
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 5px;
+    width: 30px; /* Adjust width as needed */
+    height: 30px; /* Adjust height as needed */
+}
+
 .number-circle {
     position: absolute;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: lightgray; /* Ensure background color is applied */
+    background-color: lightgray;
     color: black;
     text-align: center;
     line-height: 20px;
     font-size: 12px;
     cursor: pointer;
+}
+
+.playing-measure {
+    background-color: lightblue; /* Highlight playing measure */
+}
+
+.active-fret {
+    background-color: yellow; /* Highlight active fret */
+}
+
+.context-menu {
+    background-color: #333;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.context-menu div {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.context-menu div:hover {
+    background-color: #555;
 }
