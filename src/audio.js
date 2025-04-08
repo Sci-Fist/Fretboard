@@ -1,7 +1,7 @@
 // src/audio.js
 // audio.js - Handles audio playback and processing
 
-import * as Tone from 'tone';
+import * as Tone from '/node_modules/tone/Tone.js'; // Explicit path to tone.js in node_modules
 import { getTabData, getNote } from './tab-data.js';
 
 let isPlaying = false;
