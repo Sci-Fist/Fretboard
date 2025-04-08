@@ -23,7 +23,7 @@ function initializeTabData() {
       measures: [], // Start with empty measures before adding one
       timeSignature: defaultTabData.timeSignature // Initialize time signature
     };
-    addMeasure(); // Add the initial measure
+    addMeasure(); // Add the initial measure with default time signature
 }
 
 
@@ -32,15 +32,10 @@ function initializeTabData() {
  */
 function addMeasure() {
     console.log('tab-data.js: addMeasure called');
+    const timeSignature = tabData.timeSignature;
+    const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10); // Get numerator
     const measure = {
-        strings: [
-            ['-', '-', '-', '-'],
-            ['-', '-', '-', '-'],
-            ['-', '-', '-', '-'],
-            ['-', '-', '-', '-'],
-            ['-', '-', '-', '-'],
-            ['-', '-', '-', '-']
-        ]
+        strings: Array(6).fill(Array(beatsPerMeasure).fill('-')) // Use beatsPerMeasure for fret count
     };
     tabData.measures.push(measure);
     console.log('tab-data.js: tabData after addMeasure:', tabData);
@@ -53,6 +48,7 @@ function clearTab() {
     console.log('tab-data.js: clearTab called');
     tabData.measures = []; // Correctly clears measures
     tabData.timeSignature = defaultTabData.timeSignature; // Reset time signature to default
+    addMeasure(); // Add an initial measure with default time signature after clearing
     // Optionally reset other properties if needed, e.g., bpm
     // tabData.bpm = defaultTabData.bpm;
 }
