@@ -67,6 +67,13 @@ export function renderTab(tabData) {
                 fretDiv.textContent = measure.strings[stringIndex][fretIndex] || "-"; // Set the fret text content, default to '-'
                 fretDiv.setAttribute('tabindex', '0'); // Make the frets focusable
                 fretDiv.setAttribute('aria-label', `Fret ${fretDiv.textContent || 'empty'}`); // Provide accessible label
+
+                // Add click event listener to each fret
+                fretDiv.addEventListener('click', (event) => {
+                    console.log("Fret clicked:", fretDiv.id); // DEBUG LOG
+                    showNumberCircle(fretDiv);
+                });
+
                 stringDiv.appendChild(fretDiv);
             }
             measureDiv.appendChild(stringDiv);
