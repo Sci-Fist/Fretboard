@@ -136,3 +136,4 @@ try {
 }
 
 registerProcessor("fretboard-processor", FretboardProcessor);
+}
