@@ -1,9 +1,5 @@
-// src/app.js
-// Main app logic - setting things up and making it go!
-
-import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab, getNote } from './tab-data.js';
-import { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass, toggleMeasureRotation } from './ui-elements.js';
+import { setupToolBar, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass, toggleMeasureRotation, handleFretInput } from './ui-elements.js';
 import { initializeAudio, playTab, stopPlayback } from './audio.js';
 import config from '../config.js';
 
