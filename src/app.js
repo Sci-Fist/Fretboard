@@ -47,20 +47,28 @@ function saveTab() {
 
 function loadTab() {
     console.log("app.js: loadTab called");
-    const savedTab = localStorage.getItem('guitarTab');
-    if (savedTab) {
-        try {
-            const tabData = JSON.parse(savedTab);
-            setTabData(tabData);
-            rendering.renderTab(getTabData());
-            alert('Tab loaded from local storage!');
-        } catch (error) {
-            console.error('Error loading tab from local storage:', error);
-            alert('Error loading tab. Check the console for more details.');
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.json'; // Accept only JSON files
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const tabData = JSON.parse(e.target.result);
+                    setTabData(tabData);
+                    rendering.renderTab(getTabData());
+                    alert('Tab loaded from file!');
+                } catch (error) {
+                    console.error('Error loading tab from file:', error);
+                    alert('Error loading tab from file. Check the console for more details.');
+                }
+            };
+            reader.readAsText(file);
         }
-    } else {
-        alert('No tab found in local storage.');
-    }
+    });
+    fileInput.click(); // Trigger the file selection dialog
 }
 
 function generateTablature(tabData) {
@@ -104,6 +112,7 @@ function toggleMeasureRotation() {
     console.log("toggleMeasureRotation - after toggle:", isMeasureRotated);
     console.log("toggleMeasureRotation - tabData.isMeasureRotated:", tabData.isMeasureRotated);
     console.log(`app.js: Measure rotation toggled to: ${isMeasureRotated}`);
+    rendering.renderTab(getTabData()); // Re-render the tab to apply the rotation
 }
 
 // --- Playback Controls ---
