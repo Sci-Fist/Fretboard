@@ -10,8 +10,5 @@
   "license": "MIT",
   "devDependencies": {
     "parcel": "^2.9.3"
-  },
-  "dependencies": {
-    "tone": "^15.0.4"
   }
 }
