@@ -342,3 +342,129 @@ function setupUI() {
     }
 
     // --- End Add
+    // --- Context Menu Setup ---
+    const tabDisplay = document.getElementById("tab-display");
+    if (tabDisplay) {
+        tabDisplay.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Prevent the default context menu
+
+            if (e.target.classList.contains('fret')) {
+                showFretContextMenu(e);
+            }
+        });
+    }
+    // --- End Context Menu Setup ---
+
+    console.log("app.js: UI setup complete.");
+}
+
+/**
+ * Handles arrow key navigation between frets.
+ * @param {string} key - The arrow key pressed.
+ * @param {HTMLElement} currentFret - The currently focused fret element.
+ */
+function handleArrowKeyNavigation(key, currentFret) {
+    const measureIndex = parseInt(currentFret.dataset.measure);
+    const stringIndex = parseInt(currentFret.dataset.string);
+    const fretIndex = parseInt(currentFret.dataset.fret);
+
+    let nextFret;
+
+    switch (key) {
+        case 'ArrowLeft':
+            if (fretIndex > 0) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex - 1}`);
+            } else if (measureIndex > 0) {
+                nextFret = document.getElementById(`fret-${measureIndex - 1}-${stringIndex}-3`);
+            }
+            break;
+        case 'ArrowRight':
+            if (fretIndex < 3) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex + 1}`);
+            } else {
+                const nextMeasureIndex = measureIndex + 1;
+                if (document.querySelector(`.fret[data-measure='${nextMeasureIndex}'][data-string='${stringIndex}'][data-fret='0']`)) {
+                    nextFret = document.getElementById(`fret-${nextMeasureIndex}-${stringIndex}-0`);
+                }
+            }
+            break;
+        case 'ArrowUp':
+            if (stringIndex > 0) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex - 1}-${fretIndex}`);
+            }
+            break;
+        case 'ArrowDown':
+            if (stringIndex < 5) {
+                nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex + 1}-${fretIndex}`);
+            }
+            break;
+    }
+
+    if (nextFret) {
+        currentFret.classList.remove('active-fret');
+        nextFret.classList.add('active-fret');
+        nextFret.focus();
+        localStorage.setItem('activeFretId', nextFret.id);
+    }
+}
+
+function handleAddMeasureWithInput(timeSignature) {
+    console.log("app.js: handleAddMeasureWithInput called");
+    const tabData = getTabData();
+
+    // Validate time signature format
+    const timeSignatureRegex = /^\d+\/\d+$/;
+    if (!timeSignatureRegex.test(timeSignature)) {
+        alert("Invalid time signature format. Please use the format 'X/Y'.");
+        return;
+    }
+
+    const [beats, noteValue] = timeSignature.split('/').map(Number);
+
+    if (isNaN(beats) || isNaN(noteValue) || beats <= 0 || noteValue <= 0) {
+        alert("Invalid time signature. Please enter positive numbers for beats and note value.");
+        return;
+    }
+
+    // Create a new measure with the specified time signature
+    const newMeasure = {
+        strings: Array(6).fill(Array(beats).fill('-')) // Initialize with '-' for each fret based on beats
+    };
+    tabData.measures.push(newMeasure);
+    tabData.timeSignature = timeSignature; // Set the time signature for the new measure
+
+    setTabData(tabData);
+    rendering.renderTab(getTabData());
+}
+
+
+/**
+ * Sets up the entire application.
+ */
+async function setupApp() {
+    console.log("app.js: setupApp called");
+    try {
+        console.log("app.js: Calling initializeTabData...");
+        initializeTabData();
+        console.log("app.js: initializeTabData finished.");
+        const currentTabData = getTabData();
+        console.log("app.js: Calling renderTab with data:", JSON.stringify(currentTabData)); // Log the data being passed
+        rendering.renderTab(currentTabData);
+        console.log("app.js: renderTab finished.");
+        setupUI();
+        console.log("app.js: setupUI finished.");
+        // Initialize Audio after UI setup (or ensure context is resumed on interaction)
+        await initializeAudio();
+        console.log("app.js: initializeAudio finished.");
+        // Config variables and log are now inside setupUI.
+    } catch (error) {
+        // This catch block now handles errors from initializeTabData, renderTab, setupUI, AND initializeAudio
+        console.error("app.js: Error during app setup:", error);
+        console.trace(); // Add stack trace
+        alert("Failed to initialize the application. Please check the console for details.");
+    }
+    console.log("app.js: Finished setupApp");
+}
+
+// --- Start the App ---
+setupApp();
