@@ -266,9 +266,68 @@ function setupUI() {
     }
 
 
+    // --- Add Measure Modal Setup ---
+    const addMeasureModal = document.createElement('div');
+    addMeasureModal.id = 'addMeasureModal';
+    addMeasureModal.style.display = 'none'; // Initially hidden
+    addMeasureModal.style.position = 'fixed';
+    addMeasureModal.style.zIndex = '1000'; // Ensure it's on top
+    addMeasureModal.style.left = '50%';
+    addMeasureModal.style.top = '50%';
+    addMeasureModal.style.transform = 'translate(-50%, -50%)';
+    addMeasureModal.style.backgroundColor = '#fff';
+    addMeasureModal.style.padding = '20px';
+    addMeasureModal.style.border = '1px solid #ccc';
+    addMeasureModal.style.borderRadius = '5px';
+    addMeasureModal.innerHTML = `
+        <h2>Add Measure</h2>
+        <label for="timeSignature">Time Signature:</label>
+        <select id="timeSignature">
+            <option value="4/4">4/4</option>
+            <option value="3/4">3/4</option>
+            <option value="6/8">6/8</option>
+            <option value="2/4">2/4</option>
+        </select>
+        <br><br>
+        <button id="addMeasureModalSubmit">Add Measure</button>
+        <button id="addMeasureModalCancel">Cancel</button>
+    `;
+    document.body.appendChild(addMeasureModal);
+
+    // Modal event listeners
+    const addMeasureModalSubmit = document.getElementById('addMeasureModalSubmit');
+    const addMeasureModalCancel = document.getElementById('addMeasureModalCancel');
+    const timeSignatureSelectModal = document.getElementById('timeSignature');
+
+    if (addMeasureModalSubmit) {
+        addMeasureModalSubmit.addEventListener('click', () => {
+            const selectedTimeSignature = timeSignatureSelectModal.value;
+            handleAddMeasure(selectedTimeSignature);
+            closeAddMeasureModal();
+        });
+    } else {
+        console.error("app.js: addMeasureModalSubmit element not found.");
+    }
+
+    if (addMeasureModalCancel) {
+        addMeasureModalCancel.addEventListener('click', closeAddMeasureModal);
+    } else {
+        console.error("app.js: addMeasureModalCancel element not found.");
+    }
+
+    function openAddMeasureModal() {
+        addMeasureModal.style.display = 'block';
+    }
+
+    function closeAddMeasureModal() {
+        addMeasureModal.style.display = 'none';
+    }
+
+    // --- End Add Measure Modal Setup ---
+
     // Pass dependencies to setupToolBar
     setupToolBar({
-        addMeasure: handleAddMeasureWithInput,
+        addMeasure: openAddMeasureModal, // Now calls handleAddMeasureWithInput from app.js
         clearTab,
         exportTab,
         playTab: handlePlay,
@@ -388,13 +447,9 @@ function handleArrowKeyNavigation(key, currentFret) {
     }
 }
 
-function handleAddMeasureWithInput() {
+function handleAddMeasureWithInput(timeSignature) {
     console.log("app.js: handleAddMeasureWithInput called");
     const tabData = getTabData();
-    const timeSignature = prompt("Enter time signature for the new measure (e.g., 4/4, 6/8):", "4/4"); // Prompt for time signature
-    if (!timeSignature) {
-        return; // User cancelled
-    }
 
     // Validate time signature format
     const timeSignatureRegex = /^\d+\/\d+$/;
