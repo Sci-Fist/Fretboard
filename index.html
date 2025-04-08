@@ -4,21 +4,32 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Guitar Tab App</title>
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="styles.css"> <!-- Ensure CSS is linked -->
     </head>
     <body>
         <div class="tool-bar">
             <!-- Add buttons with expected IDs -->
             <button id="addMeasureBtn">Add Measure</button>
             <button id="clearTabBtn">Clear Tab</button>
-            <button id="setBPMBtn">Set BPM</button> <!-- Functionality missing -->
-            <button id="playTabBtn">Play Tab</button>
+            <label for="bpmInput">BPM:</label> <!-- Label for BPM input -->
+            <input type="number" id="bpmInput" value="120" min="1" max="300"> <!-- BPM Input Field -->
+            <button id="playTabBtn">Play</button> <!-- Play/Resume Button -->
+            <button id="pauseTabBtn" style="display: none;">Pause</button>
             <button id="stopTabBtn" style="display: none;">Stop</button>
             <button id="saveTabBtn">Save Tab</button>
             <button id="loadTabBtn">Load Tab</button>
             <button id="exportTabBtn">Export Tab</button>
-            <button id="exportMIDIBtn">Export MIDI</button> <!-- Functionality missing -->
+            <button id="exportMIDIBtn">Export MIDI</button>
             <button id="rotateMeasureBtn" aria-label="Rotate Measure">Rotate Measure</button>
+
+            <!-- Time Signature Selection -->
+            <select id="timeSignatureSelect">
+                <option value="4/4">4/4</option>
+                <option value="3/4">3/4</option>
+                <option value="2/4">2/4</option>
+                <option value="6/8">6/8</option>
+                <!-- Add more time signatures as needed -->
+            </select>
         </div>
         <div id="tab-display">
             <!-- Tab display will be added here by JavaScript -->

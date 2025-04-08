@@ -13,6 +13,9 @@ console.log("app.js: Starting app.js");
 
 let isMeasureRotated = false; // State variable to track measure rotation
 let isPlaying = false; // Playback state
+let currentMeasureIndex = -1; // Track current measure during playback
+let playbackIntervalId = null; // Interval ID for playback timing
+
 
 // --- Placeholder Functions ---
 // TODO: Implement actual functionality
@@ -33,20 +36,6 @@ function exportTab() {
     alert("Tab exported as text!");
 }
 
-function showBPMInput() {
-    console.log("app.js: showBPMInput called (placeholder)");
-    const currentBPM = getTabData().bpm || 120;
-    const newBPM = prompt("Enter new BPM:", currentBPM);
-    if (newBPM !== null && !isNaN(newBPM) && newBPM > 0) {
-        const tabData = getTabData();
-        tabData.bpm = parseInt(newBPM, 10);
-        setTabData(tabData);
-        alert(`BPM set to ${tabData.bpm}`);
-        // Optionally re-render or update UI elements showing BPM
-    } else if (newBPM !== null) {
-        alert("Invalid BPM value.");
-    }
-}
 
 function saveTab() {
     console.log("app.js: saveTab called");
@@ -142,7 +131,9 @@ function handlePlay() {
             playButton.style.display = 'none'; // Hide Play button
             pauseButton.style.display = 'inline-block'; // Show Pause button
             stopButton.style.display = 'inline-block'; // Show Stop button
+            playButton.textContent = 'Resume'; // Change Play to Resume
         }
+        startPlaybackHighlight(); // Start visual highlighting
     } else {
         handlePause(); // If already playing, treat "Play" as "Resume" (or could be separate "Resume" button)
     }
@@ -161,7 +152,9 @@ function handlePause() {
             playButton.style.display = 'inline-block'; // Show Play button (now acts as Resume)
             pauseButton.style.display = 'none'; // Hide Pause button
             stopButton.style.display = 'inline-block'; // Keep Stop button visible
+            playButton.textContent = 'Resume'; // Keep text as Resume
         }
+        stopPlaybackHighlight(); // Stop visual highlighting
     }
 }
 
@@ -171,6 +164,7 @@ function handleStop() {
         console.log("app.js: Playback stopped");
         stopPlayback(); // Call audio.js stopPlayback
         isPlaying = false;
+        currentMeasureIndex = -1; // Reset measure index
         // Update UI to reflect stopped state
         const playButton = document.getElementById('playTabBtn');
         const pauseButton = document.getElementById('pauseTabBtn');
@@ -179,7 +173,10 @@ function handleStop() {
             playButton.style.display = 'inline-block'; // Show Play button
             pauseButton.style.display = 'none'; // Hide Pause button
             stopButton.style.display = 'none'; // Hide Stop button
+            playButton.textContent = 'Play'; // Change back to Play
         }
+        stopPlaybackHighlight(); // Stop visual highlighting and clear any highlights
+        resetMeasureHighlight(); // Ensure all measure highlights are cleared
     }
 }
 
@@ -191,6 +188,60 @@ function handleTimeSignatureChange(event) {
     setTabData(tabData);
     rendering.renderTab(getTabData()); // Re-render the tab to reflect changes (if needed visually)
     // TODO: Implement logic to change measure structure or playback behavior based on time signature
+}
+
+// --- Playback Highlighting ---
+function startPlaybackHighlight() {
+    if (!isPlaying) {
+        isPlaying = true;
+        currentMeasureIndex = 0; // Start from the first measure
+        const tabData = getTabData();
+        const bpm = tabData.bpm || 120;
+        const measures = tabData.measures;
+
+        if (!measures || measures.length === 0) {
+            console.warn("No measures to play.");
+            isPlaying = false;
+            return;
+        }
+
+        const millisecondsPerBeat = 60000 / bpm;
+        // Assuming 4 beats per measure for now - adjust based on time signature later if needed
+        const millisecondsPerMeasure = millisecondsPerBeat * 4; // Default to 4 beats/measure
+
+        playbackIntervalId = setInterval(() => {
+            if (currentMeasureIndex < measures.length) {
+                highlightMeasure(currentMeasureIndex);
+                currentMeasureIndex++;
+            } else {
+                stopPlaybackHighlight(); // Stop interval when all measures played
+                handleStop(); // Automatically stop playback
+            }
+        }, millisecondsPerMeasure);
+    }
+}
+
+function stopPlaybackHighlight() {
+    isPlaying = false;
+    if (playbackIntervalId) {
+        clearInterval(playbackIntervalId);
+        playbackIntervalId = null;
+    }
+    resetMeasureHighlight(); // Clear all highlights when playback stops
+}
+
+function highlightMeasure(measureIndex) {
+    resetMeasureHighlight(); // Clear any previous highlights
+    const measureDiv = document.querySelector(`.measure:nth-child(${measureIndex + 1})`);
+    if (measureDiv) {
+        measureDiv.classList.add('playing-measure');
+    }
+}
+
+function resetMeasureHighlight() {
+    document.querySelectorAll('.measure.playing-measure').forEach(measure => {
+        measure.classList.remove('playing-measure');
+    });
 }
 
 
@@ -212,13 +263,31 @@ function setupUI() {
         console.error("app.js: timeSignatureSelect element not found.");
     }
 
+    // Get BPM input element
+    const bpmInputElement = document.getElementById('bpmInput');
+    if (bpmInputElement) {
+        bpmInputElement.addEventListener('change', (event) => {
+            const newBPM = parseInt(event.target.value, 10);
+            if (!isNaN(newBPM) && newBPM > 0) {
+                const tabData = getTabData();
+                tabData.bpm = newBPM;
+                setTabData(tabData);
+                console.log(`BPM set to ${tabData.bpm}`);
+            } else {
+                alert("Invalid BPM value. Please enter a number greater than 0.");
+                bpmInputElement.value = getTabData().bpm || 120; // Revert to previous value
+            }
+        });
+    } else {
+        console.error("app.js: bpmInput element not found.");
+    }
+
 
     // Pass dependencies to setupToolBar
     setupToolBar({
         addMeasure,
         clearTab,
         exportTab, // Now defined in app.js
-        showBPMInput, // Now defined in app.js
         playTab: handlePlay, // Use handlePlay function
         pauseTab: handlePause, // Use handlePause function
         stopPlayback: handleStop, // Use handleStop function (renamed for clarity in toolbar context)
