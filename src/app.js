@@ -302,7 +302,7 @@ function setupUI() {
     if (addMeasureModalSubmit) {
         addMeasureModalSubmit.addEventListener('click', () => {
             const selectedTimeSignature = timeSignatureSelectModal.value;
-            handleAddMeasure(selectedTimeSignature);
+            handleAddMeasureWithInput(selectedTimeSignature);
             closeAddMeasureModal();
         });
     } else {
@@ -467,7 +467,7 @@ function handleAddMeasureWithInput(timeSignature) {
 
     // Create a new measure with the specified time signature
     const newMeasure = {
-        strings: Array(6).fill(Array(4).fill('-')) // Initialize with '-' for each fret based on beats
+        strings: Array(6).fill(Array(beats).fill('-')) // Initialize with '-' for each fret based on beats
     };
     tabData.measures.push(newMeasure);
     tabData.timeSignature = timeSignature; // Set the time signature for the new measure
