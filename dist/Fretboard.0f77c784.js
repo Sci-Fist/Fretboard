@@ -669,29 +669,216 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"2R06K":[function(require,module,exports,__globalThis) {
 // src/app.js
 // Main app logic - setting things up and making it go!
+// Main app logic - setting things up and making it go!
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _renderingJs = require("./rendering.js");
-var _tabDataJs = require("./tab-data.js");
-var _uiElementsJs = require("./ui-elements.js");
-var _audioJs = require("./audio.js");
+var _tabDataJs = require("./tab-data.js"); // Added getNote
+var _uiElementsJs = require("./ui-elements.js"); // Added more UI imports
+var _audioJs = require("./audio.js"); // Adjusted audio imports for individual exports
 var _configJs = require("../config.js");
 var _configJsDefault = parcelHelpers.interopDefault(_configJs);
 console.log("app.js: Starting app.js");
+// --- Placeholder Functions ---
+// TODO: Implement actual functionality
+function exportTab() {
+    console.log("app.js: exportTab called (placeholder)");
+    const tabData = (0, _tabDataJs.getTabData)();
+    // Using the generateTablature function (consider moving it)
+    const tabText = generateTablature(tabData);
+    const blob = new Blob([
+        tabText
+    ], {
+        type: "text/plain"
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "guitar_tab.txt";
+    document.body.appendChild(a); // Required for Firefox
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    alert("Tab exported as text!");
+}
+function showBPMInput() {
+    console.log("app.js: showBPMInput called (placeholder)");
+    const currentBPM = (0, _tabDataJs.getTabData)().bpm || 120;
+    const newBPM = prompt("Enter new BPM:", currentBPM);
+    if (newBPM !== null && !isNaN(newBPM) && newBPM > 0) {
+        const tabData = (0, _tabDataJs.getTabData)();
+        tabData.bpm = parseInt(newBPM, 10);
+        (0, _tabDataJs.setTabData)(tabData);
+        alert(`BPM set to ${tabData.bpm}`);
+    // Optionally re-render or update UI elements showing BPM
+    } else if (newBPM !== null) alert("Invalid BPM value.");
+}
+function saveTab() {
+    console.log("app.js: saveTab called");
+    try {
+        const tabData = (0, _tabDataJs.getTabData)();
+        localStorage.setItem('guitarTab', JSON.stringify(tabData));
+        alert('Tab saved to local storage!');
+    } catch (error) {
+        console.error('Error saving tab to local storage:', error);
+        alert('Error saving tab. Check the console for more details.');
+    }
+}
+function loadTab() {
+    console.log("app.js: loadTab called");
+    const savedTab = localStorage.getItem('guitarTab');
+    if (savedTab) try {
+        const tabData = JSON.parse(savedTab);
+        (0, _tabDataJs.setTabData)(tabData);
+        _renderingJs.renderTab((0, _tabDataJs.getTabData)()); // Re-render after loading
+        alert('Tab loaded from local storage!');
+    } catch (error) {
+        console.error('Error loading tab from local storage:', error);
+        alert('Error loading tab. Check the console for more details.');
+    }
+    else alert('No tab found in local storage.');
+}
+// Helper function (consider moving to ui-elements or utils) - needed for exportTab
+function generateTablature(tabData) {
+    if (!tabData || !tabData.measures || tabData.measures.length === 0) return "No tab data.";
+    let tabString = "";
+    const tuning = tabData.tuning || [
+        'E',
+        'A',
+        'D',
+        'G',
+        'B',
+        'E'
+    ]; // Default tuning if not present
+    const stringLabels = [
+        "E",
+        "A",
+        "D",
+        "G",
+        "B",
+        "e"
+    ]; // Standard tuning labels
+    tabData.measures.forEach((measure, measureIndex)=>{
+        tabString += `Measure ${measureIndex + 1}:\n`;
+        // Ensure measure.strings exists and has the correct length
+        const strings = measure.strings && measure.strings.length === 6 ? measure.strings : Array(6).fill([
+            '-',
+            '-',
+            '-',
+            '-'
+        ]);
+        for(let stringIndex = 0; stringIndex < 6; stringIndex++){
+            tabString += `${stringLabels[stringIndex]}|`;
+            // Ensure the string array exists and has the correct length
+            const frets = strings[stringIndex] && strings[stringIndex].length === 4 ? strings[stringIndex] : [
+                '-',
+                '-',
+                '-',
+                '-'
+            ];
+            for(let fretIndex = 0; fretIndex < 4; fretIndex++){
+                // Pad for basic alignment, ensure '-' for empty/undefined
+                const fretValue = frets[fretIndex] !== undefined && frets[fretIndex] !== '' ? String(frets[fretIndex]) : "-";
+                tabString += fretValue.padEnd(2, ' '); // Pad with space
+                tabString += "|";
+            }
+            tabString += "\n";
+        }
+        tabString += "\n";
+    });
+    // Add BPM info
+    tabString += `BPM: ${tabData.bpm || 120}\n`;
+    return tabString;
+}
+// --- UI Setup ---
+/**
+ * Sets up UI elements and event listeners.
+ */ function setupUI() {
+    console.log("app.js: setupUI called");
+    // Apply config (example - could be more extensive)
+    document.body.style.fontSize = (0, _configJsDefault.default).bodyFontSize;
+    // Pass dependencies to setupToolBar
+    (0, _uiElementsJs.setupToolBar)({
+        addMeasure: (0, _tabDataJs.addMeasure),
+        clearTab: (0, _tabDataJs.clearTab),
+        exportTab,
+        showBPMInput,
+        playTab: (0, _audioJs.playTab),
+        stopPlayback: (0, _audioJs.stopPlayback),
+        saveTab,
+        loadTab,
+        exportMIDI: (0, _audioJs.exportMIDI),
+        renderTab: _renderingJs.renderTab,
+        getTabData: (0, _tabDataJs.getTabData),
+        setTabData: (0, _tabDataJs.setTabData)
+    });
+    // Add event listener for fret clicks/focus to show number circle
+    const tabDisplay = document.getElementById("tab-display");
+    if (tabDisplay) {
+        tabDisplay.addEventListener('click', (e)=>{
+            if (e.target.classList.contains('fret')) (0, _uiElementsJs.showNumberCircle)(e.target);
+        });
+        // Add input handling for direct typing
+        tabDisplay.addEventListener('input', (e)=>{
+            if (e.target.classList.contains('fret')) (0, _uiElementsJs.handleFretInput)(e, (0, _tabDataJs.getTabData), (0, _tabDataJs.setTabData), _renderingJs.renderTab);
+        });
+        // Add keydown handling for navigation/deletion (optional enhancement)
+        tabDisplay.addEventListener('keydown', (e)=>{
+            if (e.target.classList.contains('fret')) // Basic example: Clear fret on backspace/delete
+            {
+                if (e.key === 'Backspace' || e.key === 'Delete') {
+                    e.preventDefault(); // Prevent default browser back navigation on backspace
+                    e.target.textContent = '';
+                    // Trigger input event to update data model
+                    e.target.dispatchEvent(new Event('input', {
+                        bubbles: true,
+                        cancelable: true
+                    }));
+                }
+            }
+        });
+    } else console.error("app.js: tab-display element not found for event listeners.");
+    // Close number circle logic (moved from ui-elements.js for better cohesion)
+    document.addEventListener('click', function(event) {
+        const numberCircle = document.querySelector('.number-circle');
+        if (numberCircle) // Check if the click is outside the circle AND not on a fret element
+        {
+            if (!numberCircle.contains(event.target) && !event.target.classList.contains('fret')) // Use a small timeout to allow number selection click to register first
+            setTimeout(()=>{
+                // Double-check if the target is still outside after potential DOM changes
+                if (!event.target.closest('.number-circle')) (0, _uiElementsJs.removeOpenNumberCircle)();
+            }, 50); // Reduced timeout
+        }
+    });
+    console.log("app.js: UI setup complete.");
+}
 /**
  * Sets up the entire application.
  */ async function setupApp() {
     console.log("app.js: setupApp called");
     try {
+        console.log("app.js: Calling initializeTabData...");
         (0, _tabDataJs.initializeTabData)();
-        _renderingJs.renderTab((0, _tabDataJs.getTabData)());
+        console.log("app.js: initializeTabData finished.");
+        const currentTabData = (0, _tabDataJs.getTabData)();
+        console.log("app.js: Calling renderTab with data:", JSON.stringify(currentTabData)); // Log the data being passed
+        _renderingJs.renderTab(currentTabData);
+        console.log("app.js: renderTab finished.");
         setupUI();
+        console.log("app.js: setupUI finished.");
+        // Initialize Audio after UI setup (or ensure context is resumed on interaction)
+        await (0, _audioJs.initializeAudio)();
+        console.log("app.js: initializeAudio finished.");
     // Config variables and log are now inside setupUI.
     } catch (error) {
+        // This catch block now handles errors from initializeTabData, renderTab, setupUI, AND initializeAudio
         console.error("app.js: Error during app setup:", error);
+        console.trace(); // Add stack trace
         alert("Failed to initialize the application. Please check the console for details.");
     }
     console.log("app.js: Finished setupApp");
 }
+// --- Start the App ---
+setupApp(); // Call the setup function to run the application
 
 },{"./rendering.js":"4eVfQ","./tab-data.js":"1uM0m","./ui-elements.js":"fUhVs","./audio.js":"bTyvi","../config.js":"kjaMg","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"4eVfQ":[function(require,module,exports,__globalThis) {
 // src/rendering.js
@@ -703,6 +890,7 @@ console.log("app.js: Starting app.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderTab", ()=>renderTab);
 function renderTab(tabData) {
+    console.log("rendering.js: renderTab called with data:", JSON.stringify(tabData)); // Log entry and data
     const tabDisplay = document.getElementById("tab-display");
     if (!tabDisplay) {
         console.error("rendering.js: tabDisplay element not found!");
@@ -929,6 +1117,7 @@ parcelHelpers.export(exports, "setupToolBar", ()=>setupToolBar);
 parcelHelpers.export(exports, "handleFretInput", ()=>handleFretInput);
 parcelHelpers.export(exports, "showNumberCircle", ()=>showNumberCircle);
 parcelHelpers.export(exports, "showSecondNumberCircle", ()=>showSecondNumberCircle);
+parcelHelpers.export(exports, "removeOpenNumberCircle", ()=>removeOpenNumberCircle);
 var _audioJs = require("./audio.js"); // Moved import to the top
 /**
  * Sets up the tool bar by attaching event listeners to the tool bar buttons.
@@ -950,30 +1139,18 @@ var _audioJs = require("./audio.js"); // Moved import to the top
         addMeasure();
         renderTab(getTabData());
     });
-    else console.error("Button with ID 'addMeasureBtn' not found.");
-    // Implement Load Tab button
-    if (loadTabButton) loadTabButton.addEventListener('click', ()=>{
-        const savedTab = localStorage.getItem('guitarTab');
-        if (savedTab) try {
-            const tabData = JSON.parse(savedTab);
-            setTabData(tabData);
-            renderTab(getTabData());
-            alert('Tab loaded from local storage!');
-        } catch (error) {
-            console.error('Error loading tab from local storage:', error);
-            alert('Error loading tab.  Check the console for more details.');
-        }
-        else alert('No tab found in local storage.');
-    });
+    // Removed duplicate Load Tab button logic block
     if (clearTabButton) clearTabButton.addEventListener("click", ()=>{
         clearTab();
         addMeasure(); // Add an initial measure after clearing
         renderTab(getTabData());
     });
     else console.error("Button with ID 'clearTabBtn' not found.");
-    if (exportTabButton) exportTabButton.addEventListener("click", exportTab);
+    if (exportTabButton) // Use the passed exportTab function directly
+    exportTabButton.addEventListener("click", exportTab);
     else console.error("Button with ID 'exportTabBtn' not found.");
-    if (showBPMInputButton) showBPMInputButton.addEventListener("click", showBPMInput);
+    if (showBPMInputButton) // Use the passed showBPMInput function directly
+    showBPMInputButton.addEventListener("click", showBPMInput);
     else console.error("Button with ID 'setBPMBtn' not found.");
     if (playTabButton) playTabButton.addEventListener("click", ()=>{
         try {
@@ -1014,76 +1191,60 @@ var _audioJs = require("./audio.js"); // Moved import to the top
         }
     });
     else console.error("Button with ID 'stopTabBtn' not found.");
-    if (saveTabButton) saveTabButton.addEventListener("click", saveTab);
+    if (saveTabButton) // Use the passed saveTab function directly
+    saveTabButton.addEventListener("click", saveTab);
     else console.error("Button with ID 'saveTabBtn' not found.");
-    if (loadTabButton) loadTabButton.addEventListener("click", loadTab);
+    if (loadTabButton) // Use the passed loadTab function directly
+    loadTabButton.addEventListener("click", loadTab);
     else console.error("Button with ID 'loadTabBtn' not found.");
-    // Implement Load Tab button
-    if (loadTabButton) loadTabButton.addEventListener('click', ()=>{
-        const savedTab = localStorage.getItem('guitarTab');
-        if (savedTab) try {
-            const tabData = JSON.parse(savedTab);
-            setTabData(tabData);
-            renderTab(getTabData());
-            alert('Tab loaded from local storage!');
-        } catch (error) {
-            console.error('Error loading tab from local storage:', error);
-            alert('Error loading tab.  Check the console for more details.');
-        }
-        else alert('No tab found in local storage.');
-    });
-    if (exportMIDButton) exportMIDButton.addEventListener("click", exportMIDI);
+    // Removed duplicate Load Tab button logic block
+    if (exportMIDButton) // Use the passed exportMIDI function directly
+    exportMIDButton.addEventListener("click", exportMIDI);
     else console.error("Button with ID 'exportMIDIBtn' not found.");
-    // Implement Save Tab button
-    if (saveTabButton) saveTabButton.addEventListener('click', ()=>{
-        const tabData = getTabData();
-        localStorage.setItem('guitarTab', JSON.stringify(tabData));
-        alert('Tab saved to local storage!');
-    });
-    // Implement Save Tab button
-    if (saveTabButton) saveTabButton.addEventListener('click', ()=>{
-        const tabData = getTabData();
-        localStorage.setItem('guitarTab', JSON.stringify(tabData));
-        alert('Tab saved to local storage!');
-    });
-    // Implement Export Tab button
-    if (exportTabButton) exportTabButton.addEventListener("click", ()=>{
-        const tabData = getTabData();
-        const tabText = generateTablature(tabData);
-        const blob = new Blob([
-            tabText
-        ], {
-            type: "text/plain"
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "guitar_tab.txt";
-        document.body.appendChild(a); // Required for Firefox
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    });
+    // Removed duplicate Save Tab button logic blocks
+    // Removed inline Export Tab button logic block (now uses dependency)
     console.log("ui-elements.js: Toolbar setup complete");
 }
+// Moved generateTablature outside setupToolBar - ideally move to tab-data.js or utils
 function generateTablature(tabData) {
     if (!tabData || !tabData.measures || tabData.measures.length === 0) return "No tab data.";
     let tabString = "";
-    const tuning = tabData.tuning;
-    const stringLabels = tuning.map((_, i)=>[
-            "E",
-            "A",
-            "D",
-            "G",
-            "B",
-            "e"
-        ][i] || "").join("\n");
+    const tuning = tabData.tuning || [
+        'E',
+        'A',
+        'D',
+        'G',
+        'B',
+        'E'
+    ]; // Default tuning if not present
+    const stringLabels = [
+        "E",
+        "A",
+        "D",
+        "G",
+        "B",
+        "e"
+    ]; // Standard tuning labels
     tabData.measures.forEach((measure, measureIndex)=>{
-        tabString += `${measureIndex + 1}. Measure:\n`;
+        tabString += `Measure ${measureIndex + 1}:\n`;
+        // Ensure measure.strings exists and has the correct length
+        const strings = measure.strings && measure.strings.length === 6 ? measure.strings : Array(6).fill([
+            '-',
+            '-',
+            '-',
+            '-'
+        ]);
         for(let stringIndex = 0; stringIndex < 6; stringIndex++){
-            tabString += `${stringLabels.split("\n")[stringIndex]}|`;
+            tabString += `${stringLabels[stringIndex]}|`;
+            // Ensure the string array exists and has the correct length
+            const frets = strings[stringIndex] && strings[stringIndex].length === 4 ? strings[stringIndex] : [
+                '-',
+                '-',
+                '-',
+                '-'
+            ];
             for(let fretIndex = 0; fretIndex < 4; fretIndex++){
-                tabString += measure.strings[stringIndex][fretIndex] || "-";
+                tabString += (frets[fretIndex] !== undefined && frets[fretIndex] !== '' ? frets[fretIndex] : "-").padEnd(2); // Pad for alignment
                 tabString += "|";
             }
             tabString += "\n";
@@ -1263,12 +1424,25 @@ if (typeof document !== "undefined") document.addEventListener("click", function
 // play a complete tab, and stop playback.
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+// Initialize audio context and AudioWorklet
 parcelHelpers.export(exports, "initializeAudio", ()=>initializeAudio);
-parcelHelpers.export(exports, "loadSound", ()=>loadSound);
-parcelHelpers.export(exports, "playSound", ()=>playSound);
-parcelHelpers.export(exports, "playTab", ()=>playTab);
-parcelHelpers.export(exports, "stopPlayback", ()=>stopPlayback);
-parcelHelpers.export(exports, "exportMIDI", ()=>exportMIDI);
+/**
+ * Loads a sound (not currently used).
+ */ parcelHelpers.export(exports, "loadSound", ()=>loadSound);
+/**
+ * Plays a sound (not currently used).
+ */ parcelHelpers.export(exports, "playSound", ()=>playSound);
+/**
+ * Stops the audio playback.
+ */ parcelHelpers.export(exports, "stopPlayback", ()=>stopPlayback);
+/**
+ * Exports the tab data as a MIDI file (placeholder).
+ */ parcelHelpers.export(exports, "exportMIDI", ()=>exportMIDI);
+/**
+ * Plays the entire tab.
+ * @param {object} tabData - The tab data object.
+ */ parcelHelpers.export(exports, "playTab", ()=>playTab) // Removed combined export block at the end
+;
 var _tabDataJs = require("./tab-data.js"); // Import getNote function
 let isPlaying = false;
 let currentMeasureIndex = 0;
@@ -1278,10 +1452,33 @@ let actx; // Audio context
 let fretboardNode; // AudioWorkletNode
 let bpm = 120; // Default BPM
 const NUMBER_OF_STRINGS = 6;
-// Initialize audio context and AudioWorklet
 async function initializeAudio() {
     try {
         actx = new AudioContext();
+        // Add a function to resume the AudioContext on user interaction
+        // Attach the event listeners for user interaction *after* context is created
+        // Use { once: true } so they only fire once per type
+        async function resumeAudioContextOnInteraction() {
+            console.log("resumeAudioContextOnInteraction called. actx is:", actx); // Add this log
+            // Check if actx is initialized *and* suspended before resuming
+            if (actx && actx.state === "suspended") try {
+                console.log("Attempting to resume AudioContext...");
+                await actx.resume();
+                console.log("AudioContext resumed successfully");
+            } catch (error) {
+                console.error("Error resuming AudioContext:", error);
+            }
+        }
+        document.addEventListener("touchstart", resumeAudioContextOnInteraction, {
+            once: true
+        });
+        document.addEventListener("click", resumeAudioContextOnInteraction, {
+            once: true
+        });
+        document.addEventListener("keydown", resumeAudioContextOnInteraction, {
+            once: true
+        });
+        console.log("Audio resume listeners attached.");
         await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
         fretboardNode = new AudioWorkletNode(actx, "fretboard-processor"); // Use the processor's registered name
         // Connect the AudioWorkletNode to the destination
@@ -1292,20 +1489,7 @@ async function initializeAudio() {
         alert("Failed to initialize audio playback. Please check your browser settings and the console.");
     }
 }
-// Add a function to resume the AudioContext on user interaction
-async function resumeAudioContextOnInteraction() {
-    if (actx.state === "suspended") {
-        await actx.resume();
-        console.log("AudioContext resumed successfully");
-    }
-}
-// Attach the event listeners for user interaction
-document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
-document.addEventListener("click", resumeAudioContextOnInteraction, false);
-document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
-/**
- * Loads a sound (not currently used).
- */ async function loadSound() {
+async function loadSound() {
     // Placeholder function for loading a sound
     // In a future version, this function would handle loading a sound file.
     alert("Sound loading not yet implemented.");
@@ -1326,16 +1510,12 @@ document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
         velocity: 0.75
     });
 }
-/**
- * Plays a sound (not currently used).
- */ function playSound() {
+function playSound() {
     // Placeholder function for playing a sound
     // In a future version, this function would handle playing a sound.
     alert("Sound playing not yet implemented.");
 }
-/**
- * Stops the audio playback.
- */ function stopPlayback() {
+function stopPlayback() {
     console.log("audio.js: stopPlayback called");
     if (!isPlaying) {
         console.log("No playback in progress, ignoring.");
@@ -1349,17 +1529,12 @@ document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
         type: "noteOff"
     });
 }
-/**
- * Exports the tab data as a MIDI file (placeholder).
- */ function exportMIDI() {
+function exportMIDI() {
     // Placeholder function for MIDI export
     // In a future version, this function would handle MIDI file generation and download.
     alert("MIDI export not yet implemented.");
 }
-/**
- * Plays the entire tab.
- * @param {object} tabData - The tab data object.
- */ async function playTab(tabData) {
+async function playTab(tabData) {
     console.log("audio.js: playTab called");
     // Ensure the AudioContext is running
     if (actx.state === "suspended") await actx.resume();
