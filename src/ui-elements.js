@@ -18,7 +18,6 @@ function setupToolBar(dependencies) {
     stopPlayback, // Renamed to stopPlayback to match dependency name
     saveTab,
     loadTab,
-    exportMIDI,
     renderTab,
     getTabData,
     setTabData,
@@ -35,7 +34,6 @@ function setupToolBar(dependencies) {
   const stopTabButton = document.getElementById("stopTabBtn");
   const saveTabButton = document.getElementById("saveTabBtn");
   const loadTabButton = document.getElementById("loadTabBtn");
-  const exportMIDButton = document.getElementById("exportMIDIBtn");
   const rotateMeasureButton = document.getElementById("rotateMeasureBtn"); // Rotate measure button
 
   // Add event listeners only if the button exists
@@ -173,16 +171,6 @@ function setupToolBar(dependencies) {
     console.error("Button with ID 'loadTabBtn' not found.");
   }
   // Removed duplicate Load Tab button logic block
-
-  if (exportMIDButton) {
-    // Use the passed exportMIDI function directly
-    exportMIDButton.addEventListener("click", exportMIDI);
-    exportMIDButton.title = "Export tab as MIDI file (Ctrl+Shift+M)"; // Tooltip
-  } else {
-    console.error("Button with ID 'exportMIDIBtn' not found.");
-  }
-  // Removed duplicate Save Tab button logic blocks
-  // Removed inline Export Tab button logic block (now uses dependency)
 
   if (rotateMeasureButton) {
     rotateMeasureButton.addEventListener("click", () => {
