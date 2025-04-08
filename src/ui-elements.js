@@ -44,6 +44,7 @@ function setupToolBar(dependencies) {
       addMeasure(); // Now calls handleAddMeasureWithInput from app.js
       // renderTab(getTabData()); // Render is now handled in app.js
     });
+    addMeasureButton.title = "Add a new measure (Ctrl+M)"; // Tooltip
   }
   // Removed duplicate Load Tab button logic block
 
@@ -53,6 +54,7 @@ function setupToolBar(dependencies) {
       addMeasure(); // Add an initial measure after clearing
       renderTab(getTabData());
     });
+    clearTabButton.title = "Clear the entire tab (Ctrl+Shift+C)"; // Tooltip
   } else {
     console.error("Button with ID 'clearTabBtn' not found.");
   }
@@ -60,6 +62,7 @@ function setupToolBar(dependencies) {
   if (exportTabButton) {
     // Use the passed exportTab function directly
     exportTabButton.addEventListener("click", exportTab);
+    exportTabButton.title = "Export tab as text file (Ctrl+E)"; // Tooltip
   } else {
     console.error("Button with ID 'exportTabBtn' not found.");
   }
@@ -106,6 +109,7 @@ function setupToolBar(dependencies) {
         }
       }
     });
+    playTabButton.title = "Play the tab (Spacebar)"; // Tooltip
   } else {
     console.error("Button with ID 'playTabBtn' not found.");
   }
@@ -124,6 +128,7 @@ function setupToolBar(dependencies) {
         playTabButton.focus(); // Move focus back to play button
       }
     });
+    pauseTabButton.title = "Pause the tab (Spacebar)"; // Tooltip
   } else {
     console.error("Button with ID 'pauseTabBtn' not found.");
   }
@@ -147,6 +152,7 @@ function setupToolBar(dependencies) {
         playTabButton.focus(); // Move focus to play button after stop
       }
     });
+    stopTabButton.title = "Stop playback (Esc)"; // Tooltip
   } else {
     console.error("Button with ID 'stopTabBtn' not found.");
   }
@@ -154,6 +160,7 @@ function setupToolBar(dependencies) {
   if (saveTabButton) {
     // Use the passed saveTab function directly
     saveTabButton.addEventListener("click", saveTab);
+    saveTabButton.title = "Save tab to local storage (Ctrl+S)"; // Tooltip
   } else {
     console.error("Button with ID 'saveTabBtn' not found.");
   }
@@ -161,6 +168,7 @@ function setupToolBar(dependencies) {
   if (loadTabButton) {
     // Use the passed loadTab function directly
     loadTabButton.addEventListener("click", loadTab);
+    loadTabButton.title = "Load tab from local storage (Ctrl+O)"; // Tooltip
   } else {
     console.error("Button with ID 'loadTabBtn' not found.");
   }
@@ -169,6 +177,7 @@ function setupToolBar(dependencies) {
   if (exportMIDButton) {
     // Use the passed exportMIDI function directly
     exportMIDButton.addEventListener("click", exportMIDI);
+    exportMIDButton.title = "Export tab as MIDI file (Ctrl+Shift+M)"; // Tooltip
   } else {
     console.error("Button with ID 'exportMIDIBtn' not found.");
   }
@@ -180,6 +189,7 @@ function setupToolBar(dependencies) {
       toggleMeasureRotation(); // Call the toggle function from dependencies
       renderTab(getTabData()); // Re-render to apply/remove rotation
     });
+    rotateMeasureButton.title = "Rotate measure (Ctrl+R)"; // Tooltip
   } else {
     console.error("Button with ID 'rotateMeasureBtn' not found.");
   }
