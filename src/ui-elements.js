@@ -112,7 +112,7 @@ if (rotateMeasureBtn) {
 /**
  * Toggles the measure rotation state.
  */
-export function toggleMeasureRotation() {
+function toggleMeasureRotation() {
   const tabDisplay = document.getElementById('tab-display');
   if (tabDisplay) {
     tabDisplay.classList.toggle('rotated'); // Toggle the 'rotated' class
