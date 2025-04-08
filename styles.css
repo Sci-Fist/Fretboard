@@ -358,3 +358,6 @@ body {
     background-color: #555; /* Example: Highlight color for playing measure */
     /* Add any other styles to visually indicate playing measure */
 }
+.rotated {
+  flex-direction: column; /* Stack measures vertically when rotated */
+}
