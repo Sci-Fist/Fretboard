@@ -420,30 +420,23 @@ function handleArrowKeyNavigation(key, currentFret) {
 function handleAddMeasureWithInput() {
     console.log("app.js: handleAddMeasureWithInput called");
     const tabData = getTabData();
-    const beatsPerMeasure = parseInt(tabData.timeSignature.split('/')[0], 10);
-    const newMeasureFrets = [];
-    for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
-        const stringFrets = [];
-        for (let fretIndex = 0; fretIndex < beatsPerMeasure; fretIndex++) {
-            let fretValue = prompt(`Enter fret for string ${stringIndex + 1}, beat ${fretIndex + 1} of new measure:`, '-');
-            if (fretValue === null) { // User cancelled
-                return;
-            }
-            stringFrets.push(fretValue || '-'); // Default to '-' if empty input
-        }
-        newMeasureFrets.push(stringFrets);
+    const numMeasures = prompt("Enter the number of measures to add:", "1"); // Prompt for number of measures
+    const numMeasuresParsed = parseInt(numMeasures, 10);
+
+    if (isNaN(numMeasuresParsed) || numMeasuresParsed <= 0) {
+        alert("Invalid input. Please enter a number greater than 0.");
+        return;
     }
 
-    if (newMeasureFrets.length === 6) { // Ensure we got all string data
+    for (let i = 0; i < numMeasuresParsed; i++) {
         const newMeasure = {
-            strings: newMeasureFrets
+            strings: Array(6).fill(Array(4).fill('-')) // Initialize with default values
         };
         tabData.measures.push(newMeasure);
-        setTabData(tabData);
-        rendering.renderTab(getTabData());
-    } else {
-        alert("Could not create measure. Input incomplete.");
     }
+
+    setTabData(tabData);
+    rendering.renderTab(getTabData());
 }
 
 
