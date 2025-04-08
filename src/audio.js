@@ -170,3 +170,5 @@ function schedulePlay() {
         }
     }, intervalDuration);
 }
+
+export { initializeAudio, playTab, stopPlayback, setOscillatorType, resumeTab, pauseTab };
