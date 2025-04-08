@@ -150,6 +150,14 @@ function setupToolBar(dependencies) {
   } else {
     console.error("Button with ID 'exportMIDIBtn' not found.");
   }
+  // Implement Save Tab button
+  if (saveTabButton) {
+    saveTabButton.addEventListener('click', () => {
+      const tabData = getTabData();
+      localStorage.setItem('guitarTab', JSON.stringify(tabData));
+      alert('Tab saved to local storage!');
+    });
+  }
 
   // Implement Export Tab button
   if (exportTabButton) {
