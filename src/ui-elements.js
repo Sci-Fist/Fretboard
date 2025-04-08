@@ -1,6 +1,7 @@
 // src/ui-elements.js
 // This module handles the user interface elements and their interactions.
 // It sets up the toolbar, handles fret input, and displays the number circle for fret selection.
+import { stopPlayback } from "./audio.js"; // Moved import to the top
 
 /**
  * Sets up the tool bar by attaching event listeners to the tool bar buttons.
