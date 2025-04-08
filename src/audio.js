@@ -67,6 +67,14 @@ export async function initializeAudio() { // Added export
       gainNode.connect(actx.destination);
 
       console.log("AudioWorkletNode connected to destination with gain control");
+
+      // Attach the event listeners for user interaction *after* context is created
+      // Use { once: true } so they only fire once per type
+      document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
+      document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
+      document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
+      console.log("Audio resume listeners attached.");
+
     } catch (error) {
       console.error("Failed to add audio worklet module:", error.name, error.message);
       alert(
@@ -183,7 +191,7 @@ export async function playTab(tabData) { // Added export and kept async
       console.log("AudioContext resumed successfully");
     } catch (error) {
       console.error("Error resuming AudioContext:", error);
-      alert("Failed to resume AudioContext. Please check the console for details.");
+      alert("Failed to resume AudioContext. The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page.");
       return;
     }
   }
