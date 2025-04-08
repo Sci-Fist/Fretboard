@@ -114,10 +114,13 @@ function generateTablature(tabData) {
 }
 
 function toggleMeasureRotation() {
+    console.log("toggleMeasureRotation - before toggle:", isMeasureRotated); // ADDED LOG
     isMeasureRotated = !isMeasureRotated; // Toggle the rotation state
     const tabData = getTabData();
     tabData.isMeasureRotated = isMeasureRotated; // Store rotation state in tabData
     setTabData(tabData); // Update tabData
+    console.log("toggleMeasureRotation - after toggle:", isMeasureRotated); // ADDED LOG
+    console.log("toggleMeasureRotation - tabData.isMeasureRotated:", tabData.isMeasureRotated); // ADDED LOG
     console.log(`app.js: Measure rotation toggled to: ${isMeasureRotated}`);
 }
 
