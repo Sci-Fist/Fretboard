@@ -44,14 +44,28 @@ export async function initializeAudio() { // Added export
     document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
     console.log("Audio resume listeners attached.");
 
-    await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
-    fretboardNode = new AudioWorkletNode(
-      actx,
-      "fretboard-processor",
-    ); // Use the processor's registered name
+    if (!actx) {
+      console.error("AudioContext is not initialized.");
+      alert("AudioContext is not initialized. Please check the console for details.");
+      return;
+    }
 
-    // Connect the AudioWorkletNode to the destination
-    fretboardNode.connect(actx.destination);
+    try {
+      await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
+      fretboardNode = new AudioWorkletNode(
+        actx,
+        "fretboard-processor",
+      ); // Use the processor's registered name
+
+      // Connect the AudioWorkletNode to the destination
+      fretboardNode.connect(actx.destination);
+    } catch (error) {
+      console.error("Failed to add audio worklet module:", error.name, error.message);
+      alert(
+        "Failed to add audio worklet module. Please check the console for details.",
+      );
+      return; // Stop initialization if the module fails to load
+    }
 
     console.log("Audio initialized successfully");
 
