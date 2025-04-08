@@ -48,40 +48,43 @@ export async function initializeAudio() { // Added export
       console.error("AudioContext is not initialized.");
       alert("AudioContext is not initialized. Please check the console for details.");
       return;
+    async function createAudioWorkletNode() {
+      try {
+        await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
+        fretboardNode = new AudioWorkletNode(
+          actx,
+          "fretboard-processor",
+        ); // Use the processor's registered name
+
+        // Connect the AudioWorkletNode to the destination
+        fretboardNode.connect(actx.destination);
+
+        // Create a gain node
+        const gainNode = actx.createGain();
+        gainNode.gain.value = 0.5; // Set initial gain value
+        fretboardNode.connect(gainNode);
+        gainNode.connect(actx.destination);
+
+        console.log("AudioWorkletNode connected to destination with gain control");
+
+      } catch (error) {
+        console.error(new Date().toISOString(), "Failed to add audio worklet module:", error.name, error.message, error.stack);
+        alert(
+          "Failed to add audio worklet module. Please check the console for details.",
+        );
+        // Retry after a delay
+        setTimeout(createAudioWorkletNode, 1000); // Retry after 1 second
+      }
     }
 
-    try {
-      await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
-      fretboardNode = new AudioWorkletNode(
-        actx,
-        "fretboard-processor",
-      ); // Use the processor's registered name
+    await createAudioWorkletNode();
 
-      // Connect the AudioWorkletNode to the destination
-      fretboardNode.connect(actx.destination);
-
-      // Create a gain node
-      const gainNode = actx.createGain();
-      gainNode.gain.value = 0.5; // Set initial gain value
-      fretboardNode.connect(gainNode);
-      gainNode.connect(actx.destination);
-
-      console.log("AudioWorkletNode connected to destination with gain control");
-
-      // Attach the event listeners for user interaction *after* context is created
-      // Use { once: true } so they only fire once per type
-      document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
-      document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
-      document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
-      console.log("Audio resume listeners attached.");
-
-    } catch (error) {
-      console.error(new Date().toISOString(), "Failed to add audio worklet module:", error.name, error.message, error.stack);
-      alert(
-        "Failed to add audio worklet module. Please check the console for details.",
-      );
-      return; // Stop initialization if the module fails to load
-    }
+    // Attach the event listeners for user interaction *after* context is created
+    // Use { once: true } so they only fire once per type
+    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
+    console.log("Audio resume listeners attached.");
 
     console.log("Audio initialized successfully");
 
@@ -191,7 +194,7 @@ export async function playTab(tabData) { // Added export and kept async
       console.log("AudioContext resumed successfully");
     } catch (error) {
       console.error("Error resuming AudioContext:", error);
-      alert("Failed to resume AudioContext. The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page.");
+      alert("Failed to resume AudioContext. The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. Please interact with the page and try again.");
       return;
     }
   }
