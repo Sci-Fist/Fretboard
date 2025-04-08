@@ -1,9 +1,14 @@
 // ui-elements.js
 import config from '../config.js'; // Import config
 
-// Function to clear number circles
+// --- Number Circle Functions ---
+
+// Array to store number circle elements for later clearing.
 let numberCircleElements = [];
 
+/**
+ * Clears all number circle elements from the document.
+ */
 function clearNumberCircles() {
     numberCircleElements.forEach(element => {
         element.remove();
@@ -11,7 +16,14 @@ function clearNumberCircles() {
     numberCircleElements = [];
 }
 
-// Function to create a number circle
+/**
+ * Creates and displays a number circle at the specified position.
+ * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+ * @param {number} x - The x-coordinate of the center of the circle.
+ * @param {number} y - The y-coordinate of the center of the circle.
+ * @param {string[]} numbers - An array of numbers (as strings) to display in the circle.
+ * @param {function} onClick - A callback function to execute when a number is clicked.
+ */
 export function createNumberCircle(ctx, x, y, numbers, onClick) {
     const circleRadius = 20;
     const numberSpacing = 1.2; // Adjust for spacing between numbers
@@ -19,9 +31,10 @@ export function createNumberCircle(ctx, x, y, numbers, onClick) {
     const centerX = x;
     const centerY = y;
 
-    // Clear any existing number circles
+    // Clear any existing number circles before creating a new one.
     clearNumberCircles();
 
+    // Create and append number elements to the DOM.
     const numberElements = [];
 
     numbers.forEach((number, index) => {
@@ -54,6 +67,6 @@ export function createNumberCircle(ctx, x, y, numbers, onClick) {
         numberElements.push(numberElement);
     });
 
-    // Store the number elements for later clearing
+    // Store the number elements for later clearing.
     numberCircleElements = numberElements;
 }
