@@ -403,9 +403,9 @@ function showFretContextMenu(e) {
     // Append the context menu to the body
     document.body.appendChild(contextMenu);
 
-    // Remove the context menu when clicking outside
+    // Remove the context menu when clicking outside, *except* when clicking on a fret
     document.addEventListener('click', function removeContextMenu(event) {
-        if (!contextMenu.contains(event.target)) {
+        if (!contextMenu.contains(event.target) && !event.target.classList.contains('fret')) {
             contextMenu.remove();
             document.removeEventListener('click', removeContextMenu); // Remove the listener after use
         }
