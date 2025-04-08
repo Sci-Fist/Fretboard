@@ -150,21 +150,6 @@ function generateTablature(tabData) {
     return tabString;
 }
 
-/**
- * Toggles the measure rotation state.
- */
-function toggleMeasureRotation() {
-    console.log("app.js: toggleMeasureRotation - before toggle:", isMeasureRotated);
-    isMeasureRotated = !isMeasureRotated;
-    const tabData = getTabData();
-    tabData.isMeasureRotated = isMeasureRotated;
-    setTabData(tabData);
-    console.log("toggleMeasureRotation - after toggle:", isMeasureRotated);
-    console.log("toggleMeasureRotation - tabData.isMeasureRotated:", tabData.isMeasureRotated);
-    console.log(`app.js: Measure rotation toggled to: ${isMeasureRotated}`);
-    rendering.renderTab(getTabData()); // Re-render the tab to apply the rotation
-}
-
 // --- Playback Controls ---
 /**
  * Handles the play action.
