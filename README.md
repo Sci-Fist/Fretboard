@@ -17,6 +17,8 @@ Welcome to the totally tubular Guitar Tab Editor! This application lets you crea
 
 ## Getting Started - Let's Do It!
 
+[Click here for a live demo!]([your-deployment-url])
+
 1.  **Clone the repository:**
 
     ```bash
