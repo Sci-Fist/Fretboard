@@ -62,6 +62,9 @@ function playNote(note, duration) {
     console.warn("audio.js: AudioWorkletNode not initialized.");
     return;
   }
+  if (Tone.context.state === 'suspended') {
+    Tone.context.resume();
+  }
   fretboardNode.port.postMessage({
     type: "noteOn",
     note: note,
