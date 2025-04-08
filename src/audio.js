@@ -1,6 +1,8 @@
 // audio.js
 // This module handles audio playback using the Web Audio API.
 
+import { getTabData, getNote } from './tab-data.js'; // Import getTabData and getNote
+
 let audioContext;
 let fretboardProcessorNode;
 let resumeListenersAttached = false; // Flag to track if listeners are attached
@@ -80,46 +82,31 @@ function playTab() {
 
     console.log("audio.js: playTab - Tab data received:", tabData); // Log tabData
 
-    // --- Simple Playback Logic ---
-    const bpm = tabData.bpm || 120;
-    const secondsPerBeat = 60 / bpm;
-    const notesPerMeasure = 4; // Assuming 4 notes per measure for simplicity
-    const secondsPerNote = secondsPerBeat / notesPerMeasure;
-
-    let currentTime = audioContext.currentTime; // Start at current audio context time
-
-    for (const measure of tabData.measures) {
-        for (let stringIndex = 0; stringIndex < measure.strings.length; stringIndex++) {
-            for (let fretIndex = 0; fretIndex < measure.strings[stringIndex].length; fretIndex++) {
-                const fretValue = measure.strings[stringIndex][fretIndex];
-                if (fretValue !== '-' && fretValue !== '') { // Check for hyphen and empty string
-                    const note = getNote(stringIndex, parseInt(fretValue), tabData.tuning); // Assuming getNote is available
-                    if (note) {
-                        // Schedule note on message
-                        fretboardProcessorNode.port.postMessage({
-                            type: 'noteOn',
-                            note: note,
-                            velocity: 0.8, // Example velocity
-                            // oscillatorType: 'sine' // Example oscillator type - removed for now to use default
-                        });
-
-                        // Schedule note off message (after note duration) -  For now, just a fixed duration
-                        const noteOffTime = currentTime + secondsPerNote * 0.9; // Shorten note slightly
-                        const noteDuration = secondsPerNote * 0.9; // Example duration
-
-                        // Basic note off implementation - sending 'allNotesOff' might be too abrupt for individual notes
-                         setTimeout(() => {
-                            fretboardProcessorNode.port.postMessage({ type: 'allNotesOff' }); // Send note off message
-                         }, noteDuration * 1000); // setTimeout in milliseconds
-
-
-                        currentTime += secondsPerNote; // Advance time for next note
-                    }
-                } else {
-                    currentTime += secondsPerNote; // Still advance time even if no note
-                }
+    // --- Simple Playback Logic (for debugging - plays only first note) ---
+    if (tabData.measures[0] && tabData.measures[0].strings[0][0] !== '-' && tabData.measures[0].strings[0][0] !== '') {
+        const fretValue = tabData.measures[0].strings[0][0];
+        const note = getNote(0, parseInt(fretValue), tabData.tuning); // Play first note of first string, first fret
+        if (note) {
+            console.log("audio.js: playTab - Playing note:", note); // Log note to be played
+            if (fretboardProcessorNode) {
+                fretboardProcessorNode.port.postMessage({
+                    type: 'noteOn',
+                    note: note,
+                    velocity: 0.8,
+                    // oscillatorType: 'sine' // Oscillator type removed for now to use default
+                });
+                 // Stop note after a short duration (for debugging)
+                 setTimeout(() => {
+                    stopPlayback();
+                }, 1000); // Stop after 1 second
+            } else {
+                console.error("audio.js: AudioWorkletNode is not initialized.");
+                alert("Audio system not ready. Please refresh the page.");
             }
         }
+    } else {
+        console.log("audio.js: playTab - No note to play in the first fret.");
+        alert("No note to play in the first fret of the first measure."); // More specific alert
     }
 }
 

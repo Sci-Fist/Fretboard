@@ -11,6 +11,7 @@ import config from '../config.js';
 
 console.log("app.js: Starting app.js");
 
+
 let isMeasureRotated = false; // State variable to track measure rotation
 let isPlaying = false; // Playback state
 let currentMeasureIndex = -1; // Track current measure during playback
@@ -107,7 +108,7 @@ function generateTablature(tabData) {
 }
 
 function toggleMeasureRotation() {
-    console.log("toggleMeasureRotation - before toggle:", isMeasureRotated); // ADDED LOG
+    console.log("app.js: toggleMeasureRotation - before toggle:", isMeasureRotated); // ADDED LOG
     isMeasureRotated = !isMeasureRotated; // Toggle the rotation state
     const tabData = getTabData();
     tabData.isMeasureRotated = isMeasureRotated; // Store rotation state in tabData
@@ -450,28 +451,28 @@ function handleAddMeasureWithInput() {
  * Sets up the entire application.
  */
 async function setupApp() {
-  console.log("app.js: setupApp called");
-  try {
-    console.log("app.js: Calling initializeTabData...");
-    initializeTabData();
-    console.log("app.js: initializeTabData finished.");
-    const currentTabData = getTabData();
-    console.log("app.js: Calling renderTab with data:", JSON.stringify(currentTabData)); // Log the data being passed
-    rendering.renderTab(currentTabData);
-    console.log("app.js: renderTab finished.");
-    setupUI();
-    console.log("app.js: setupUI finished.");
-    // Initialize Audio after UI setup (or ensure context is resumed on interaction)
-    await initializeAudio();
-    console.log("app.js: initializeAudio finished.");
-    // Config variables and log are now inside setupUI.
-  } catch (error) {
-    // This catch block now handles errors from initializeTabData, renderTab, setupUI, AND initializeAudio
-    console.error("app.js: Error during app setup:", error);
-    console.trace(); // Add stack trace
-    alert("Failed to initialize the application. Please check the console for details.");
-  }
-  console.log("app.js: Finished setupApp");
+    console.log("app.js: setupApp called");
+    try {
+        console.log("app.js: Calling initializeTabData...");
+        initializeTabData();
+        console.log("app.js: initializeTabData finished.");
+        const currentTabData = getTabData();
+        console.log("app.js: Calling renderTab with data:", JSON.stringify(currentTabData)); // Log the data being passed
+        rendering.renderTab(currentTabData);
+        console.log("app.js: renderTab finished.");
+        setupUI();
+        console.log("app.js: setupUI finished.");
+        // Initialize Audio after UI setup (or ensure context is resumed on interaction)
+        await initializeAudio();
+        console.log("app.js: initializeAudio finished.");
+        // Config variables and log are now inside setupUI.
+    } catch (error) {
+        // This catch block now handles errors from initializeTabData, renderTab, setupUI, AND initializeAudio
+        console.error("app.js: Error during app setup:", error);
+        console.trace(); // Add stack trace
+        alert("Failed to initialize the application. Please check the console for details.");
+    }
+    console.log("app.js: Finished setupApp");
 }
 
 // --- Start the App ---

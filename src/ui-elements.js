@@ -196,7 +196,198 @@ function setupToolBar(dependencies) {
  * @param {function} setTabData - Function to set tab data.
  * @param {function} renderTab - Function to render the tab.
  */
-// ... (rest of ui-elements.js is unchanged) ...
+function handleFretInput(e, getTabData, setTabData, renderTab) {
+    const fretElement = e.target;
+    const measureIndex = parseInt(fretElement.dataset.measure);
+    const stringIndex = parseInt(fretElement.dataset.string);
+    const fretIndex = parseInt(fretElement.dataset.fret);
+    let value = fretElement.textContent.replace(/[^0-9]/g, "").slice(0, 2); // Allow only numbers, max 2 digits
+
+    const tabData = getTabData();
+    if (tabData.measures[measureIndex]) {
+        tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
+        setTabData(tabData);
+    }
+    // No re-render or direct DOM manipulation here for input - renderTab is called on measure add/clear/time signature change
+}
+
+
+/**
+ * Displays the number circle for fret selection.
+ * @param {HTMLElement} fret - The fret element.
+ */
+function showNumberCircle(fret) {
+  // Remove any existing number circle
+  removeOpenNumberCircle();
+
+  // Remove active class from any previously active fret
+  removeActiveFretClass();
+  // Add active class to the currently focused fret
+  fret.classList.add('active-fret');
+  // Store the active fret's ID in localStorage so it can be re-applied after re-render
+  localStorage.setItem('activeFretId', fret.id);
+
+
+  const circle = document.createElement("div");
+  circle.className = "number-circle";
+  const radius = 50;
+  const centerX = fret.offsetWidth / 2;
+  const centerY = fret.offsetHeight / 2;
+
+  const numbers = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "1x",
+    "2x",
+  ];
+
+  numbers.forEach((num, i) => {
+    const angle = (i / numbers.length) * 2 * Math.PI;
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+
+    const number = document.createElement("div");
+    number.className = "number";
+    number.textContent = num;
+    number.style.left = `${x}px`;
+    number.style.top = `${y}px`;
+    number.style.animationDelay = `${i * 0.1}s`;
+
+    number.onclick = () => {
+      if (num === "1x" || num === "2x") {
+        removeOpenNumberCircle();
+        showSecondNumberCircle(fret, num);
+      } else {
+        fret.textContent = num; // Set the text first
+        // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
+        fret.dispatchEvent(
+          new Event("input", { bubbles: true, cancelable: true }),
+        );
+        removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
+        fret.focus(); // Re-focus the fret after input
+      }
+    };
+    circle.appendChild(number);
+  });
+
+  if (typeof document !== "undefined") {
+    document.body.appendChild(circle);
+    positionNumberCircle(circle, fret);
+  }
+}
+
+/**
+ * Removes any open number circle from the DOM.
+ */
+function removeOpenNumberCircle() {
+  const openCircle = document.querySelector(".number-circle");
+  if (openCircle) {
+    openCircle.remove();
+  }
+}
+
+/**
+ * Removes the 'active-fret' class from any fret that has it.
+ */
+function removeActiveFretClass() {
+    document.querySelectorAll('.fret.active-fret').forEach(fret => {
+        fret.classList.remove('active-fret');
+    });
+    localStorage.removeItem('activeFretId'); // Clear stored active fret ID
+}
+
+
+/**
+ * Positions the number circle relative to the fret element.
+ * @param {HTMLElement} circle - The number circle element.
+ * @param {HTMLElement} fret - The fret element.
+ */
+function positionNumberCircle(circle, fret) {
+  const fretRect = fret.getBoundingClientRect();
+  circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`;
+  circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`;
+}
+
+/**
+ * Displays the second number circle for bends and slides.
+ * @param {HTMLElement} fret - The fret element.
+ * @param {string} firstDigit - The first digit selected ("1x" or "2x").
+ */
+function showSecondNumberCircle(fret, firstDigit) {
+  removeOpenNumberCircle(); // Remove any existing number circle
+
+  const circle = document.createElement("div");
+  circle.className = "number-circle";
+  circle.classList.add("second-number-circle");
+  const radius = 50;
+  const centerX = fret.offsetWidth / 2;
+  const centerY = fret.offsetHeight / 2;
+
+  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  numbers.forEach((num, i) => {
+    const angle = (i / numbers.length) * 2 * Math.PI;
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+
+    const number = document.createElement("div");
+    number.className = "number";
+    number.textContent = num;
+    number.style.left = `${x}px`;
+    number.style.top = `${y}px`;
+    number.style.animationDelay = `${i * 0.1}s`;
+
+    number.onclick = () => {
+      fret.textContent = firstDigit.replace(/x/, num); // Set the text first
+      // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
+      fret.dispatchEvent(
+        new Event("input", { bubbles: true, cancelable: true }),
+      );
+      removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
+      fret.focus(); // Re-focus the fret after input
+    };
+    circle.appendChild(number);
+  });
+
+  if (typeof document !== "undefined") {
+    document.body.appendChild(circle);
+    positionNumberCircle(circle, fret);
+  }
+}
+
+// Close number circle when clicking outside
+if (typeof document !== "undefined") {
+  document.addEventListener("click", function (event) {
+    const numberCircle = document.querySelector(".number-circle");
+    if (numberCircle) {
+      let isClickInside = numberCircle.contains(event.target);
+      let isClickOnFret = event.target.classList.contains("fret");
+
+      if (!isClickInside && !isClickOnFret) {
+        setTimeout(() => {
+          if (!event.target.closest(".number-circle")) {
+            removeOpenNumberCircle(); // Use dedicated function to remove
+          }
+        }, 100);
+      }
+    }
+  });
+
+  // Remove active fret class when clicking outside of frets
+  document.addEventListener('click', function(event) {
+    if (!event.target.classList.contains('fret')) {
+      removeActiveFretClass();
+    }
+  });
+}
 
 
 export {
