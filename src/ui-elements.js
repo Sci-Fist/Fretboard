@@ -378,4 +378,5 @@ export {
   handleFretInput,
   showNumberCircle,
   showSecondNumberCircle,
+  removeOpenNumberCircle, // Add this export
 };
