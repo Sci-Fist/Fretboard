@@ -359,6 +359,60 @@ function setupUI() {
 }
 
 /**
+ * Shows the context menu for a fret element.
+ * @param {Event} e - The contextmenu event.
+ */
+function showFretContextMenu(e) {
+    console.log("app.js: showFretContextMenu called");
+    // Create the context menu
+    const contextMenu = document.createElement('div');
+    contextMenu.className = 'context-menu';
+    contextMenu.style.position = 'absolute';
+    contextMenu.style.backgroundColor = '#333';
+    contextMenu.style.color = '#fff';
+    contextMenu.style.padding = '5px';
+    contextMenu.style.borderRadius = '5px';
+    contextMenu.style.zIndex = '1000'; // Ensure it's on top
+
+    // Get the fret element
+    const fretElement = e.target;
+
+    // Add menu items
+    const menuItems = [
+        { text: 'Clear Fret', action: () => { fretElement.textContent = ''; handleFretInput({ target: fretElement }, getTabData, setTabData, rendering.renderTab); } },
+        { text: 'Set to 0', action: () => { fretElement.textContent = '0'; handleFretInput({ target: fretElement }, getTabData, setTabData, rendering.renderTab); } },
+        { text: 'Set to 1', action: () => { fretElement.textContent = '1'; handleFretInput({ target: fretElement }, getTabData, setTabData, rendering.renderTab); } },
+        // Add more menu items as needed
+    ];
+
+    menuItems.forEach(item => {
+        const menuItem = document.createElement('div');
+        menuItem.textContent = item.text;
+        menuItem.style.padding = '5px';
+        menuItem.style.cursor = 'pointer';
+        menuItem.addEventListener('mouseover', () => { menuItem.style.backgroundColor = '#555'; });
+        menuItem.addEventListener('mouseout', () => { menuItem.style.backgroundColor = '#333'; });
+        menuItem.addEventListener('click', item.action);
+        contextMenu.appendChild(menuItem);
+    });
+
+    // Position the context menu
+    contextMenu.style.left = `${e.clientX}px`;
+    contextMenu.style.top = `${e.clientY}px`;
+
+    // Append the context menu to the body
+    document.body.appendChild(contextMenu);
+
+    // Remove the context menu when clicking outside
+    document.addEventListener('click', function removeContextMenu(event) {
+        if (!contextMenu.contains(event.target)) {
+            contextMenu.remove();
+            document.removeEventListener('click', removeContextMenu); // Remove the listener after use
+        }
+    });
+}
+
+/**
  * Handles arrow key navigation between frets.
  * @param {string} key - The arrow key pressed.
  * @param {HTMLElement} currentFret - The currently focused fret element.
