@@ -46,6 +46,7 @@ function addMeasure(options = {}) {
         strings: Array(6).fill(Array(beatsPerMeasure).fill('-')) // Use beatsPerMeasure for fret count, default '-'
     };
     tabData.measures.push(measure);
+    setTabData(tabData); // Re-render the tab after adding a measure.
     console.log('tab-data.js: tabData after addMeasure:', tabData);
 }
 
@@ -59,6 +60,7 @@ function clearTab() {
     addMeasure({ timeSignature: '4/4', name: 'Measure 1' }); // Add an initial measure with default time signature and name after clearing
     // Optionally reset other properties if needed, e.g., bpm
     // tabData.bpm = defaultTabData.bpm;
+    setTabData(tabData); // Re-render the tab after clearing.
 }
 
 /**
@@ -75,6 +77,11 @@ function getTabData() {
  */
 function setTabData(data) {
     tabData = data;
+    // Assuming there's a function to re-render the tab in the UI
+    // For example:
+    // renderTab(tabData); // Call a function to re-render the tab
+    // This is just a placeholder, replace with your actual rendering logic
+    console.log('tab-data.js: setTabData called, new tabData:', tabData);
 }
 
 /**
