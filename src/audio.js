@@ -42,6 +42,9 @@ async function resumeAudioContextOnInteraction() {
 document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
 document.addEventListener("click", resumeAudioContextOnInteraction, false);
 document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
+document.removeEventListener("touchstart", resumeAudioContextOnInteraction);
+document.removeEventListener("click", resumeAudioContextOnInteraction);
+document.removeEventListener("keydown", resumeAudioContextOnInteraction);
 
 // Load the AudioWorkletProcessor
 async function setupAudioWorklet() {
