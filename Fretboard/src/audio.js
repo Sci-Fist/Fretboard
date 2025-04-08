@@ -6,20 +6,6 @@ let fretboardNode;
 let tempo = 60.0;
 let timerID = 0;
 
-// Add a function to resume the AudioContext on user interaction
-function resumeAudioContextOnInteraction() {
-  if (actx.state === "suspended") {
-    actx.resume().then(() => {
-      console.log("AudioContext resumed successfully");
-    });
-  }
-}
-
-// Attach the event listeners for user interaction
-document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
-document.addEventListener("click", resumeAudioContextOnInteraction, false);
-document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
-
 function nextNote() {
   const secondsPerBeat = 60.0 / tempo;
   nextNoteTime += secondsPerBeat / 2;
