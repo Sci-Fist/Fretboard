@@ -7,7 +7,8 @@ const defaultTabData = {
     measures: [],
     bpm: 120,
     tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
-    capo: 0
+    capo: 0,
+    timeSignature: '4/4' // Added time signature to default data
 };
 
 let tabData = { ...defaultTabData };
@@ -19,7 +20,8 @@ function initializeTabData() {
     // Ensure deep copy for measures array if defaultTabData could be modified elsewhere (though unlikely here)
     tabData = {
       ...defaultTabData,
-      measures: [] // Start with empty measures before adding one
+      measures: [], // Start with empty measures before adding one
+      timeSignature: defaultTabData.timeSignature // Initialize time signature
     };
     addMeasure(); // Add the initial measure
 }
@@ -50,6 +52,7 @@ function addMeasure() {
 function clearTab() {
     console.log('tab-data.js: clearTab called');
     tabData.measures = []; // Correctly clears measures
+    tabData.timeSignature = defaultTabData.timeSignature; // Reset time signature to default
     // Optionally reset other properties if needed, e.g., bpm
     // tabData.bpm = defaultTabData.bpm;
 }

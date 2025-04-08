@@ -14,7 +14,8 @@ function setupToolBar(dependencies) {
     exportTab,
     showBPMInput,
     playTab,
-    stopPlayback,
+    pauseTab, // ADDED pauseTab
+    stopPlayback, // Renamed to stopPlayback to match dependency name
     saveTab,
     loadTab,
     exportMIDI,
@@ -30,6 +31,7 @@ function setupToolBar(dependencies) {
   const exportTabButton = document.getElementById("exportTabBtn");
   const showBPMInputButton = document.getElementById("setBPMBtn");
   const playTabButton = document.getElementById("playTabBtn");
+  const pauseTabButton = document.getElementById("pauseTabBtn"); // Pause button
   const stopTabButton = document.getElementById("stopTabBtn");
   const saveTabButton = document.getElementById("saveTabBtn");
   const loadTabButton = document.getElementById("loadTabBtn");
@@ -72,13 +74,17 @@ function setupToolBar(dependencies) {
   if (playTabButton) {
     playTabButton.addEventListener("click", () => {
       try {
-        playTab(getTabData());
+        playTab(); // Use the playTab function passed as dependency
         playTabButton.style.display = "none";
         playTabButton.setAttribute("aria-pressed", "false");
+        if (pauseTabButton) { // Show pause button instead of stop
+          pauseTabButton.style.display = "inline-block";
+          pauseTabButton.setAttribute("aria-pressed", "true");
+          pauseTabButton.focus(); // Move focus to pause button
+        }
         if (stopTabButton) {
           stopTabButton.style.display = "inline-block";
           stopTabButton.setAttribute("aria-pressed", "true");
-          stopTabButton.focus(); // Move focus to stop button
         }
       } catch (err) {
         console.error("Error initiating playback:", err);
@@ -89,6 +95,10 @@ function setupToolBar(dependencies) {
         stopPlayback(); // Call stopPlayback to clean up potentially partially started audio
         playTabButton.style.display = "inline-block";
         playTabButton.setAttribute("aria-pressed", "false");
+        if (pauseTabButton) {
+          pauseTabButton.style.display = "none";
+          pauseTabButton.setAttribute("aria-pressed", "false");
+        }
         if (stopTabButton) {
           stopTabButton.style.display = "none";
           stopTabButton.setAttribute("aria-pressed", "false");
@@ -99,19 +109,41 @@ function setupToolBar(dependencies) {
     console.error("Button with ID 'playTabBtn' not found.");
   }
 
+  if (pauseTabButton) { // Event listener for PAUSE button
+    pauseTabButton.addEventListener("click", () => {
+      if (pauseTab) {
+        pauseTab(); // Call the pauseTab function passed as dependency
+      }
+      // Update button states for pause
+      pauseTabButton.style.display = "none";
+      pauseTabButton.setAttribute("aria-pressed", "false");
+      if (playTabButton) {
+        playTabButton.style.display = "inline-block";
+        playTabButton.setAttribute("aria-pressed", "false"); // Ensure play is not pressed
+        playTabButton.focus(); // Move focus back to play button
+      }
+    });
+  } else {
+    console.error("Button with ID 'pauseTabBtn' not found.");
+  }
+
+
   if (stopTabButton) {
     stopTabButton.addEventListener("click", () => {
-      try {
-        stopPlayback();
-      } finally {
-        // Ensure button states are reset regardless of stopPlayback success/failure
-        stopTabButton.style.display = "none";
-        stopTabButton.setAttribute("aria-pressed", "false");
-        if (playTabButton) {
-          playTabButton.style.display = "inline-block";
-          playTabButton.setAttribute("aria-pressed", "false"); // Ensure play is not pressed
-          playTabButton.focus(); // Move focus back to play button
-        }
+      if (stopPlayback) {
+        stopPlayback(); // Use the stopPlayback function passed as dependency
+      }
+      // Update button states for stop
+      stopTabButton.style.display = "none";
+      stopTabButton.setAttribute("aria-pressed", "false");
+      if (pauseTabButton) {
+        pauseTabButton.style.display = "none";
+        pauseTabButton.setAttribute("aria-pressed", "false");
+      }
+      if (playTabButton) {
+        playTabButton.style.display = "inline-block";
+        playTabButton.setAttribute("aria-pressed", "false");
+        playTabButton.focus(); // Move focus to play button after stop
       }
     });
   } else {

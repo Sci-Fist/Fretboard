@@ -12,6 +12,7 @@ import config from '../config.js';
 console.log("app.js: Starting app.js");
 
 let isMeasureRotated = false; // State variable to track measure rotation
+let isPlaying = false; // Playback state
 
 // --- Placeholder Functions ---
 // TODO: Implement actual functionality
@@ -109,6 +110,9 @@ function generateTablature(tabData) {
 
     // Add BPM info
     tabString += `BPM: ${tabData.bpm || 120}\n`;
+    // Add Time Signature info
+    tabString += `Time Signature: ${tabData.timeSignature || '4/4'}\n`;
+
 
     return tabString;
 }
@@ -124,6 +128,71 @@ function toggleMeasureRotation() {
     console.log(`app.js: Measure rotation toggled to: ${isMeasureRotated}`);
 }
 
+// --- Playback Controls ---
+function handlePlay() {
+    if (!isPlaying) {
+        console.log("app.js: Playback started");
+        playTab(); // Call audio.js playTab function
+        isPlaying = true;
+        // Update UI to reflect playing state
+        const playButton = document.getElementById('playTabBtn');
+        const pauseButton = document.getElementById('pauseTabBtn');
+        const stopButton = document.getElementById('stopTabBtn');
+        if (playButton && pauseButton && stopButton) {
+            playButton.style.display = 'none'; // Hide Play button
+            pauseButton.style.display = 'inline-block'; // Show Pause button
+            stopButton.style.display = 'inline-block'; // Show Stop button
+        }
+    } else {
+        handlePause(); // If already playing, treat "Play" as "Resume" (or could be separate "Resume" button)
+    }
+}
+
+function handlePause() {
+    if (isPlaying) {
+        console.log("app.js: Playback paused");
+        stopPlayback(); // For now, using stopPlayback to pause as well (can be refined)
+        isPlaying = false;
+        // Update UI to reflect paused state (can be different from stopped if needed)
+        const playButton = document.getElementById('playTabBtn');
+        const pauseButton = document.getElementById('pauseTabBtn');
+        const stopButton = document.getElementById('stopTabBtn');
+        if (playButton && pauseButton && stopButton) {
+            playButton.style.display = 'inline-block'; // Show Play button (now acts as Resume)
+            pauseButton.style.display = 'none'; // Hide Pause button
+            stopButton.style.display = 'inline-block'; // Keep Stop button visible
+        }
+    }
+}
+
+
+function handleStop() {
+    if (isPlaying) { // Or if paused, depending on desired stop behavior
+        console.log("app.js: Playback stopped");
+        stopPlayback(); // Call audio.js stopPlayback
+        isPlaying = false;
+        // Update UI to reflect stopped state
+        const playButton = document.getElementById('playTabBtn');
+        const pauseButton = document.getElementById('pauseTabBtn');
+        const stopButton = document.getElementById('stopTabBtn');
+        if (playButton && pauseButton && stopButton) {
+            playButton.style.display = 'inline-block'; // Show Play button
+            pauseButton.style.display = 'none'; // Hide Pause button
+            stopButton.style.display = 'none'; // Hide Stop button
+        }
+    }
+}
+
+function handleTimeSignatureChange(event) {
+    const newTimeSignature = event.target.value;
+    console.log(`app.js: Time signature changed to: ${newTimeSignature}`);
+    const tabData = getTabData();
+    tabData.timeSignature = newTimeSignature; // Update time signature in tab data
+    setTabData(tabData);
+    rendering.renderTab(getTabData()); // Re-render the tab to reflect changes (if needed visually)
+    // TODO: Implement logic to change measure structure or playback behavior based on time signature
+}
+
 
 // --- UI Setup ---
 /**
@@ -135,14 +204,24 @@ function setupUI() {
     // Apply config (example - could be more extensive)
     document.body.style.fontSize = config.bodyFontSize;
 
+    // Get time signature select element
+    const timeSignatureSelect = document.getElementById('timeSignatureSelect');
+    if (timeSignatureSelect) {
+        timeSignatureSelect.addEventListener('change', handleTimeSignatureChange);
+    } else {
+        console.error("app.js: timeSignatureSelect element not found.");
+    }
+
+
     // Pass dependencies to setupToolBar
     setupToolBar({
         addMeasure,
         clearTab,
         exportTab, // Now defined in app.js
         showBPMInput, // Now defined in app.js
-        playTab,
-        stopPlayback,
+        playTab: handlePlay, // Use handlePlay function
+        pauseTab: handlePause, // Use handlePause function
+        stopPlayback: handleStop, // Use handleStop function (renamed for clarity in toolbar context)
         saveTab, // Now defined in app.js
         loadTab, // Now defined in app.js
         exportMIDI, // Imported from audio.js
