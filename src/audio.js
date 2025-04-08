@@ -1,146 +1,147 @@
-// src/audio.js
-// This module handles audio context and playback functionalities.
+// audio.js
+// This module handles audio playback using the Web Audio API.
 
-let actx; // Audio context
-let fretboardNode; // Custom AudioWorkletNode
-let gainNode;     // Gain node for volume control (if needed later)
+let audioContext;
+let fretboardProcessorNode;
+let resumeListenersAttached = false; // Flag to track if listeners are attached
+let tabData; // To hold tab data for playback
 
-export async function initializeAudio() { // Added export
-  try {
-    actx = new (window.AudioContext || window.webkitAudioContext)();
-
-    // --- Define resumeAudioContextOnInteraction here, before it's used ---
-    async function resumeAudioContextOnInteraction() {
-      console.log("resumeAudioContextOnInteraction called. actx is:", actx); // Add this log
-      // Check if actx is initialized *and* suspended before resuming
-      if (actx && actx.state === "suspended") {
-        try {
-          await actx.resume();
-          console.log("AudioContext resumed successfully.");
-        } catch (resumeError) {
-          console.error("Error resuming AudioContext:", resumeError);
+/**
+ * Initializes the audio context and processor.
+ */
+async function initializeAudio() {
+    console.log("audio.js: initializeAudio called.");
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        console.log("audio.js: AudioContext created:", audioContext);
+        if (audioContext.state === 'suspended') {
+            console.log("audio.js: AudioContext is suspended, attaching resume listeners.");
+            if (!resumeListenersAttached) {
+                resumeAudioContextOnInteraction();
+                resumeListenersAttached = true;
+            }
         }
-      } else {
-        console.log("AudioContext state was not suspended, or context not initialized.");
-      }
-      // Detach listeners after first successful resume attempt
-      document.removeEventListener("mousedown", resumeAudioContextOnInteraction);
-      document.removeEventListener("touchstart", resumeAudioContextOnInteraction);
-      document.removeEventListener("keydown", resumeAudioContextOnInteraction);
     }
 
-    // Attach event listeners for user interaction *after* context is created
-    // Use { once: true } so they only fire once per type
-    document.addEventListener("mousedown", resumeAudioContextOnInteraction, { once: true });
-    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
-    document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
-
-    console.log("Audio resume listeners attached.");
-
-
-    async function createAudioWorkletNode() {
-      try {
-        await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
-          fretboardNode = new AudioWorkletNode(
-            actx,
-          "fretboard-processor",
-        ); // Use the processor's registered name
-
-        // Connect the AudioWorkletNode to the destination
-        fretboardNode.connect(actx.destination);
-
-        console.log("AudioWorkletNode created and connected.");
-      } catch (workletError) {
-        console.error("Error creating AudioWorkletNode:", workletError);
-      }
+    if (!fretboardProcessorNode) {
+        await setupAudioWorklet();
     }
-
-    await createAudioWorkletNode();
-
-
-  } catch (error) {
-    console.error("Error initializing audio system:", error);
-  }
+    console.log("audio.js: initializeAudio finished.");
 }
 
-
-export async function playTab(tabData) {
-  if (!actx || !fretboardNode) {
-    console.error("Audio system not initialized or AudioWorkletNode missing.");
-    return;
-  }
-
-  // Basic error checks - expand as needed
-  if (!tabData || !tabData.measures || tabData.measures.length === 0) {
-    console.warn("No tab data to play or tabData is invalid.");
-    return;
-  }
-
-  // --- Simple Playback Logic ---
-  const bpm = tabData.bpm || 120;
-  const secondsPerBeat = 60 / bpm;
-  const notesPerMeasure = 4; // Assuming 4 notes per measure for simplicity
-  const secondsPerNote = secondsPerBeat / notesPerMeasure;
-
-  let currentTime = actx.currentTime; // Start at current audio context time
-
-  for (const measure of tabData.measures) {
-    for (let stringIndex = 0; stringIndex < measure.strings.length; stringIndex++) {
-      for (let fretIndex = 0; fretIndex < measure.strings[stringIndex].length; fretIndex++) {
-        const fretValue = measure.strings[stringIndex][fretIndex];
-        if (fretValue !== '') {
-          const note = getNote(stringIndex, parseInt(fretValue), tabData.tuning); // Assuming getNote is available
-          if (note) {
-            // Schedule note on message
-            fretboardNode.port.postMessage({
-              type: 'noteOn',
-              note: note,
-              velocity: 0.8, // Example velocity
-            });
-
-            // Schedule note off message (after note duration) -  For now, just a fixed duration
-            const noteOffTime = currentTime + secondsPerNote * 0.9; // Shorten note slightly
-            const noteDuration = secondsPerNote * 0.9; // Example duration
-
-            // Basic note off implementation - sending 'allNotesOff' might be too abrupt for individual notes
-             setTimeout(() => {
-                fretboardNode.port.postMessage({ type: 'allNotesOff' }); // Send note off message
-             }, noteDuration * 1000); // setTimeout in milliseconds
-
-
-            currentTime += secondsPerNote; // Advance time for next note
-          }
-        } else {
-          currentTime += secondsPerNote; // Still advance time even if no note
+/**
+ * Resumes the audio context on user interaction.
+ */
+function resumeAudioContextOnInteraction() {
+    console.log("audio.js: resumeAudioContextOnInteraction called. actx is:", audioContext);
+    const resume = async () => {
+        if (audioContext.state === 'suspended') {
+            await audioContext.resume();
+            console.log("audio.js: AudioContext resumed successfully.");
         }
-      }
+        document.removeEventListener('mousedown', resume);
+        document.removeEventListener('touchstart', resume);
+        document.removeEventListener('keydown', resume);
+    };
+    document.addEventListener('mousedown', resume);
+    document.addEventListener('touchstart', resume);
+    document.addEventListener('keydown', resume);
+    console.log("audio.js: Audio resume listeners attached.");
+}
+
+
+/**
+ * Sets up the AudioWorklet processor for sound generation.
+ */
+async function setupAudioWorklet() {
+    try {
+        await audioContext.audioWorklet.addModule('src/fretboard-processor.js');
+        fretboardProcessorNode = new AudioWorkletNode(audioContext, 'fretboard-processor');
+        fretboardProcessorNode.connect(audioContext.destination);
+        console.log("audio.js: AudioWorkletNode created and connected.");
+    } catch (error) {
+        console.error("audio.js: Error setting up AudioWorklet:", error);
+        alert('Failed to initialize audio. Please check console for details.');
     }
-  }
+}
+
+/**
+ * Plays the guitar tab data.
+ * @param {object} currentTabData - The guitar tab data.
+ */
+function playTab() {
+    console.log("audio.js: playTab called");
+    tabData = getTabData(); // Get tab data directly from module
+    if (!tabData || !tabData.measures || tabData.measures.length === 0) {
+        console.warn("audio.js: No tab data to play or tabData is invalid.");
+        alert("No tab data available to play. Please add measures and notes.");
+        return;
+    }
+
+    console.log("audio.js: playTab - Tab data received:", tabData); // Log tabData
+
+    // --- Simple Playback Logic ---
+    const bpm = tabData.bpm || 120;
+    const secondsPerBeat = 60 / bpm;
+    const notesPerMeasure = 4; // Assuming 4 notes per measure for simplicity
+    const secondsPerNote = secondsPerBeat / notesPerMeasure;
+
+    let currentTime = audioContext.currentTime; // Start at current audio context time
+
+    for (const measure of tabData.measures) {
+        for (let stringIndex = 0; stringIndex < measure.strings.length; stringIndex++) {
+            for (let fretIndex = 0; fretIndex < measure.strings[stringIndex].length; fretIndex++) {
+                const fretValue = measure.strings[stringIndex][fretIndex];
+                if (fretValue !== '-' && fretValue !== '') { // Check for hyphen and empty string
+                    const note = getNote(stringIndex, parseInt(fretValue), tabData.tuning); // Assuming getNote is available
+                    if (note) {
+                        // Schedule note on message
+                        fretboardProcessorNode.port.postMessage({
+                            type: 'noteOn',
+                            note: note,
+                            velocity: 0.8, // Example velocity
+                            // oscillatorType: 'sine' // Example oscillator type - removed for now to use default
+                        });
+
+                        // Schedule note off message (after note duration) -  For now, just a fixed duration
+                        const noteOffTime = currentTime + secondsPerNote * 0.9; // Shorten note slightly
+                        const noteDuration = secondsPerNote * 0.9; // Example duration
+
+                        // Basic note off implementation - sending 'allNotesOff' might be too abrupt for individual notes
+                         setTimeout(() => {
+                            fretboardProcessorNode.port.postMessage({ type: 'allNotesOff' }); // Send note off message
+                         }, noteDuration * 1000); // setTimeout in milliseconds
+
+
+                        currentTime += secondsPerNote; // Advance time for next note
+                    }
+                } else {
+                    currentTime += secondsPerNote; // Still advance time even if no note
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Stops the audio playback.
+ */
+function stopPlayback() {
+    console.log("audio.js: stopPlayback called");
+    if (fretboardProcessorNode) {
+        fretboardProcessorNode.port.postMessage({ type: 'allNotesOff' });
+    }
+    // Additional stop logic if needed (e.g., clearing intervals, UI reset)
+}
+
+/**
+ * Exports the current tab data as a MIDI file (placeholder).
+ */
+function exportMIDI() {
+    console.log("audio.js: exportMIDI called (placeholder)");
+    alert("MIDI export functionality is not yet implemented."); // Placeholder alert
+    // TODO: Implement MIDI export logic
 }
 
 
-export function stopPlayback() {
-  if (fretboardNode) {
-    fretboardNode.port.postMessage({ type: 'allNotesOff' });
-    console.log("Playback stopped and notes turned off.");
-  } else {
-    console.warn("stopPlayback called but AudioWorkletNode is not initialized.");
-  }
-}
-
-
-export async function exportMIDI() {
-    alert("MIDI Export functionality is not yet implemented."); // Placeholder
-    console.log("exportMIDI() called - functionality not implemented yet.");
-    // Future MIDI export logic here
-}
-
-// Placeholder getNote function - replace with actual implementation from tab-data.js
-function getNote(stringIndex, fretNumber, tuning) {
-    const notes = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
-    const baseNote = tuning[stringIndex];
-    const baseIndex = notes.indexOf(baseNote);
-    const noteIndex = (baseIndex + fretNumber) % 12;
-    const octave = Math.floor((baseIndex + fretNumber) / 12) + 2; // Determine octave
-    return notes[noteIndex] + octave;
-}
+export { initializeAudio, playTab, stopPlayback, exportMIDI };

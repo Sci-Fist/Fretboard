@@ -28,14 +28,14 @@ function initializeTabData() {
 
 
 /**
- * Adds a new measure to the tab data.
+ * Adds a new measure to the tab data with default '-' values.
  */
 function addMeasure() {
     console.log('tab-data.js: addMeasure called');
     const timeSignature = tabData.timeSignature;
     const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10); // Get numerator
     const measure = {
-        strings: Array(6).fill(Array(beatsPerMeasure).fill('-')) // Use beatsPerMeasure for fret count
+        strings: Array(6).fill(Array(beatsPerMeasure).fill('-')) // Use beatsPerMeasure for fret count, default '-'
     };
     tabData.measures.push(measure);
     console.log('tab-data.js: tabData after addMeasure:', tabData);

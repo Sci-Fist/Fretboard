@@ -285,7 +285,7 @@ function setupUI() {
 
     // Pass dependencies to setupToolBar
     setupToolBar({
-        addMeasure,
+        addMeasure: handleAddMeasureWithInput, // Changed to use handleAddMeasureWithInput
         clearTab,
         exportTab, // Now defined in app.js
         playTab: handlePlay, // Use handlePlay function
@@ -413,6 +413,35 @@ function handleArrowKeyNavigation(key, currentFret) {
         nextFret.classList.add('active-fret'); // Add to next
         nextFret.focus();
         localStorage.setItem('activeFretId', nextFret.id); // Update stored active fret ID
+    }
+}
+
+function handleAddMeasureWithInput() {
+    console.log("app.js: handleAddMeasureWithInput called");
+    const tabData = getTabData();
+    const beatsPerMeasure = parseInt(tabData.timeSignature.split('/')[0], 10);
+    const newMeasureFrets = [];
+    for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+        const stringFrets = [];
+        for (let fretIndex = 0; fretIndex < beatsPerMeasure; fretIndex++) {
+            let fretValue = prompt(`Enter fret for string ${stringIndex + 1}, beat ${fretIndex + 1} of new measure:`, '-');
+            if (fretValue === null) { // User cancelled
+                return;
+            }
+            stringFrets.push(fretValue || '-'); // Default to '-' if empty input
+        }
+        newMeasureFrets.push(stringFrets);
+    }
+
+    if (newMeasureFrets.length === 6) { // Ensure we got all string data
+        const newMeasure = {
+            strings: newMeasureFrets
+        };
+        tabData.measures.push(newMeasure);
+        setTabData(tabData);
+        rendering.renderTab(getTabData());
+    } else {
+        alert("Could not create measure. Input incomplete.");
     }
 }
 
