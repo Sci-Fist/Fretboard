@@ -119,3 +119,40 @@ export function toggleMeasureRotation() {
   }
   removeActiveFretClass();
 }
+
+/**
+ * Handles input for fret elements.
+ * @param {Event} event - The input event.
+ * @param {function} getTabData - Function to get the tab data.
+ * @param {function} setTabData - Function to set the tab data.
+ * @param {function} renderTab - Function to re-render the tab.
+ */
+export function handleFretInput(event, getTabData, setTabData, renderTab) {
+    const fretElement = event.target;
+    const measureIndex = parseInt(fretElement.dataset.measure, 10);
+    const stringIndex = parseInt(fretElement.dataset.string, 10);
+    const fretIndex = parseInt(fretElement.dataset.fret, 10);
+    const fretValue = fretElement.textContent;
+
+    if (isNaN(measureIndex) || isNaN(stringIndex) || isNaN(fretIndex)) {
+        console.warn('Invalid fret element data attributes.');
+        return;
+    }
+
+    const tabData = getTabData();
+    if (!tabData.measures[measureIndex]) {
+        console.warn(`Measure at index ${measureIndex} not found.`);
+        return;
+    }
+
+    if (!tabData.measures[measureIndex].strings[stringIndex]) {
+        console.warn(`String at index ${stringIndex} not found in measure ${measureIndex}.`);
+        return;
+    }
+
+    tabData.measures[measureIndex].strings[stringIndex][fretIndex] = fretValue;
+    setTabData(tabData);
+    renderTab(tabData);
+}
+
+export { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass, toggleMeasureRotation };
