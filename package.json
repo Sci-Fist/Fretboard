@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "tone": "15.0.4",
-    "standardized-audio-context": "^25.3.77",
+    "standardized-audio-context": "^25.3.77"
   },
   "devDependencies": {
     "parcel": "^2.9.3"
