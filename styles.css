@@ -8,6 +8,7 @@ body {
     background-color: #121212;
     color: #fff;
     display: flex;
+    flex-direction: column; /* Changed to column for vertical layout */
     justify-content: center;
     align-items: flex-start; /* Align to top for better use of vertical space, especially on smaller screens */
     min-height: 98vh; /* Slightly reduced to ensure no scrollbar unless necessary */
@@ -121,6 +122,7 @@ body {
     justify-content: flex-start; /* Align buttons to the start */
     flex-wrap: wrap;
     border-radius: 6px; /* Use a fixed value or add to config if needed */
+    order: 2; /* Place the toolbar below the tab display */
 }
 
 .tool-bar button {
