@@ -23,6 +23,8 @@ export async function initializeAudio() { // Added export
     actx = new AudioContext();
 
     // Add a function to resume the AudioContext on user interaction
+    // Attach the event listeners for user interaction *after* context is created
+    // Use { once: true } so they only fire once per type
     async function resumeAudioContextOnInteraction() {
       console.log("resumeAudioContextOnInteraction called. actx is:", actx); // Add this log
       // Check if actx is initialized *and* suspended before resuming
@@ -37,8 +39,6 @@ export async function initializeAudio() { // Added export
       }
     }
 
-    // Attach the event listeners for user interaction *after* context is created
-    // Use { once: true } so they only fire once per type
     document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
     document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
     document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
