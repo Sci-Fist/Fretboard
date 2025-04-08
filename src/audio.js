@@ -36,6 +36,7 @@ function resumeAudioContextOnInteraction() {
       false,
     );
     document.addEventListener("click", resumeAudioContextOnInteraction, false);
+    document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
 
     // Load the AudioWorkletProcessor
     async function setupAudioWorklet() {
@@ -56,6 +57,7 @@ function resumeAudioContextOnInteraction() {
       }
     }
 
+    setupAudioWorklet();
     const sixteenthNoteDuration = 60 / bpm / 4; // Default Tempo.  Adjust for the BPM.
 
     /**
