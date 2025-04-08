@@ -200,13 +200,11 @@ async function setupApp() {
     initializeTabData();
     rendering.renderTab(getTabData());
     setupUI();
-    // Config variables and log are now inside setupUI.
-  } catch (error) {
-    console.error("app.js: Error during app setup:", error);
     // Initialize Audio after UI setup (or ensure context is resumed on interaction)
     await initializeAudio();
-
+    // Config variables and log are now inside setupUI.
   } catch (error) {
+    // This catch block now handles errors from initializeTabData, renderTab, setupUI, AND initializeAudio
     console.error("app.js: Error during app setup:", error);
     alert("Failed to initialize the application. Please check the console for details.");
   }

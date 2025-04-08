@@ -54,8 +54,6 @@ function setupToolBar(dependencies) {
   }
 
   if (exportTabButton) {
-    exportTabButton.addEventListener("click", exportTab);
-  } else {
     // Use the passed exportTab function directly
     exportTabButton.addEventListener("click", exportTab);
   } else {
@@ -119,8 +117,6 @@ function setupToolBar(dependencies) {
   }
 
   if (saveTabButton) {
-    saveTabButton.addEventListener("click", saveTab);
-  } else {
     // Use the passed saveTab function directly
     saveTabButton.addEventListener("click", saveTab);
   } else {
@@ -136,8 +132,6 @@ function setupToolBar(dependencies) {
   // Removed duplicate Load Tab button logic block
 
   if (exportMIDButton) {
-    exportMIDButton.addEventListener("click", exportMIDI);
-  } else {
     // Use the passed exportMIDI function directly
     exportMIDButton.addEventListener("click", exportMIDI);
   } else {
