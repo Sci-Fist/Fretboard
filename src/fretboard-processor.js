@@ -1,16 +1,15 @@
 // fretboard-processor.js
-try {
-  class FretboardProcessor extends AudioWorkletProcessor {
-    static get parameterDescriptors() {
-      return [
-        {
-          name: "detune", // Optional: Example parameter
-          defaultValue: 0,
-          minValue: -1200, // Cents
-          maxValue: 1200,
-        },
-      ];
-    }
+class FretboardProcessor extends AudioWorkletProcessor {
+  static get parameterDescriptors() {
+    return [
+      {
+        name: "detune", // Optional: Example parameter
+        defaultValue: 0,
+        minValue: -1200, // Cents
+        maxValue: 1200,
+      },
+    ];
+  }
 
   constructor() {
     super();
@@ -136,4 +135,3 @@ try {
 }
 
 registerProcessor("fretboard-processor", FretboardProcessor);
-}
