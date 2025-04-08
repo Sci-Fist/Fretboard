@@ -5,14 +5,15 @@ import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from './tab-data.js';
 import { setupToolBar, handleFretInput, showNumberCircle } from './ui-elements.js';
 import { playTab, stopPlayback, exportMIDI } from './audio.js'; // Import audio functions
+import { actx } from './audio.js'; // Import the AudioContext
 import config from '../config.js'; // Import config
 
 console.log("app.js: Starting app.js");
 
 // Add a function to resume the AudioContext on user interaction
 function resumeAudioContextOnInteraction() {
-  if (Tone.context.state === "suspended") {
-    Tone.context.resume().then(() => {
+  if (actx.state === "suspended") {
+    actx.resume().then(() => {
       console.log("AudioContext resumed successfully");
     });
   }

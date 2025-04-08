@@ -1,5 +1,5 @@
 console.log("Fretboard\\src\\audio.js loaded");
-const actx = new AudioContext();
+export const actx = new AudioContext();
 let nextNoteTime = 0.0;
 let noteResolution = 0;
 let fretboardNode;
