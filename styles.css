@@ -25,7 +25,7 @@ body {
     flex-direction: column;
     width: 98%; /* Default width for smaller screens */
     align-items: center;
-    max-width: var(--config-tab-editor-max-width, 1200px); /* Increased max-width for larger screens */
+    max-width: var(--config-tab-editor-max-width, 1000px); /* Changed max-width for larger screens */
     margin: 10px auto; /* Added margin top/bottom for spacing */
     border: var(--config-tab-editor-border, 1.5px solid #333);
     padding: var(--config-tab-editor-padding, 15px);
@@ -49,8 +49,8 @@ body {
     border-radius: var(--config-tab-display-border-radius, 6px);
     /* Flexbox for horizontal measures */
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; /* Allow measures to wrap if they exceed container width */
+    flex-direction: row; /* Arrange measures horizontally */
+    flex-wrap: nowrap; /* Prevent wrapping to the next line */
     align-items: flex-start; /* Align items to the start of the container */
     gap: 20px; /* Add some gap between measures (adjust as needed) */
 }
@@ -127,7 +127,7 @@ body {
     background-color: #333;
     justify-content: flex-start; /* Align buttons to the start */
     flex-wrap: wrap;
-    border-radius: 6px; /* Use a fixed value or add to config if needed */
+    border-radius: var(--config-tool-bar-button-border-radius, 6px);
     order: 2; /* Place the toolbar below the tab display */
 }
 
