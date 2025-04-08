@@ -20,7 +20,7 @@ const NUMBER_OF_STRINGS = 6;
 // Initialize audio context and AudioWorklet
 export async function initializeAudio() { // Added export
   try {
-    actx = new AudioContext();
+    actx = new (window.AudioContext || window.webkitAudioContext)();
 
     // Add a function to resume the AudioContext on user interaction
     // Attach the event listeners for user interaction *after* context is created
@@ -51,8 +51,8 @@ export async function initializeAudio() { // Added export
     async function createAudioWorkletNode() {
       try {
         await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
-        fretboardNode = new AudioWorkletNode(
-          actx,
+          fretboardNode = new AudioWorkletNode(
+            actx,
           "fretboard-processor",
         ); // Use the processor's registered name
 
@@ -79,11 +79,9 @@ export async function initializeAudio() { // Added export
 
     await createAudioWorkletNode();
 
-    // Attach the event listeners for user interaction *after* context is created
-    // Use { once: true } so they only fire once per type
-    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
     document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
     document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
     console.log("Audio resume listeners attached.");
 
     console.log("Audio initialized successfully");
