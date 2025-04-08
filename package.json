@@ -14,5 +14,5 @@
   "devDependencies": {
     "parcel": "^2.9.3"
   },
-  "type": "commonjs" // Add this line
+  "type": "commonjs"
 }
