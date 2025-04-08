@@ -402,7 +402,7 @@ function setupUI() {
         exportTab: exportTab,
         playTab: handlePlay,
         pauseTab: handlePause,
-        stopPlayback: stopPlayback,
+        stopPlayback: handleStop,
         saveTab: saveTab,
         loadTab: loadTab,
         renderTab: rendering.renderTab,
