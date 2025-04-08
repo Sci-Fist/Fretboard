@@ -77,6 +77,7 @@ function loadTab() {
     });
     fileInput.click(); // Trigger the file selection dialog
 }
+
 /**
  * Handles adding a measure with user input for time signature and measure name.
  * @param {string} timeSignature - The time signature to use for the new measure.
@@ -413,7 +414,7 @@ async function setupUI() {
                 const fretsWithCircles = document.querySelectorAll('.fret .number-circle');
                 fretsWithCircles.forEach(circle => circle.remove());
                 // Show the number circle on the clicked fret
-                showFretContextMenu(e);
+                showNumberCircle(fretElement);
             }
         });
     }
