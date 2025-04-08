@@ -380,6 +380,7 @@ function setupUI() {
     function openAddMeasureModal() {
         addMeasureModal.style.display = 'block';
         measureNameInputModal.value = ''; // Clear measure name input when opening modal
+        measureNameInputModal.focus(); // ADD THIS LINE to focus on measure name input
     }
 
     function closeAddMeasureModal() {
