@@ -1,204 +1,55 @@
-// src/ui-elements.js
-import { addMeasure, clearTab, getTabData, initializeTabData, setTabData } from './tab-data.js';
-import { playTab, stopPlayback, setOscillatorType, resumeTab, pauseTab } from './audio.js';
-import { renderTab } from './rendering.js'; // Import renderTab
+// ui-elements.js
+// Function to create a number circle
+export function createNumberCircle(ctx, x, y, numbers, onClick) {
+    const circleRadius = 20;
+    const numberSpacing = 1.2; // Adjust for spacing between numbers
+    const angleIncrement = (2 * Math.PI) / numbers.length;
+    const centerX = x;
+    const centerY = y;
 
-// DOM element references
-const addMeasureBtn = document.getElementById('addMeasureBtn');
-const clearTabBtn = document.getElementById('clearTabBtn');
-const bpmInput = document.getElementById('bpmInput');
-const playTabBtn = document.getElementById('playTabBtn');
-const pauseTabBtn = document.getElementById('pauseTabBtn');
-const stopTabBtn = document.getElementById('stopTabBtn');
-const saveTabBtn = document.getElementById('saveTabBtn');
-const loadTabBtn = document.getElementById('loadTabBtn');
-const exportTabBtn = document.getElementById('exportTabBtn');
-const timeSignatureSelect = document.getElementById('timeSignatureSelect');
-const rotateMeasureBtn = document.getElementById('rotateMeasureBtn');
+    // Clear any existing number circles
+    clearNumberCircles();
 
-// Initialize tab data and render the initial tab
-initializeTabData();
-renderTab(getTabData()); // Initial render
+    const numberElements = [];
 
-// Function to remove the active-fret class from all frets
-function removeActiveFretClass() {
-    document.querySelectorAll('.fret.active-fret').forEach(fret => {
-        fret.classList.remove('active-fret');
-    });
-}
+    numbers.forEach((number, index) => {
+        const angle = index * angleIncrement;
+        const numberX = centerX + Math.cos(angle) * circleRadius * numberSpacing;
+        const numberY = centerY + Math.sin(angle) * circleRadius * numberSpacing;
 
-// Event listeners
-if (addMeasureBtn) {
-    addMeasureBtn.addEventListener('click', () => {
-        const selectedTimeSignature = timeSignatureSelect ? timeSignatureSelect.value : '4/4';
-        addMeasure({ timeSignature: selectedTimeSignature });
-        renderTab(getTabData()); // Re-render after adding a measure
-    });
-}
+        const numberElement = document.createElement('div');
+        numberElement.textContent = number;
+        numberElement.style.position = 'absolute';
+        numberElement.style.left = `${numberX - 10}px`; // Adjust for text width
+        numberElement.style.top = `${numberY - 10}px`; // Adjust for text height
+        numberElement.style.width = '20px';
+        numberElement.style.height = '20px';
+        numberElement.style.borderRadius = '50%';
+        numberElement.style.backgroundColor = 'lightgray';
+        numberElement.style.textAlign = 'center';
+        numberElement.style.lineHeight = '20px';
+        numberElement.style.cursor = 'pointer';
+        numberElement.style.fontSize = '12px';
+        numberElement.classList.add('number-circle'); // Add class for styling
 
-if (clearTabBtn) {
-    clearTabBtn.addEventListener('click', () => {
-        clearTab();
-        renderTab(getTabData()); // Re-render after clearing
-    });
-}
-
-if (bpmInput) {
-    bpmInput.addEventListener('change', () => {
-        // Update the tempo in your tab data or audio settings
-        // For example:
-        // tabData.tempo = parseInt(bpmInput.value, 10);
-        // setTabData(tabData);
-        console.log('BPM changed to:', bpmInput.value);
-    });
-}
-
-if (playTabBtn) {
-    playTabBtn.addEventListener('click', () => {
-        const tempo = parseInt(bpmInput?.value, 10) || 120; // Use the BPM input value or default to 120
-        playTab(tempo);
-        // Optionally, update button visibility
-        playTabBtn.style.display = 'none';
-        pauseTabBtn.style.display = '';
-        stopTabBtn.style.display = '';
-    });
-}
-
-if (pauseTabBtn) {
-    pauseTabBtn.addEventListener('click', () => {
-        pauseTab();
-        // Optionally, update button visibility
-        pauseTabBtn.style.display = 'none';
-        playTabBtn.style.display = '';
-    });
-}
-
-if (stopTabBtn) {
-    stopTabBtn.addEventListener('click', () => {
-        stopPlayback();
-        // Optionally, update button visibility
-        stopTabBtn.style.display = 'none';
-        playTabBtn.style.display = '';
-        pauseTabBtn.style.display = 'none';
-    });
-}
-
-if (saveTabBtn) {
-    saveTabBtn.addEventListener('click', () => {
-        // Implement save tab functionality
-        console.log('Save Tab clicked');
-    });
-}
-
-if (loadTabBtn) {
-    loadTabBtn.addEventListener('click', () => {
-        // Implement load tab functionality
-        console.log('Load Tab clicked');
-    });
-}
-
-if (exportTabBtn) {
-    exportTabBtn.addEventListener('click', () => {
-        // Implement export tab functionality
-        console.log('Export Tab clicked');
-    });
-}
-
-if (rotateMeasureBtn) {
-    rotateMeasureBtn.addEventListener('click', () => {
-        toggleMeasureRotation();
-    });
-}
-/**
- * Toggles the measure rotation state.
- */
-function toggleMeasureRotation() {
-  const tabDisplay = document.getElementById('tab-display');
-  if (tabDisplay) {
-    tabDisplay.classList.toggle('rotated'); // Toggle the 'rotated' class
-  }
-  removeActiveFretClass();
-}
-
-/**
- * Handles input for fret elements.
- * @param {Event} event - The input event.
- * @param {function} getTabData - Function to get the tab data.
- * @param {function} setTabData - Function to set the tab data.
- * @param {function} renderTab - Function to re-render the tab.
- */
-function handleFretInput(event, getTabData, setTabData, renderTab) {
-    const fretElement = event.target;
-    const measureIndex = parseInt(fretElement.dataset.measure, 10);
-    const stringIndex = parseInt(fretElement.dataset.string, 10);
-    const fretIndex = parseInt(fretElement.dataset.fret, 10);
-    const fretValue = fretElement.textContent;
-
-    if (isNaN(measureIndex) || isNaN(stringIndex) || isNaN(fretIndex)) {
-        console.warn('Invalid fret element data attributes.');
-        return;
-    }
-
-    const tabData = getTabData();
-    if (!tabData.measures[measureIndex]) {
-        console.warn(`Measure at index ${measureIndex} not found.`);
-        return;
-    }
-
-    if (!tabData.measures[measureIndex].strings[stringIndex]) {
-        console.warn(`String at index ${stringIndex} not found in measure ${measureIndex}.`);
-        return;
-    }
-
-    tabData.measures[measureIndex].strings[stringIndex][fretIndex] = fretValue;
-    setTabData(tabData);
-    renderTab(tabData);
-}
-
-/**
- * Displays a number circle on a fret.
- * @param {HTMLElement} fretElement - The fret element.
- */
-function showNumberCircle(fretElement) {
-    // Implementation for showing the number circle
-    console.log("ui-elements.js: showNumberCircle called");
-    // You'll need to add the logic to create and position the circle here.
-    // For example:
-    const circle = document.createElement('div');
-    circle.className = 'number-circle';
-    circle.textContent = fretElement.textContent;
-    fretElement.appendChild(circle);
-}
-
-/**
- * Removes the number circle from a fret.
- * @param {HTMLElement} fretElement - The fret element.
- */
-function removeOpenNumberCircle(fretElement) {
-    // Implementation for removing the number circle
-    console.log("ui-elements.js: removeOpenNumberCircle called");
-    // You'll need to add the logic to remove the circle here.
-    // For example:
-    const circle = fretElement.querySelector('.number-circle');
-    if (circle) {
-        circle.remove();
-    }
-}
-
-// Add event listeners to fret elements
-document.addEventListener('DOMContentLoaded', () => {
-    const tabDisplay = document.getElementById('tab-display');
-    if (tabDisplay) {
-        tabDisplay.addEventListener('click', (event) => {
-            if (event.target.classList.contains('fret')) {
-                // Remove any existing number circles
-                const fretsWithCircles = document.querySelectorAll('.fret .number-circle');
-                fretsWithCircles.forEach(circle => circle.remove());
-                // Show the number circle on the clicked fret
-                showNumberCircle(event.target);
-            }
+        numberElement.addEventListener('click', () => {
+            onClick(number);
+            clearNumberCircles(); // Clear the number circles after a click
         });
-    }
-});
 
-export { handleFretInput, removeActiveFretClass, toggleMeasureRotation, showNumberCircle, removeOpenNumberCircle };
+        document.body.appendChild(numberElement);
+        numberElements.push(numberElement);
+    });
+
+    // Store the number elements for later clearing
+    numberCircleElements = numberElements;
+}
+
+// Function to clear number circles
+let numberCircleElements = [];
+function clearNumberCircles() {
+    numberCircleElements.forEach(element => {
+        element.remove();
+    });
+    numberCircleElements = [];
+}
