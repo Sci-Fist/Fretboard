@@ -1,5 +1,6 @@
 // src/rendering.js
 // Functions for rendering the tab to the DOM
+import { showNumberCircle } from './ui-elements.js'; // Import showNumberCircle
 
 /**
  * Renders the tab data to the tab display.
