@@ -20,8 +20,9 @@ export function renderTab(tabData) {
     }
 
     const isRotated = tabData.isMeasureRotated || false; // Get rotation state from tabData
-    const timeSignature = tabData.timeSignature;
-    const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10); // Get numerator for fret count
+    const timeSignature = tabData.timeSignature || '4/4'; // Default to 4/4 if not set
+    const [beats, noteValue] = timeSignature.split('/').map(Number);
+    const fretsPerMeasure = beats; // Use beats for the number of frets
 
     tabData.measures.forEach((measure, measureIndex) => {
         const measureDiv = document.createElement("div");
@@ -48,7 +49,7 @@ export function renderTab(tabData) {
             stringLine.className = "string-line";
             stringDiv.appendChild(stringLine);
 
-            for (let fretIndex = 0; fretIndex < beatsPerMeasure; fretIndex++) { // Use beatsPerMeasure here
+            for (let fretIndex = 0; fretIndex < fretsPerMeasure; fretIndex++) { // Use beatsPerMeasure here
                 const fretDiv = document.createElement("div");
                 fretDiv.className = "fret";
                 if (isRotated) {

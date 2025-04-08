@@ -1,42 +1,37 @@
 // src/app.js
 // Main app logic - setting things up and making it go!
 
-// Main app logic - setting things up and making it go!
-
 import * as rendering from './rendering.js';
-import { initializeTabData, getTabData, setTabData, addMeasure, clearTab, getNote } from './tab-data.js'; // Added getNote
-import { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass } from './ui-elements.js'; // Added more UI imports
-import { initializeAudio, playTab, stopPlayback, exportMIDI } from './audio.js'; // Adjusted audio imports for individual exports
+import { initializeTabData, getTabData, setTabData, addMeasure, clearTab, getNote } from './tab-data.js';
+import { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass } from './ui-elements.js';
+import { initializeAudio, playTab, stopPlayback, exportMIDI } from './audio.js';
 import config from '../config.js';
 
 console.log("app.js: Starting app.js");
 
+// Application State
+let isMeasureRotated = false;
+let isPlaying = false;
+let currentMeasureIndex = -1;
+let playbackIntervalId = null;
 
-let isMeasureRotated = false; // State variable to track measure rotation
-let isPlaying = false; // Playback state
-let currentMeasureIndex = -1; // Track current measure during playback
-let playbackIntervalId = null; // Interval ID for playback timing
+// --- Helper Functions ---
 
-
-// --- Placeholder Functions ---
-// TODO: Implement actual functionality
 function exportTab() {
     console.log("app.js: exportTab called (placeholder)");
     const tabData = getTabData();
-    // Using the generateTablature function (consider moving it)
     const tabText = generateTablature(tabData);
     const blob = new Blob([tabText], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = "guitar_tab.txt";
-    document.body.appendChild(a); // Required for Firefox
+    document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     alert("Tab exported as text!");
 }
-
 
 function saveTab() {
     console.log("app.js: saveTab called");
@@ -57,7 +52,7 @@ function loadTab() {
         try {
             const tabData = JSON.parse(savedTab);
             setTabData(tabData);
-            rendering.renderTab(getTabData()); // Re-render after loading
+            rendering.renderTab(getTabData());
             alert('Tab loaded from local storage!');
         } catch (error) {
             console.error('Error loading tab from local storage:', error);
@@ -68,29 +63,25 @@ function loadTab() {
     }
 }
 
-// Helper function (consider moving to ui-elements or utils) - needed for exportTab
 function generateTablature(tabData) {
     if (!tabData || !tabData.measures || tabData.measures.length === 0) {
         return "No tab data.";
     }
 
     let tabString = "";
-    const tuning = tabData.tuning || ['E', 'A', 'D', 'G', 'B', 'E']; // Default tuning if not present
-    const stringLabels = ["E", "A", "D", "G", "B", "e"]; // Standard tuning labels
+    const tuning = tabData.tuning || ['E', 'A', 'D', 'G', 'B', 'E'];
+    const stringLabels = ["E", "A", "D", "G", "B", "e"];
 
     tabData.measures.forEach((measure, measureIndex) => {
         tabString += `Measure ${measureIndex + 1}:\n`;
-        // Ensure measure.strings exists and has the correct length
         const strings = measure.strings && measure.strings.length === 6 ? measure.strings : Array(6).fill(['-', '-', '-', '-']);
 
         for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
             tabString += `${stringLabels[stringIndex]}|`;
-            // Ensure the string array exists and has the correct length
             const frets = strings[stringIndex] && strings[stringIndex].length === 4 ? strings[stringIndex] : ['-', '-', '-', '-'];
             for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
-                // Pad for basic alignment, ensure '-' for empty/undefined
                 const fretValue = (frets[fretIndex] !== undefined && frets[fretIndex] !== '') ? String(frets[fretIndex]) : "-";
-                tabString += fretValue.padEnd(2, ' '); // Pad with space
+                tabString += fretValue.padEnd(2, ' ');
                 tabString += "|";
             }
             tabString += "\n";
@@ -98,23 +89,20 @@ function generateTablature(tabData) {
         tabString += "\n";
     });
 
-    // Add BPM info
     tabString += `BPM: ${tabData.bpm || 120}\n`;
-    // Add Time Signature info
     tabString += `Time Signature: ${tabData.timeSignature || '4/4'}\n`;
-
 
     return tabString;
 }
 
 function toggleMeasureRotation() {
-    console.log("app.js: toggleMeasureRotation - before toggle:", isMeasureRotated); // ADDED LOG
-    isMeasureRotated = !isMeasureRotated; // Toggle the rotation state
+    console.log("app.js: toggleMeasureRotation - before toggle:", isMeasureRotated);
+    isMeasureRotated = !isMeasureRotated;
     const tabData = getTabData();
-    tabData.isMeasureRotated = isMeasureRotated; // Store rotation state in tabData
-    setTabData(tabData); // Update tabData
-    console.log("toggleMeasureRotation - after toggle:", isMeasureRotated); // ADDED LOG
-    console.log("toggleMeasureRotation - tabData.isMeasureRotated:", tabData.isMeasureRotated); // ADDED LOG
+    tabData.isMeasureRotated = isMeasureRotated;
+    setTabData(tabData);
+    console.log("toggleMeasureRotation - after toggle:", isMeasureRotated);
+    console.log("toggleMeasureRotation - tabData.isMeasureRotated:", tabData.isMeasureRotated);
     console.log(`app.js: Measure rotation toggled to: ${isMeasureRotated}`);
 }
 
@@ -122,62 +110,58 @@ function toggleMeasureRotation() {
 function handlePlay() {
     if (!isPlaying) {
         console.log("app.js: Playback started");
-        playTab(); // Call audio.js playTab function
+        playTab();
         isPlaying = true;
-        // Update UI to reflect playing state
         const playButton = document.getElementById('playTabBtn');
         const pauseButton = document.getElementById('pauseTabBtn');
         const stopButton = document.getElementById('stopTabBtn');
         if (playButton && pauseButton && stopButton) {
-            playButton.style.display = 'none'; // Hide Play button
-            pauseButton.style.display = 'inline-block'; // Show Pause button
-            stopButton.style.display = 'inline-block'; // Show Stop button
-            playButton.textContent = 'Resume'; // Change Play to Resume
+            playButton.style.display = 'none';
+            pauseButton.style.display = 'inline-block';
+            stopButton.style.display = 'inline-block';
+            playButton.textContent = 'Resume';
         }
-        startPlaybackHighlight(); // Start visual highlighting
+        startPlaybackHighlight();
     } else {
-        handlePause(); // If already playing, treat "Play" as "Resume" (or could be separate "Resume" button)
+        handlePause();
     }
 }
 
 function handlePause() {
     if (isPlaying) {
         console.log("app.js: Playback paused");
-        stopPlayback(); // For now, using stopPlayback to pause as well (can be refined)
+        stopPlayback();
         isPlaying = false;
-        // Update UI to reflect paused state (can be different from stopped if needed)
         const playButton = document.getElementById('playTabBtn');
         const pauseButton = document.getElementById('pauseTabBtn');
         const stopButton = document.getElementById('stopTabBtn');
         if (playButton && pauseButton && stopButton) {
-            playButton.style.display = 'inline-block'; // Show Play button (now acts as Resume)
-            pauseButton.style.display = 'none'; // Hide Pause button
-            stopButton.style.display = 'inline-block'; // Keep Stop button visible
-            playButton.textContent = 'Resume'; // Keep text as Resume
+            playButton.style.display = 'inline-block';
+            pauseButton.style.display = 'none';
+            stopButton.style.display = 'inline-block';
+            playButton.textContent = 'Resume';
         }
-        stopPlaybackHighlight(); // Stop visual highlighting
+        stopPlaybackHighlight();
     }
 }
 
-
 function handleStop() {
-    if (isPlaying) { // Or if paused, depending on desired stop behavior
+    if (isPlaying) {
         console.log("app.js: Playback stopped");
-        stopPlayback(); // Call audio.js stopPlayback
+        stopPlayback();
         isPlaying = false;
-        currentMeasureIndex = -1; // Reset measure index
-        // Update UI to reflect stopped state
+        currentMeasureIndex = -1;
         const playButton = document.getElementById('playTabBtn');
         const pauseButton = document.getElementById('pauseTabBtn');
         const stopButton = document.getElementById('stopTabBtn');
         if (playButton && pauseButton && stopButton) {
-            playButton.style.display = 'inline-block'; // Show Play button
-            pauseButton.style.display = 'none'; // Hide Pause button
-            stopButton.style.display = 'none'; // Hide Stop button
-            playButton.textContent = 'Play'; // Change back to Play
+            playButton.style.display = 'inline-block';
+            pauseButton.style.display = 'none';
+            stopButton.style.display = 'none';
+            playButton.textContent = 'Play';
         }
-        stopPlaybackHighlight(); // Stop visual highlighting and clear any highlights
-        resetMeasureHighlight(); // Ensure all measure highlights are cleared
+        stopPlaybackHighlight();
+        resetMeasureHighlight();
     }
 }
 
@@ -185,9 +169,9 @@ function handleTimeSignatureChange(event) {
     const newTimeSignature = event.target.value;
     console.log(`app.js: Time signature changed to: ${newTimeSignature}`);
     const tabData = getTabData();
-    tabData.timeSignature = newTimeSignature; // Update time signature in tab data
+    tabData.timeSignature = newTimeSignature;
     setTabData(tabData);
-    rendering.renderTab(getTabData()); // Re-render the tab to reflect changes (if needed visually)
+    rendering.renderTab(getTabData());
     // TODO: Implement logic to change measure structure or playback behavior based on time signature
 }
 
@@ -195,7 +179,7 @@ function handleTimeSignatureChange(event) {
 function startPlaybackHighlight() {
     if (!isPlaying) {
         isPlaying = true;
-        currentMeasureIndex = 0; // Start from the first measure
+        currentMeasureIndex = 0;
         const tabData = getTabData();
         const bpm = tabData.bpm || 120;
         const measures = tabData.measures;
@@ -207,7 +191,6 @@ function startPlaybackHighlight() {
         }
 
         const millisecondsPerBeat = 60000 / bpm;
-        // Assuming 4 beats per measure for now - adjust based on time signature later if needed
         const millisecondsPerMeasure = millisecondsPerBeat * 4; // Default to 4 beats/measure
 
         playbackIntervalId = setInterval(() => {
@@ -215,8 +198,8 @@ function startPlaybackHighlight() {
                 highlightMeasure(currentMeasureIndex);
                 currentMeasureIndex++;
             } else {
-                stopPlaybackHighlight(); // Stop interval when all measures played
-                handleStop(); // Automatically stop playback
+                stopPlaybackHighlight();
+                handleStop();
             }
         }, millisecondsPerMeasure);
     }
@@ -228,11 +211,11 @@ function stopPlaybackHighlight() {
         clearInterval(playbackIntervalId);
         playbackIntervalId = null;
     }
-    resetMeasureHighlight(); // Clear all highlights when playback stops
+    resetMeasureHighlight();
 }
 
 function highlightMeasure(measureIndex) {
-    resetMeasureHighlight(); // Clear any previous highlights
+    resetMeasureHighlight();
     const measureDiv = document.querySelector(`.measure:nth-child(${measureIndex + 1})`);
     if (measureDiv) {
         measureDiv.classList.add('playing-measure');
@@ -244,7 +227,6 @@ function resetMeasureHighlight() {
         measure.classList.remove('playing-measure');
     });
 }
-
 
 // --- UI Setup ---
 /**
@@ -286,19 +268,19 @@ function setupUI() {
 
     // Pass dependencies to setupToolBar
     setupToolBar({
-        addMeasure: handleAddMeasureWithInput, // Changed to use handleAddMeasureWithInput
+        addMeasure: handleAddMeasureWithInput,
         clearTab,
-        exportTab, // Now defined in app.js
-        playTab: handlePlay, // Use handlePlay function
-        pauseTab: handlePause, // Use handlePause function
-        stopPlayback: handleStop, // Use handleStop function (renamed for clarity in toolbar context)
-        saveTab, // Now defined in app.js
-        loadTab, // Now defined in app.js
-        exportMIDI, // Imported from audio.js
-        renderTab: rendering.renderTab, // Pass the rendering function
+        exportTab,
+        playTab: handlePlay,
+        pauseTab: handlePause,
+        stopPlayback: handleStop,
+        saveTab,
+        loadTab,
+        exportMIDI,
+        renderTab: rendering.renderTab,
         getTabData,
         setTabData,
-        toggleMeasureRotation, // Pass the toggleMeasureRotation function
+        toggleMeasureRotation,
     });
 
     // Add event listener for fret clicks/focus to show number circle
@@ -306,15 +288,12 @@ function setupUI() {
     if (tabDisplay) {
         tabDisplay.addEventListener('click', (e) => {
             if (e.target.classList.contains('fret')) {
-                // Remove active class from any previously active fret
                 removeActiveFretClass();
-                // Add active class to the currently focused fret
                 e.target.classList.add('active-fret');
-                // Store the active fret's ID in localStorage so it can be re-applied after re-render
                 localStorage.setItem('activeFretId', e.target.id);
                 showNumberCircle(e.target);
             } else {
-                removeActiveFretClass(); // Remove highlight if clicking outside frets
+                removeActiveFretClass();
             }
         });
 
@@ -328,14 +307,12 @@ function setupUI() {
         // Add keydown handling for navigation/deletion
         tabDisplay.addEventListener('keydown', (e) => {
             if (e.target.classList.contains('fret')) {
-                // Basic example: Clear fret on backspace/delete
                 if (e.key === 'Backspace' || e.key === 'Delete') {
-                    e.preventDefault(); // Prevent default browser back navigation on backspace
+                    e.preventDefault();
                     e.target.textContent = '';
-                    // Trigger input event to update data model
                     e.target.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
                 } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    e.preventDefault(); // Prevent default scrolling
+                    e.preventDefault();
                     handleArrowKeyNavigation(e.key, e.target);
                 }
             }
@@ -348,15 +325,12 @@ function setupUI() {
     document.addEventListener('click', function(event) {
         const numberCircle = document.querySelector('.number-circle');
         if (numberCircle) {
-            // Check if the click is outside the circle AND not on a fret element
             if (!numberCircle.contains(event.target) && !event.target.classList.contains('fret')) {
-                // Use a small timeout to allow number selection click to register first
                  setTimeout(() => {
-                    // Double-check if the target is still outside after potential DOM changes
                     if (!event.target.closest('.number-circle')) {
                          removeOpenNumberCircle();
                     }
-                 }, 50); // Reduced timeout
+                 }, 50);
             }
         }
     });
@@ -381,7 +355,6 @@ function handleArrowKeyNavigation(key, currentFret) {
             if (fretIndex > 0) {
                 nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex - 1}`);
             } else if (measureIndex > 0) {
-                // Move to the last fret of the previous measure on the same string
                 nextFret = document.getElementById(`fret-${measureIndex - 1}-${stringIndex}-3`);
             }
             break;
@@ -389,8 +362,6 @@ function handleArrowKeyNavigation(key, currentFret) {
             if (fretIndex < 3) {
                 nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex + 1}`);
             } else {
-                // Move to the first fret of the next measure on the same string
-                // For now, let's just stay on the last fret if it's the last measure
                 const nextMeasureIndex = measureIndex + 1;
                 if (document.querySelector(`.fret[data-measure='${nextMeasureIndex}'][data-string='${stringIndex}'][data-fret='0']`)) {
                     nextFret = document.getElementById(`fret-${nextMeasureIndex}-${stringIndex}-0`);
@@ -410,10 +381,10 @@ function handleArrowKeyNavigation(key, currentFret) {
     }
 
     if (nextFret) {
-        currentFret.classList.remove('active-fret'); // Remove from current
-        nextFret.classList.add('active-fret'); // Add to next
+        currentFret.classList.remove('active-fret');
+        nextFret.classList.add('active-fret');
         nextFret.focus();
-        localStorage.setItem('activeFretId', nextFret.id); // Update stored active fret ID
+        localStorage.setItem('activeFretId', nextFret.id);
     }
 }
 
@@ -425,18 +396,26 @@ function handleAddMeasureWithInput() {
         return; // User cancelled
     }
 
+    // Validate time signature format
+    const timeSignatureRegex = /^\d+\/\d+$/;
+    if (!timeSignatureRegex.test(timeSignature)) {
+        alert("Invalid time signature format. Please use the format 'X/Y'.");
+        return;
+    }
+
     const [beats, noteValue] = timeSignature.split('/').map(Number);
 
     if (isNaN(beats) || isNaN(noteValue) || beats <= 0 || noteValue <= 0) {
-        alert("Invalid time signature. Please use the format 'X/Y' where X and Y are positive numbers.");
+        alert("Invalid time signature. Please enter positive numbers for beats and note value.");
         return;
     }
 
     // Create a new measure with the specified time signature
     const newMeasure = {
-        strings: Array(6).fill(Array(beats).fill('-')) // Initialize with '-' for each fret based on beats
+        strings: Array(6).fill(Array(4).fill('-')) // Initialize with '-' for each fret based on beats
     };
     tabData.measures.push(newMeasure);
+    tabData.timeSignature = timeSignature; // Set the time signature for the new measure
 
     setTabData(tabData);
     rendering.renderTab(getTabData());
@@ -472,4 +451,4 @@ async function setupApp() {
 }
 
 // --- Start the App ---
-setupApp(); // Call the setup function to run the application
+setupApp();
