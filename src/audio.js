@@ -207,4 +207,4 @@ function resumeAudioContextOnInteraction() {
   }
 }
 
-export { initializeAudio, loadSound, playSound, playTab, stopPlayback,exportMIDI };
+export { initializeAudio, loadSound, playSound, playTab, stopPlayback, exportMIDI };
