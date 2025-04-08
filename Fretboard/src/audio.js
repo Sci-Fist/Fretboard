@@ -1,6 +1,7 @@
 const actx = new AudioContext();
 let nextNoteTime = 0.0;
 let noteResolution = 0;
+let fretboardNode;
 let tempo = 60.0;
 let timerID = 0;
 

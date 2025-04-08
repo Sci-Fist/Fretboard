@@ -41,18 +41,18 @@ function resumeAudioContextOnInteraction() {
     // Load the AudioWorkletProcessor
     async function setupAudioWorklet() {
       try {
-        await Tone.context.audioWorklet.addModule("fretboard-processor.js"); // Path to the processor file
+        await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
         fretboardNode = new AudioWorkletNode(
-          Tone.context,
+          actx,
           "fretboard-processor",
         ); // Use the processor's registered name
 
         // Connect the AudioWorkletNode to the destination
-        fretboardNode.connect(Tone.context.destination);
+        fretboardNode.connect(actx.destination);
       } catch (error) {
         console.error("Failed to initialize AudioWorklet:", error);
         alert(
-          "Failed to initialize audio playback.  Please check your browser settings and the console.",
+          "Failed to initialize audio playback. Please check your browser settings and the console.",
         );
       }
     }
