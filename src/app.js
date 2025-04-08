@@ -170,9 +170,20 @@ function handleTimeSignatureChange(event) {
     console.log(`app.js: Time signature changed to: ${newTimeSignature}`);
     const tabData = getTabData();
     tabData.timeSignature = newTimeSignature;
+
+    // Update the number of frets in each measure
+    tabData.measures.forEach(measure => {
+        const [beats] = newTimeSignature.split('/').map(Number);
+        measure.strings = measure.strings.map(string => {
+            // Ensure the string has the correct number of frets, padding with '-' if needed
+            const newFrets = Array(beats).fill('-');
+            return newFrets;
+        });
+    });
+
     setTabData(tabData);
     rendering.renderTab(getTabData());
-    // TODO: Implement logic to change measure structure or playback behavior based on time signature
+    // TODO: Implement logic to change playback behavior based on time signature
 }
 
 // --- Playback Highlighting ---
