@@ -17,6 +17,9 @@ let playbackIntervalId = null;
 
 // --- Helper Functions ---
 
+/**
+ * Exports the tab data as a text file.
+ */
 function exportTab() {
     console.log("app.js: exportTab called (placeholder)");
     const tabData = getTabData();
@@ -33,6 +36,9 @@ function exportTab() {
     alert("Tab exported as text!");
 }
 
+/**
+ * Saves the tab data to local storage.
+ */
 function saveTab() {
     console.log("app.js: saveTab called");
     try {
@@ -45,6 +51,9 @@ function saveTab() {
     }
 }
 
+/**
+ * Loads tab data from a JSON file.
+ */
 function loadTab() {
     console.log("app.js: loadTab called");
     const fileInput = document.createElement('input');
@@ -71,6 +80,11 @@ function loadTab() {
     fileInput.click(); // Trigger the file selection dialog
 }
 
+/**
+ * Generates tablature text from the tab data.
+ * @param {object} tabData - The tab data object.
+ * @returns {string} The tablature text.
+ */
 function generateTablature(tabData) {
     if (!tabData || !tabData.measures || tabData.measures.length === 0) {
         return "No tab data.";
@@ -103,6 +117,9 @@ function generateTablature(tabData) {
     return tabString;
 }
 
+/**
+ * Toggles the measure rotation state.
+ */
 function toggleMeasureRotation() {
     console.log("app.js: toggleMeasureRotation - before toggle:", isMeasureRotated);
     isMeasureRotated = !isMeasureRotated;
@@ -116,64 +133,72 @@ function toggleMeasureRotation() {
 }
 
 // --- Playback Controls ---
+/**
+ * Handles the play action.
+ */
 function handlePlay() {
     if (!isPlaying) {
         console.log("app.js: Playback started");
         playTab();
         isPlaying = true;
-        const playButton = document.getElementById('playTabBtn');
-        const pauseButton = document.getElementById('pauseTabBtn');
-        const stopButton = document.getElementById('stopTabBtn');
-        if (playButton && pauseButton && stopButton) {
-            playButton.style.display = 'none';
-            pauseButton.style.display = 'inline-block';
-            stopButton.style.display = 'inline-block';
-            playButton.textContent = 'Resume';
-        }
+        // Update button visibility
+        updatePlayPauseStopButtons();
         startPlaybackHighlight();
     } else {
         handlePause();
     }
 }
 
+/**
+ * Handles the pause action.
+ */
 function handlePause() {
     if (isPlaying) {
         console.log("app.js: Playback paused");
         stopPlayback();
         isPlaying = false;
-        const playButton = document.getElementById('playTabBtn');
-        const pauseButton = document.getElementById('pauseTabBtn');
-        const stopButton = document.getElementById('stopTabBtn');
-        if (playButton && pauseButton && stopButton) {
-            playButton.style.display = 'inline-block';
-            pauseButton.style.display = 'none';
-            stopButton.style.display = 'inline-block';
-            playButton.textContent = 'Resume';
-        }
+        // Update button visibility
+        updatePlayPauseStopButtons();
         stopPlaybackHighlight();
     }
 }
 
+/**
+ * Handles the stop action.
+ */
 function handleStop() {
     if (isPlaying) {
         console.log("app.js: Playback stopped");
         stopPlayback();
         isPlaying = false;
         currentMeasureIndex = -1;
-        const playButton = document.getElementById('playTabBtn');
-        const pauseButton = document.getElementById('pauseTabBtn');
-        const stopButton = document.getElementById('stopTabBtn');
-        if (playButton && pauseButton && stopButton) {
-            playButton.style.display = 'inline-block';
-            pauseButton.style.display = 'none';
-            stopButton.style.display = 'none';
-            playButton.textContent = 'Play';
-        }
+        // Update button visibility
+        updatePlayPauseStopButtons();
         stopPlaybackHighlight();
         resetMeasureHighlight();
     }
 }
 
+/**
+ * Updates the visibility of the play, pause, and stop buttons.
+ */
+function updatePlayPauseStopButtons() {
+    const playButton = document.getElementById('playTabBtn');
+    const pauseButton = document.getElementById('pauseTabBtn');
+    const stopButton = document.getElementById('stopTabBtn');
+
+    if (playButton && pauseButton && stopButton) {
+        playButton.style.display = isPlaying ? 'none' : 'inline-block';
+        pauseButton.style.display = isPlaying ? 'inline-block' : 'none';
+        stopButton.style.display = isPlaying ? 'inline-block' : 'none';
+        playButton.textContent = isPlaying ? 'Resume' : 'Play';
+    }
+}
+
+/**
+ * Handles the time signature change.
+ * @param {Event} event - The change event.
+ */
 function handleTimeSignatureChange(event) {
     const newTimeSignature = event.target.value;
     console.log(`app.js: Time signature changed to: ${newTimeSignature}`);
@@ -194,6 +219,9 @@ function handleTimeSignatureChange(event) {
 }
 
 // --- Playback Highlighting ---
+/**
+ * Starts the playback highlighting.
+ */
 function startPlaybackHighlight() {
     if (!isPlaying) {
         isPlaying = true;
@@ -223,6 +251,9 @@ function startPlaybackHighlight() {
     }
 }
 
+/**
+ * Stops the playback highlighting.
+ */
 function stopPlaybackHighlight() {
     isPlaying = false;
     if (playbackIntervalId) {
@@ -232,6 +263,10 @@ function stopPlaybackHighlight() {
     resetMeasureHighlight();
 }
 
+/**
+ * Highlights a specific measure.
+ * @param {number} measureIndex - The index of the measure to highlight.
+ */
 function highlightMeasure(measureIndex) {
     resetMeasureHighlight();
     const measureDiv = document.querySelector(`.measure:nth-child(${measureIndex + 1})`);
@@ -240,6 +275,9 @@ function highlightMeasure(measureIndex) {
     }
 }
 
+/**
+ * Resets the measure highlighting.
+ */
 function resetMeasureHighlight() {
     document.querySelectorAll('.measure.playing-measure').forEach(measure => {
         measure.classList.remove('playing-measure');
@@ -478,6 +516,10 @@ function handleArrowKeyNavigation(key, currentFret) {
     }
 }
 
+/**
+ * Handles adding a measure with user input for time signature.
+ * @param {string} timeSignature - The time signature to use for the new measure.
+ */
 function handleAddMeasureWithInput(timeSignature) {
     console.log("app.js: handleAddMeasureWithInput called");
     const tabData = getTabData();
