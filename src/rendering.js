@@ -1,14 +1,15 @@
 // rendering.js
-import { drawFretboard, drawStrings, drawFrets, drawNotes, clearCanvas } from './fretboard-processor';
-import { getTablatureData } from './tab-data';
-import { playNote } from './audio';
-import { createNumberCircle } from './ui-elements'; // Import the function
+import { drawFretboard, drawStrings, drawFrets, drawNotes, clearCanvas } from './fretboard-processor.js'; // Add .js extension
+import { getTablatureData } from './tab-data.js'; // Add .js extension
+import { playNote } from './audio.js'; // Add .js extension
+import { createNumberCircle } from './ui-elements.js'; // Add .js extension
+import { handleFretInput } from './ui-elements.js'; // Add .js extension
 
 // --- Rendering Variables ---
 let canvas;
 let ctx;
 let fretboardData;
-let currentTab = [];
+let currentTab = []; // Not used in this rendering approach, using tabData from tab-data.js now
 let selectedString = null;
 let selectedFret = null;
 let isPlaying = false;
@@ -40,7 +41,7 @@ export function initializeRendering(canvasId) {
     // Initialize fretboard data.
     fretboardData = {
         strings: 6,
-        frets: 12,
+        frets: 12, // Number of frets to *draw* on the fretboard canvas (visual frets)
         stringSpacing: 20,
         fretSpacing: 60,
         startPositionX: 50,
@@ -73,105 +74,127 @@ export function resizeCanvas() {
     drawFretboard(ctx, fretboardData);
     drawStrings(ctx, fretboardData);
     drawFrets(ctx, fretboardData);
-    drawNotes(ctx, fretboardData, currentTab);
+    // drawNotes(ctx, fretboardData, currentTab); // Notes are now rendered in renderTab function
 }
 
-// --- Tablature Updates ---
-
 /**
- * Updates the tablature being displayed.
- * @param {Array} newTab - The new tablature data.
+ * Renders the entire tablature from tabData.measures.
+ * @param {object} tabData - The complete tablature data object.
  */
-export function updateTablature(newTab) {
-    currentTab = newTab;
-    if (ctx && fretboardData) {
-        clearCanvas(ctx, canvas.width, canvas.height);
-        drawFretboard(ctx, fretboardData);
-        drawStrings(ctx, fretboardData);
-        drawFrets(ctx, fretboardData);
-        drawNotes(ctx, fretboardData, currentTab);
-    }
-}
+export function renderTab(tabData) {
+    console.log("rendering.js: renderTab called with tabData:", tabData);
 
-// --- Playback Control ---
-
-/**
- * Starts the tablature playback.
- */
-export function playTab() {
-    if (isPlaying) {
-        stopTab();
+    const tabDisplay = document.getElementById('tab-display');
+    if (!tabDisplay) {
+        console.error("Tab display element not found.");
         return;
     }
-    isPlaying = true;
-    currentNoteIndex = 0;
-    playNextNote();
-}
+    tabDisplay.innerHTML = ''; // Clear existing tab display
 
-/**
- * Stops the tablature playback.
- */
-export function stopTab() {
-    isPlaying = false;
-    cancelAnimationFrame(animationFrameId);
-    currentNoteIndex = 0;
-}
-
-/**
- * Plays the next note in the tablature.
- */
-function playNextNote() {
-    if (!isPlaying || currentNoteIndex >= currentTab.length) {
-        stopTab();
+    if (!tabData || !tabData.measures || tabData.measures.length === 0) {
+        tabDisplay.textContent = "No tablature data available.";
         return;
     }
-    const note = currentTab[currentNoteIndex];
-    if (note) {
-        playNote(note.string, note.fret);
-    }
-    currentNoteIndex++;
-    // Delay before playing the next note (adjust as needed)
-    setTimeout(() => {
-        if (isPlaying) {
-            animationFrameId = requestAnimationFrame(playNextNote);
+
+    tabData.measures.forEach((measure, measureIndex) => {
+        const measureDiv = document.createElement('div');
+        measureDiv.className = 'measure';
+        measureDiv.dataset.measureIndex = measureIndex; // Store measure index
+
+        const measureLabel = document.createElement('div');
+        measureLabel.className = 'measure-label';
+        measureLabel.textContent = `Measure ${measureIndex + 1} (${measure.name}, ${measure.timeSignature})`;
+        measureDiv.appendChild(measureLabel);
+
+
+        for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+            const stringDiv = document.createElement('div');
+            stringDiv.className = 'tab-string';
+            stringDiv.dataset.stringIndex = stringIndex; // Store string index
+
+            for (let fretIndex = 0; fretIndex < measure.strings[stringIndex].length; fretIndex++) {
+                const fretElement = document.createElement('div');
+                fretElement.className = 'fret';
+                fretElement.textContent = measure.strings[stringIndex][fretIndex]; // Display fret value from tabData
+                fretElement.dataset.measure = measureIndex;
+                fretElement.dataset.string = stringIndex;
+                fretElement.dataset.fret = fretIndex;
+                fretElement.setAttribute('tabindex', '0'); // Make fret focusable
+
+                // Add event listeners to fret element
+                fretElement.addEventListener('click', handleFretClick);
+                fretElement.addEventListener('keydown', handleFretKeydown);
+                fretElement.addEventListener('blur', handleFretBlur);
+
+
+                stringDiv.appendChild(fretElement);
+            }
+            measureDiv.appendChild(stringDiv);
         }
-    }, 500); // 500ms delay
+        tabDisplay.appendChild(measureDiv);
+    });
+
+    console.log("rendering.js: Tab rendered to DOM.");
 }
 
-// --- Event Handlers ---
+
+// --- Event Handlers for DOM rendered frets ---
 
 /**
- * Handles clicks on the canvas.
- * @param {MouseEvent} event - The mouse click event.
+ * Handles clicks on a fret element in the DOM.
+ * @param {MouseEvent} event - The click event.
  */
-function handleCanvasClick(event) {
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+function handleFretClick(event) {
+    console.log("rendering.js: handleFretClick called");
+    const fretElement = event.target;
+    // Remove any existing number circles
+    const fretsWithCircles = document.querySelectorAll('.fret .number-circle');
+    fretsWithCircles.forEach(circle => circle.remove());
+    // Show the number circle on the clicked fret
+    showNumberCircleForDOMFret(fretElement);
+}
 
-    // Calculate the string and fret based on the click coordinates.
-    const string = Math.floor((y - fretboardData.startPositionY) / fretboardData.stringSpacing);
-    const fret = Math.floor((x - fretboardData.startPositionX) / fretboardData.fretSpacing);
+/**
+ * Handles keydown events on a fret element.
+ * @param {KeyboardEvent} event - The keydown event.
+ */
+function handleFretKeydown(event) {
+    console.log("rendering.js: handleFretKeydown called");
+    const key = event.key;
+    const fretElement = event.target;
 
-    // Check if the click is within the fretboard bounds.
-    if (string >= 0 && string < fretboardData.strings && fret >= 0 && fret <= fretboardData.frets) {
-        console.log(`Clicked on string: ${string}, fret: ${fret}`);
-        // Show the number circle when a bar is clicked.
-        showNumberCircle(fret, string);
+    if (key >= '0' && key <= '9') {
+        fretElement.textContent = key; // Update fret text content directly
+        handleFretInputEvent(event); // Call handleFretInput with the event
+        event.preventDefault(); // Prevent default input behavior if needed
+    } else if (key === 'Delete' || key === 'Backspace') {
+        fretElement.textContent = '-'; // Clear fret value
+        handleFretInputEvent(event); // Call handleFretInput with the event
+        event.preventDefault();
+    } else if (key.startsWith('Arrow')) {
+        handleArrowKeyNavigation(key, fretElement);
     }
 }
 
-// --- Number Circle Display ---
+/**
+ * Handles blur event on a fret element.
+ * @param {FocusEvent} event - The blur event.
+ */
+function handleFretBlur(event) {
+    console.log("rendering.js: handleFretBlur called");
+    event.target.classList.remove('active-fret');
+}
+
 
 /**
- * Displays the number circle at the specified fret and string.
- * @param {number} fret - The fret number.
- * @param {number} string - The string number.
+ * Shows the number circle for a DOM fret element.
+ * @param {HTMLElement} fretElement - The fret element.
  */
-function showNumberCircle(fret, string) {
-    // Get the position to display the number circle.
-    const x = fretboardData.startPositionX + fret * fretboardData.fretSpacing;
-    const y = fretboardData.startPositionY - 20; // Above the fret
+function showNumberCircleForDOMFret(fretElement) {
+    console.log("rendering.js: showNumberCircleForDOMFret called");
+    const rect = fretElement.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top - 60; // Position above the fret
 
     // Create and display the number circle.
     createNumberCircle(ctx, x, y, [
@@ -180,78 +203,76 @@ function showNumberCircle(fret, string) {
         '1x', '2x'
     ], (value) => {
         // Handle the number circle click.
-        handleNumberCircleClick(fret, string, value);
+        handleNumberCircleClickForDOMFret(fretElement, value);
     });
 }
 
-// --- Number Circle Click Handling ---
-
 /**
- * Handles clicks on the number circle.
- * @param {number} fret - The fret number.
- * @param {number} string - The string number.
+ * Handles clicks on the number circle for DOM fret elements.
+ * @param {HTMLElement} fretElement - The fret element.
  * @param {string} value - The value of the clicked number.
  */
-function handleNumberCircleClick(fret, string, value) {
-    console.log(`Clicked on number: ${value} for string: ${string}, fret: ${fret}`);
+function handleNumberCircleClickForDOMFret(fretElement, value) {
+    console.log(`rendering.js: handleNumberCircleClickForDOMFret called with value: ${value}`);
+    fretElement.textContent = value; // Update fret text content with selected value
+    handleFretInputEvent({ target: fretElement }); // Simulate event and call handleFretInput
+}
 
-    if (value === '1x' || value === '2x') {
-        // Show the second number circle for two-digit input
-        showSecondNumberCircle(fret, string, value);
+
+/**
+ * Simulates a generic event and calls handleFretInput.
+ * @param {object} eventData - Data to simulate the event (e.g., { target: fretElement }).
+ */
+function handleFretInputEvent(eventData) {
+    console.log("rendering.js: handleFretInputEvent called");
+    if (eventData && eventData.target) {
+        handleFretInput(eventData, getTabData, setTabData, renderTab); // Call handleFretInput
     } else {
-        // Handle single-digit fret number selection
-        // Update the tab data with the selected fret number
-        updateTabWithFretNumber(fret, string, value);
+        console.error("Invalid event data provided to handleFretInputEvent.");
     }
 }
 
-// --- Two-Digit Fret Input ---
+
+// --- Canvas Click Handling (Currently Not Used for Tab Editing) ---
 
 /**
- * Shows the second number circle for two-digit input (1x or 2x).
- * @param {number} fret - The fret number.
- * @param {number} string - The string number.
- * @param {string} prefix - The prefix ('1x' or '2x').
+ * Handles clicks on the canvas (currently used for fretboard interaction, not tab editing).
+ * @param {MouseEvent} event - The mouse click event.
  */
-function showSecondNumberCircle(fret, string, prefix) {
-    // Get the position to display the number circle
-    const x = fretboardData.startPositionX + fret * fretboardData.fretSpacing;
-    const y = fretboardData.startPositionY - 20; // Above the fret
+function handleCanvasClick(event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-    // Create and display the second number circle
-    createNumberCircle(ctx, x, y, ['1', '2', '3', '4', '5', '6', '7', '8', '9'], (secondDigit) => {
-        // Handle the second number circle click
-        const fretNumber = prefix[0] === '1' ? prefix[0] + secondDigit : prefix[0] + secondDigit;
-        updateTabWithFretNumber(fret, string, fretNumber);
-    });
+    // Calculate the string and fret based on the click coordinates on the *canvas* (visual fretboard)
+    const string = Math.floor((y - fretboardData.startPositionY) / fretboardData.stringSpacing);
+    const fret = Math.floor((x - fretboardData.startPositionX) / fretboardData.fretSpacing);
+
+    // Check if the click is within the fretboard bounds.
+    if (string >= 0 && string < fretboardData.strings && fret >= 0 && fret <= fretboardData.frets) {
+        console.log(`Clicked on canvas string: ${string}, fret: ${fret}`);
+        playNote(string, fret); // Play note on canvas click for visual fretboard interaction
+        // showNumberCircle(fret, string); // Potentially re-enable number circle on canvas click if needed
+    }
 }
 
-// --- Tab Data Update ---
+
+// --- Playback Control (Placeholders - to be implemented) ---
 
 /**
- * Updates the tab data with the selected fret number.
- * @param {number} fret - The fret number.
- * @param {number} string - The string number.
- * @param {string} fretNumber - The selected fret number (as a string).
+ * Starts the tablature playback.
  */
-function updateTabWithFretNumber(fret, string, fretNumber) {
-    // Convert fretNumber to a number
-    const fretValue = parseInt(fretNumber, 10);
+export function playTab() {
+    console.log("rendering.js: playTab called (placeholder)");
+    // Implementation will be moved to app.js and audio.js, this will trigger playback start
+    alert("Tab Playback - Feature in progress.");
+}
 
-    // Ensure fretValue is a valid number
-    if (!isNaN(fretValue)) {
-        // Update the currentTab with the new fret number
-        const newTab = [...currentTab];
-        const noteIndex = newTab.findIndex(note => note.string === string && note.fret === fret);
-
-        if (noteIndex !== -1) {
-            // If a note already exists at this position, update it
-            newTab[noteIndex].fret = fretValue;
-        } else {
-            // If no note exists, add a new one
-            newTab.push({ string: string, fret: fretValue });
-        }
-
-        updateTablature(newTab);
-    }
+/**
+ * Stops the tablature playback.
+ */
+export function stopTab() {
+    console.log("rendering.js: stopTab called (placeholder)");
+    // Implementation will be moved to app.js and audio.js, this will trigger playback stop
+    alert("Tab Stop - Feature in progress.");
 }
