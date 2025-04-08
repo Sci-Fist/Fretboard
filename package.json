@@ -9,8 +9,8 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
-    "standardized-audio-context": "^25.3.77",
-    "tone": "15.0.4"
+    "tone": "15.0.4",
+    "standardized-audio-context": "^25.3.77"
   },
   "devDependencies": {
     "parcel": "^2.9.3"
