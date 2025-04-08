@@ -73,34 +73,39 @@ class FretboardProcessor extends AudioWorkletProcessor {
     const noteNumber = this.note ? this.note.match(/([a-gA-G#b]+)(\d+)/) : null;
     let noteValue = 0;
 
-    if (noteNumber) {
-      const noteName = noteNumber[1];
-      const octave = parseInt(noteNumber[2]);
+    try {
+      if (noteNumber) {
+        const noteName = noteNumber[1];
+        const octave = parseInt(noteNumber[2]);
 
-      const noteMap = {
-        C: 0,
-        "C#": 1,
-        D: 2,
-        "D#": 3,
-        E: 4,
-        F: 5,
-        "F#": 6,
-        G: 7,
-        "G#": 8,
-        A: 9,
-        "A#": 10,
-        B: 11,
-      };
+        const noteMap = {
+          C: 0,
+          "C#": 1,
+          D: 2,
+          "D#": 3,
+          E: 4,
+          F: 5,
+          "F#": 6,
+          G: 7,
+          "G#": 8,
+          A: 9,
+          "A#": 10,
+          B: 11,
+        };
 
-      noteValue = noteMap[noteName] + (octave - 4) * 12;
+        noteValue = noteMap[noteName] + (octave - 4) * 12;
+      }
+    } catch (error) {
+      console.error("Error calculating note value:", error);
+      return true;
     }
 
-    this.frequency = A4 * semitoneRatio ** noteValue;
-    //--- Get the frequency---
-
-    const phaseIncrement = (this.frequency * 2 * Math.PI) / sampleRate;
-
     try {
+      this.frequency = A4 * semitoneRatio ** noteValue;
+      //--- Get the frequency---
+
+      const phaseIncrement = (this.frequency * 2 * Math.PI) / sampleRate;
+
       for (let i = 0; i < channel.length; i++) {
         let sample = 0;
 
@@ -125,7 +130,7 @@ class FretboardProcessor extends AudioWorkletProcessor {
       console.error("Error in process method:", error);
     }
 
-    return true;
+    return true; // Keep the processor alive
   }
 }
 

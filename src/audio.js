@@ -59,6 +59,14 @@ export async function initializeAudio() { // Added export
 
       // Connect the AudioWorkletNode to the destination
       fretboardNode.connect(actx.destination);
+
+      // Create a gain node
+      const gainNode = actx.createGain();
+      gainNode.gain.value = 0.5; // Set initial gain value
+      fretboardNode.connect(gainNode);
+      gainNode.connect(actx.destination);
+
+      console.log("AudioWorkletNode connected to destination with gain control");
     } catch (error) {
       console.error("Failed to add audio worklet module:", error.name, error.message);
       alert(
@@ -170,7 +178,14 @@ export async function playTab(tabData) { // Added export and kept async
 
   // Ensure the AudioContext is running
   if (actx.state === "suspended") {
-    await actx.resume();
+    try {
+      await actx.resume();
+      console.log("AudioContext resumed successfully");
+    } catch (error) {
+      console.error("Error resuming AudioContext:", error);
+      alert("Failed to resume AudioContext. Please check the console for details.");
+      return;
+    }
   }
 
   if (isPlaying) {
