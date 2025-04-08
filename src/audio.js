@@ -1,7 +1,7 @@
 // src/audio.js
 // audio.js - Handles audio playback and processing
 
-import * as Tone from '/node_modules/tone/Tone.js'; // Explicit path to tone.js in node_modules
+import * as Tone from 'tone'; // Standard import for Tone.js with Parcel
 import { getTabData, getNote } from './tab-data.js';
 
 let isPlaying = false;
