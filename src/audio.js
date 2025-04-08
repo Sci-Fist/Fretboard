@@ -21,6 +21,29 @@ const NUMBER_OF_STRINGS = 6;
 export async function initializeAudio() { // Added export
   try {
     actx = new AudioContext();
+
+    // Add a function to resume the AudioContext on user interaction
+    async function resumeAudioContextOnInteraction() {
+      console.log("resumeAudioContextOnInteraction called. actx is:", actx); // Add this log
+      // Check if actx is initialized *and* suspended before resuming
+      if (actx && actx.state === "suspended") {
+        try {
+          console.log("Attempting to resume AudioContext...");
+          await actx.resume();
+          console.log("AudioContext resumed successfully");
+        } catch (error) {
+          console.error("Error resuming AudioContext:", error);
+        }
+      }
+    }
+
+    // Attach the event listeners for user interaction *after* context is created
+    // Use { once: true } so they only fire once per type
+    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
+    console.log("Audio resume listeners attached.");
+
     await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
     fretboardNode = new AudioWorkletNode(
       actx,
@@ -32,33 +55,11 @@ export async function initializeAudio() { // Added export
 
     console.log("Audio initialized successfully");
 
-    // Attach the event listeners for user interaction *after* context is created
-    // Use { once: true } so they only fire once per type
-    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
-    document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
-    document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
-    console.log("Audio resume listeners attached.");
-
   } catch (error) {
     console.error("Failed to initialize audio:", error);
     alert(
       "Failed to initialize audio playback. Please check your browser settings and the console.",
     );
-  }
-}
-
-// Add a function to resume the AudioContext on user interaction
-async function resumeAudioContextOnInteraction() {
-  console.log("resumeAudioContextOnInteraction called. actx is:", actx); // Add this log
-  // Check if actx is initialized *and* suspended before resuming
-  if (actx && actx.state === "suspended") {
-    try {
-      console.log("Attempting to resume AudioContext...");
-      await actx.resume();
-      console.log("AudioContext resumed successfully");
-    } catch (error) {
-      console.error("Error resuming AudioContext:", error);
-    }
   }
 }
 
