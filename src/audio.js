@@ -1,5 +1,6 @@
 // src/audio.js
-import * as Tone from '../node_modules/tone/build/esm/index.js';
+import * as Tone from 'tone';
+import { createAudioContext } from 'standardized-audio-context'; // Import standardized-audio-context
 
 let audioContext;
 let fretboardSynth;
@@ -14,7 +15,7 @@ async function initializeAudio() {
     }
 
     try {
-        audioContext = new AudioContext();
+        audioContext = new createAudioContext(); // Use createAudioContext from standardized-audio-context
         await audioContext.resume(); // Ensure audio context is started
         console.log("Audio context state:", audioContext.state); // Should be 'running'
 
