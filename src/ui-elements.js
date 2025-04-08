@@ -37,8 +37,8 @@ function setupToolBar(dependencies) {
   // Add event listeners only if the button exists
   if (addMeasureButton) {
     addMeasureButton.addEventListener("click", () => {
-      console.log("Add Measure button clicked"); // DEBUG LOG
-      addMeasure();
+      alert("Add Measure button clicked!"); // DEBUG ALERT
+      // addMeasure(); // Original function call - COMMENTED OUT
     });
     addMeasureButton.title = "Add a new measure (Ctrl+M)"; // Tooltip
   }
@@ -46,10 +46,10 @@ function setupToolBar(dependencies) {
 
   if (clearTabButton) {
     clearTabButton.addEventListener("click", () => {
-      console.log("Clear Tab button clicked"); // DEBUG LOG
-      clearTab();
-      addMeasure(); // Add an initial measure after clearing
-      renderTab(getTabData());
+      alert("Clear Tab button clicked!"); // DEBUG ALERT
+      // clearTab(); // Original function call - COMMENTED OUT
+      // addMeasure(); // Add an initial measure after clearing - COMMENTED OUT
+      // renderTab(getTabData()); // - COMMENTED OUT
     });
     clearTabButton.title = "Clear the entire tab (Ctrl+Shift+C)"; // Tooltip
   } else {
@@ -59,8 +59,8 @@ function setupToolBar(dependencies) {
   if (exportTabButton) {
     // Use the passed exportTab function directly
     exportTabButton.addEventListener("click", () => {
-      console.log("Export Tab button clicked"); // DEBUG LOG
-      exportTab();
+      alert("Export Tab button clicked!"); // DEBUG ALERT
+      // exportTab(); // Original function call - COMMENTED OUT
     });
     exportTabButton.title = "Export tab as text file (Ctrl+E)"; // Tooltip
   } else {
@@ -69,8 +69,8 @@ function setupToolBar(dependencies) {
 
   if (playTabButton) {
     playTabButton.addEventListener("click", () => {
-      console.log("Play Tab button clicked"); // DEBUG LOG
-      playTab(); // Use the playTab function passed as dependency
+      alert("Play Tab button clicked!"); // DEBUG ALERT
+      // playTab(); // Use the playTab function passed as dependency - COMMENTED OUT
     });
     playTabButton.title = "Play the tab (Spacebar)"; // Tooltip
   } else {
@@ -79,10 +79,10 @@ function setupToolBar(dependencies) {
 
   if (pauseTabButton) { // Event listener for PAUSE button
     pauseTabButton.addEventListener("click", () => {
-      console.log("Pause Tab button clicked"); // DEBUG LOG
-      if (pauseTab) {
-        pauseTab(); // Call the pauseTab function passed as dependency
-      }
+      alert("Pause Tab button clicked!"); // DEBUG ALERT
+      // if (pauseTab) { // - COMMENTED OUT
+      //   pauseTab(); // Call the pauseTab function passed as dependency - COMMENTED OUT
+      // } // - COMMENTED OUT
     });
     pauseTabButton.title = "Pause the tab (Spacebar)"; // Tooltip
   } else {
@@ -92,10 +92,10 @@ function setupToolBar(dependencies) {
 
   if (stopTabButton) {
     stopTabButton.addEventListener("click", () => {
-      console.log("Stop Tab button clicked"); // DEBUG LOG
-      if (stopPlayback) {
-        stopPlayback(); // Use the stopPlayback function passed as dependency
-      }
+      alert("Stop Tab button clicked!"); // DEBUG ALERT
+      // if (stopPlayback) { // - COMMENTED OUT
+      //   stopPlayback(); // Use the stopPlayback function passed as dependency - COMMENTED OUT
+      // } // - COMMENTED OUT
     });
     stopTabButton.title = "Stop playback (Esc)"; // Tooltip
   } else {
@@ -105,8 +105,8 @@ function setupToolBar(dependencies) {
   if (saveTabButton) {
     // Use the passed saveTab function directly
     saveTabButton.addEventListener("click", () => {
-      console.log("Save Tab button clicked"); // DEBUG LOG
-      saveTab();
+      alert("Save Tab button clicked!"); // DEBUG ALERT
+      // saveTab(); // Original function call - COMMENTED OUT
     });
     saveTabButton.title = "Save tab to local storage (Ctrl+S)"; // Tooltip
   } else {
@@ -116,8 +116,8 @@ function setupToolBar(dependencies) {
   if (loadTabButton) {
     // Use the passed loadTab function directly
     loadTabButton.addEventListener("click", () => {
-      console.log("Load Tab button clicked"); // DEBUG LOG
-      loadTab();
+      alert("Load Tab button clicked!"); // DEBUG ALERT
+      // loadTab(); // Original function call - COMMENTED OUT
     });
     loadTabButton.title = "Load tab from local storage (Ctrl+O)"; // Tooltip
   } else {
@@ -127,9 +127,9 @@ function setupToolBar(dependencies) {
 
   if (rotateMeasureButton) {
     rotateMeasureButton.addEventListener("click", () => {
-      console.log("Rotate Measure button clicked"); // DEBUG LOG
-      toggleMeasureRotation(); // Call the toggle function from dependencies
-      renderTab(getTabData()); // Re-render to apply/remove rotation
+      alert("Rotate Measure button clicked!"); // DEBUG ALERT
+      // toggleMeasureRotation(); // Call the toggle function from dependencies - COMMENTED OUT
+      // renderTab(getTabData()); // Re-render to apply/remove rotation - COMMENTED OUT
     });
     rotateMeasureButton.title = "Rotate measure (Ctrl+R)"; // Tooltip
   } else {
