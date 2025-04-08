@@ -77,25 +77,29 @@ class FretboardProcessor extends AudioWorkletProcessor {
 
     const phaseIncrement = (this.frequency * 2 * Math.PI) / sampleRate;
 
-    for (let i = 0; i < channel.length; i++) {
-      let sample = 0;
+    try {
+      for (let i = 0; i < channel.length; i++) {
+        let sample = 0;
 
-      // Oscillator selection
-      if (this.oscillatorType === "sine") {
-        sample = Math.sin(this.phase);
-      } else if (this.oscillatorType === "square") {
-        sample = this.phase < Math.PI ? 1 : -1;
-      } else if (this.oscillatorType === "sawtooth") {
-        sample = 2 * (this.phase / (2 * Math.PI)) - 1;
-      } else if (this.oscillatorType === "triangle") {
-        sample = (2 / Math.PI) * Math.asin(Math.sin(this.phase));
-      }
+        // Oscillator selection
+        if (this.oscillatorType === "sine") {
+          sample = Math.sin(this.phase);
+        } else if (this.oscillatorType === "square") {
+          sample = this.phase < Math.PI ? 1 : -1;
+        } else if (this.oscillatorType === "sawtooth") {
+          sample = 2 * (this.phase / (2 * Math.PI)) - 1;
+        } else if (this.oscillatorType === "triangle") {
+          sample = (2 / Math.PI) * Math.asin(Math.sin(this.phase));
+        }
 
-      channel[i] = sample * this.velocity;
-      this.phase += phaseIncrement;
-      if (this.phase > 2 * Math.PI) {
-        this.phase -= 2 * Math.PI;
+        channel[i] = sample * this.velocity;
+        this.phase += phaseIncrement;
+        if (this.phase > 2 * Math.PI) {
+          this.phase -= 2 * Math.PI;
+        }
       }
+    } catch (error) {
+      console.error("Error in process method:", error);
     }
 
     return true;
