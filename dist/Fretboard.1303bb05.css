@@ -13,6 +13,10 @@ body {
   display: flex;
 }
 
+.number-circle {
+  z-index: 1000;
+}
+
 .tab-editor {
   width: 98%;
   max-width: var(--config-tab-editor-max-width, 1200px);
