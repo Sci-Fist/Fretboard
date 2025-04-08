@@ -4,7 +4,7 @@
 import * as rendering from './rendering.js';
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab, getNote } from './tab-data.js';
 import { setupToolBar, handleFretInput, showNumberCircle, removeOpenNumberCircle, showSecondNumberCircle, removeActiveFretClass } from './ui-elements.js';
-import { initializeAudio, playTab, stopPlayback, exportMIDI } from './audio.js';
+import { initializeAudio, playTab, stopPlayback } from './audio.js';
 import config from '../config.js';
 
 console.log("app.js: Starting app.js");
@@ -353,7 +353,6 @@ function setupUI() {
         stopPlayback: handleStop,
         saveTab,
         loadTab,
-        exportMIDI,
         renderTab: rendering.renderTab,
         getTabData,
         setTabData,
