@@ -31,6 +31,14 @@ export async function initializeAudio() { // Added export
     fretboardNode.connect(actx.destination);
 
     console.log("Audio initialized successfully");
+
+    // Attach the event listeners for user interaction *after* context is created
+    // Use { once: true } so they only fire once per type
+    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
+    console.log("Audio resume listeners attached.");
+
   } catch (error) {
     console.error("Failed to initialize audio:", error);
     alert(
@@ -52,11 +60,6 @@ async function resumeAudioContextOnInteraction() {
     }
   }
 }
-
-// Attach the event listeners for user interaction
-document.addEventListener("touchstart", resumeAudioContextOnInteraction, false);
-document.addEventListener("click", resumeAudioContextOnInteraction, false);
-document.addEventListener("keydown", resumeAudioContextOnInteraction, false);
 
 /**
  * Loads a sound (not currently used).
