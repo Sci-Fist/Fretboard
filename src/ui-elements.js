@@ -1,4 +1,6 @@
 // ui-elements.js
+import config from '../config.js'; // Import config
+
 // Function to create a number circle
 export function createNumberCircle(ctx, x, y, numbers, onClick) {
     const circleRadius = 20;
@@ -22,14 +24,15 @@ export function createNumberCircle(ctx, x, y, numbers, onClick) {
         numberElement.style.position = 'absolute';
         numberElement.style.left = `${numberX - 10}px`; // Adjust for text width
         numberElement.style.top = `${numberY - 10}px`; // Adjust for text height
-        numberElement.style.width = '20px';
-        numberElement.style.height = '20px';
+        numberElement.style.width = config.numberCircleSize; // Use config for size
+        numberElement.style.height = config.numberCircleSize; // Use config for size
         numberElement.style.borderRadius = '50%';
-        numberElement.style.backgroundColor = 'lightgray';
+        numberElement.style.backgroundColor = config.numberCircleBackgroundColor; // Use config for background color
+        numberElement.style.color = config.numberCircleTextColor; // Use config for text color
         numberElement.style.textAlign = 'center';
-        numberElement.style.lineHeight = '20px';
+        numberElement.style.lineHeight = config.numberCircleSize; // Use config for line height
         numberElement.style.cursor = 'pointer';
-        numberElement.style.fontSize = '12px';
+        numberElement.style.fontSize = config.numberCircleFont; // Use config for font size
         numberElement.classList.add('number-circle'); // Add class for styling
 
         numberElement.addEventListener('click', () => {
