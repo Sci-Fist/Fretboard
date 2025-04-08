@@ -44,10 +44,6 @@ export async function initializeAudio() { // Added export
     document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
     console.log("Audio resume listeners attached.");
 
-    if (!actx || actx === null) {
-      console.error("AudioContext is not initialized.");
-      alert("AudioContext is not initialized. Please check the console for details.");
-      return;
     async function createAudioWorkletNode() {
       try {
         await actx.audioWorklet.addModule("src/fretboard-processor.js"); // Path to the processor file
@@ -92,6 +88,11 @@ export async function initializeAudio() { // Added export
       "Failed to initialize audio playback. Please check your browser settings and the console.",
     );
   }
+    if (!actx || actx === null) {
+      console.error("AudioContext is not initialized.");
+      alert("AudioContext is not initialized. Please check the console for details.");
+      return;
+    }
 }
 
 /**
