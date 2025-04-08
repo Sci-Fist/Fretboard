@@ -6,14 +6,14 @@ Welcome to the totally tubular Guitar Tab Editor! This application lets you crea
 
 ## Features - The Goods
 
-*   **Tab Creation:** Lay down some righteous riffs by adding measures and frets.
-*   **Tab Editing:** Dial in those fret numbers directly in the tab display.
-*   **Number Wheel Input:** Use the number wheel to easily input fret numbers, including "1x" and "2x" for bends and slides. Totally radical!
-*   **Click Outside to Close Number Wheel:** Click anywhere outside the number wheel to close it. No sweat!
-*   **Play Tab:** Crank it up! Play your tab using a built-in synthesizer (Tone.js).
-*   **Export Tab:** Save your masterpiece as a plain text file. For posterity!
-*   **Export MIDI:** Export your tab as a MIDI file. Get ready to MIDI-fy!
-*   **Save/Load:** Save and load tab data to local storage. Keep those jams alive!
+*   **Tab Creation:** Add new measures with customizable time signatures.
+*   **Tab Editing:** Click on frets to activate them, then enter fret numbers directly in the tab display.
+*   **Number Wheel Input:** Click on a fret to open a number wheel for easy fret number selection, including "1x" and "2x" for bends and slides.
+*   **Click Outside to Close Number Wheel:** Click anywhere outside the number wheel to close it, keeping your focus on the tab.
+*   **Play Tab:** Play your tab using a built-in synthesizer (Tone.js), with controls for play, pause, and stop.
+*   **Export Tab:** Download your tab as a plain text file, ready for sharing.
+*   **Export MIDI:** Export your tab as a MIDI file to use in other music software.
+*   **Save/Load:** Save and load tab data to local storage, so you can keep those jams alive!
 
 ## Getting Started - Let's Do It!
 
