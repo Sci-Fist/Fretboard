@@ -171,4 +171,13 @@ function schedulePlay() {
     }, intervalDuration);
 }
 
-export { initializeAudio, playTab, stopPlayback, setOscillatorType, resumeTab, pauseTab };
+/**
+ * Placeholder for MIDI export functionality.
+ */
+function exportMIDI() {
+    console.warn("app.js: exportMIDI called (placeholder)");
+    // Implement MIDI export logic here
+    alert("MIDI export is not yet implemented.");
+}
+
+export { initializeAudio, playTab, stopPlayback, setOscillatorType, resumeTab, pauseTab, exportMIDI };
