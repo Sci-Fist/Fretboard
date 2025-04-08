@@ -52,6 +52,11 @@ function handleExport(tabData) {
   exportMIDI(tabData);
 }
 
+async function setupAudioWorklet() {
+  // Placeholder function
+  console.log("setupAudioWorklet called");
+}
+
 setupAudioWorklet();
 
 export { playTab, stopPlayback, exportMIDI };
