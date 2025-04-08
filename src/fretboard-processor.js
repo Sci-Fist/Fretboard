@@ -20,6 +20,21 @@ class FretboardProcessor extends AudioWorkletProcessor {
     this.phase = 0;
     this.detune = 0;
     this.allNotesOff = false; // Add a flag to indicate all notes off
+
+    // Setup message handler
+    this.port.onmessage = (event) => {
+      const message = event.data;
+      if (message.type === "allNotesOff") {
+        this.note = null;
+        this.velocity = 0;
+        this.allNotesOff = true;
+      } else if (message.type === "noteOn") {
+        this.note = message.note;
+        this.velocity = message.velocity;
+        this.allNotesOff = false;
+        this.oscillatorType = message.oscillatorType || "sine"; // Optionally set oscillator type from message
+      }
+    };
   }
 
   process(inputs, outputs, parameters) {
@@ -28,22 +43,6 @@ class FretboardProcessor extends AudioWorkletProcessor {
 
     if (!channel) {
       return true;
-    }
-    // Check for messages from the main thread
-    while (this.port.hasMessage()) {
-      const message = this.port.getMessage();
-      if (message.type === "allNotesOff") {
-        this.note = null;
-        this.velocity = 0;
-        this.allNotesOff = true;
-        break; // Exit loop after processing the message
-      }
-      if (message.type === "noteOn") {
-        this.note = message.note;
-        this.velocity = message.velocity;
-        this.allNotesOff = false;
-        this.oscillatorType = message.oscillatorType || "sine"; // Optionally set oscillator type from message
-      }
     }
 
     if (this.allNotesOff) {
