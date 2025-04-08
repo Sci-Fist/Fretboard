@@ -50,5 +50,4 @@ function handleExport(tabData) {
   // Placeholder function
   exportMIDI(tabData);
  }
-}
 export { playTab, stopPlayback, exportMIDI };
