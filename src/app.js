@@ -11,6 +11,8 @@ import config from '../config.js';
 
 console.log("app.js: Starting app.js");
 
+let isMeasureRotated = false; // State variable to track measure rotation
+
 // --- Placeholder Functions ---
 // TODO: Implement actual functionality
 function exportTab() {
@@ -111,6 +113,14 @@ function generateTablature(tabData) {
     return tabString;
 }
 
+function toggleMeasureRotation() {
+    isMeasureRotated = !isMeasureRotated; // Toggle the rotation state
+    const tabData = getTabData();
+    tabData.isMeasureRotated = isMeasureRotated; // Store rotation state in tabData
+    setTabData(tabData); // Update tabData
+    console.log(`app.js: Measure rotation toggled to: ${isMeasureRotated}`);
+}
+
 
 // --- UI Setup ---
 /**
@@ -136,6 +146,7 @@ function setupUI() {
         renderTab: rendering.renderTab, // Pass the rendering function
         getTabData,
         setTabData,
+        toggleMeasureRotation, // Pass the toggleMeasureRotation function
     });
 
     // Add event listener for fret clicks/focus to show number circle

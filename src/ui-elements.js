@@ -21,6 +21,7 @@ function setupToolBar(dependencies) {
     renderTab,
     getTabData,
     setTabData,
+    toggleMeasureRotation, // ADDED toggleMeasureRotation from dependencies
   } = dependencies;
 
   // Select buttons by their specific IDs
@@ -33,6 +34,7 @@ function setupToolBar(dependencies) {
   const saveTabButton = document.getElementById("saveTabBtn");
   const loadTabButton = document.getElementById("loadTabBtn");
   const exportMIDButton = document.getElementById("exportMIDIBtn");
+  const rotateMeasureButton = document.getElementById("rotateMeasureBtn"); // Rotate measure button
 
   // Add event listeners only if the button exists
   if (addMeasureButton) {
@@ -139,6 +141,16 @@ function setupToolBar(dependencies) {
   }
   // Removed duplicate Save Tab button logic blocks
   // Removed inline Export Tab button logic block (now uses dependency)
+
+  if (rotateMeasureButton) {
+    rotateMeasureButton.addEventListener("click", () => {
+      toggleMeasureRotation(); // Call the toggle function from dependencies
+      renderTab(getTabData()); // Re-render to apply/remove rotation
+    });
+  } else {
+    console.error("Button with ID 'rotateMeasureBtn' not found.");
+  }
+
 
   console.log("ui-elements.js: Toolbar setup complete");
 }
