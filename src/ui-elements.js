@@ -12,7 +12,6 @@ function setupToolBar(dependencies) {
     addMeasure, // Now handleAddMeasureWithInput from app.js
     clearTab,
     exportTab,
-    // showBPMInput, // Removed showBPMInput
     playTab,
     pauseTab, // ADDED pauseTab
     stopPlayback, // Renamed to stopPlayback to match dependency name
@@ -28,7 +27,6 @@ function setupToolBar(dependencies) {
   const addMeasureButton = document.getElementById("addMeasureBtn");
   const clearTabButton = document.getElementById("clearTabBtn");
   const exportTabButton = document.getElementById("exportTabBtn");
-  // const showBPMInputButton = document.getElementById("setBPMBtn"); // No longer a button
   const playTabButton = document.getElementById("playTabBtn");
   const pauseTabButton = document.getElementById("pauseTabBtn"); // Pause button
   const stopTabButton = document.getElementById("stopTabBtn");
@@ -38,10 +36,7 @@ function setupToolBar(dependencies) {
 
   // Add event listeners only if the button exists
   if (addMeasureButton) {
-    addMeasureButton.addEventListener("click", () => {
-      addMeasure(); // Now calls handleAddMeasureWithInput from app.js
-      // renderTab(getTabData()); // Render is now handled in app.js
-    });
+    addMeasureButton.addEventListener("click", addMeasure);
     addMeasureButton.title = "Add a new measure (Ctrl+M)"; // Tooltip
   }
   // Removed duplicate Load Tab button logic block
@@ -65,47 +60,13 @@ function setupToolBar(dependencies) {
     console.error("Button with ID 'exportTabBtn' not found.");
   }
 
-  // BPM input is now handled directly in app.js
-  // if (showBPMInputButton) {
-  //     // Use the passed showBPMInput function directly
-  //     showBPMInputButton.addEventListener("click", showBPMInput);
-  // } else {
-  //     console.error("Button with ID 'setBPMBtn' not found.");
-  // }
-
   if (playTabButton) {
     playTabButton.addEventListener("click", () => {
-      try {
-        playTab(); // Use the playTab function passed as dependency
-        playTabButton.style.display = "none";
-        playTabButton.setAttribute("aria-pressed", "false");
-        if (pauseTabButton) { // Show pause button instead of stop
-          pauseTabButton.style.display = "inline-block";
-          pauseTabButton.setAttribute("aria-pressed", "true");
-          pauseTabButton.focus(); // Move focus to pause button
-        }
-        if (stopTabButton) {
-          stopTabButton.style.display = "inline-block";
-          stopTabButton.setAttribute("aria-pressed", "true");
-        }
-      } catch (err) {
-        console.error("Error initiating playback:", err);
-        alert(
-          "There was an error playing the tab. Please check the console for more details.",
-        ); // User-friendly message
-        // Ensure UI is reset if playTab fails immediately
-        stopPlayback(); // Call stopPlayback to clean up potentially partially started audio
-        playTabButton.style.display = "inline-block";
-        playTabButton.setAttribute("aria-pressed", "false");
-        if (pauseTabButton) {
-          pauseTabButton.style.display = "none";
-          pauseTabButton.setAttribute("aria-pressed", "false");
-        }
-        if (stopTabButton) {
-          stopTabButton.style.display = "none";
-          stopTabButton.setAttribute("aria-pressed", "false");
-        }
-      }
+      playTab(); // Use the playTab function passed as dependency
+      // playTabButton.style.display = "none"; // Removed display changes
+      // pauseTabButton.style.display = "inline-block";
+      // stopButton.style.display = "inline-block";
+      // playTabButton.textContent = 'Resume';
     });
     playTabButton.title = "Play the tab (Spacebar)"; // Tooltip
   } else {
@@ -118,13 +79,8 @@ function setupToolBar(dependencies) {
         pauseTab(); // Call the pauseTab function passed as dependency
       }
       // Update button states for pause
-      pauseTabButton.style.display = "none";
-      pauseTabButton.setAttribute("aria-pressed", "false");
-      if (playTabButton) {
-        playTabButton.style.display = "inline-block";
-        playTabButton.setAttribute("aria-pressed", "false"); // Ensure play is not pressed
-        playTabButton.focus(); // Move focus back to play button
-      }
+      // pauseTabButton.style.display = "none";
+      // playTabButton.style.display = "inline-block";
     });
     pauseTabButton.title = "Pause the tab (Spacebar)"; // Tooltip
   } else {
@@ -138,17 +94,11 @@ function setupToolBar(dependencies) {
         stopPlayback(); // Use the stopPlayback function passed as dependency
       }
       // Update button states for stop
-      stopTabButton.style.display = "none";
-      stopTabButton.setAttribute("aria-pressed", "false");
-      if (pauseTabButton) {
-        pauseTabButton.style.display = "none";
-        pauseTabButton.setAttribute("aria-pressed", "false");
-      }
-      if (playTabButton) {
-        playTabButton.style.display = "inline-block";
-        playTabButton.setAttribute("aria-pressed", "false");
-        playTabButton.focus(); // Move focus to play button after stop
-      }
+      // stopTabButton.style.display = "none";
+      // if (pauseTabButton) {
+      //   pauseTabButton.style.display = "none";
+      // }
+      // playTabButton.style.display = "inline-block";
     });
     stopTabButton.title = "Stop playback (Esc)"; // Tooltip
   } else {
@@ -205,8 +155,8 @@ function handleFretInput(e, getTabData, setTabData, renderTab) {
     if (tabData.measures[measureIndex]) {
         tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
         setTabData(tabData);
+        renderTab(getTabData()); // Re-render after input
     }
-    // No re-render or direct DOM manipulation here for input - renderTab is called on measure add/clear/time signature change
 }
 
 
