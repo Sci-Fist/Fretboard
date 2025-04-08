@@ -122,7 +122,7 @@ export function exportMIDI() { // Added export
  * Plays the entire tab.
  * @param {object} tabData - The tab data object.
  */
-async function playTab(tabData) { // Added async here
+export async function playTab(tabData) { // Added export and kept async
   console.log("audio.js: playTab called");
 
   // Ensure the AudioContext is running
