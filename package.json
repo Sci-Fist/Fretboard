@@ -1,1 +1,19 @@
-npm install standardized-audio-context
+{
+  "name": "fretboard",
+  "version": "1.0.0",
+  "description": "Guitar Tab Editor",
+  "scripts": {
+    "start": "npx parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "tone": "15.0.4",
+    "standardized-audio-context": "^25.3.77"
+  },
+  "devDependencies": {
+    "parcel": "^2.9.3"
+  },
+  "type": "commonjs"
+}
