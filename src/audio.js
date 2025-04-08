@@ -2,7 +2,6 @@
 // This module handles audio playback using the Web Audio API.
 
 import { getTabData, getNote } from './tab-data.js'; // Import getTabData and getNote
-import { Midi } from '@tonejs/midi/dist/Midi';
 
 let audioContext;
 let fretboardProcessorNode;
@@ -182,73 +181,12 @@ function stopPlayback() {
 }
 
 /**
- * Exports the current tab data as a MIDI file.
+ * Exports the current tab data as a MIDI file (placeholder).
  */
-async function exportMIDI() {
-    console.log("audio.js: exportMIDI called");
-    const tabData = getTabData();
-    if (!tabData || !tabData.measures || tabData.measures.length === 0) {
-        alert("No tab data to export.");
-        return;
-    }
-
-    const midi = new Midi();
-    const track = midi.addTrack();
-    const bpm = tabData.bpm || 120;
-    const timeSignature = tabData.timeSignature || '4/4';
-    const [beats] = timeSignature.split('/').map(Number);
-    const millisecondsPerBeat = 60000 / bpm;
-    const ticksPerBeat = 480; // Standard MIDI ticks per beat
-    const ticksPerMeasure = ticksPerBeat * beats;
-    let currentTick = 0;
-
-    tabData.measures.forEach((measure, measureIndex) => {
-        for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
-            for (let fretIndex = 0; fretIndex < beats; fretIndex++) {
-                const fretValue = measure.strings[stringIndex][fretIndex];
-                if (fretValue !== '-' && fretValue !== '') {
-                    const note = getNote(stringIndex, parseInt(fretValue), tabData.tuning);
-                    if (note) {
-                        const [noteName, octave] = note.match(/([a-gA-G#b]+)(\d+)/).slice(1);
-                        const noteNumber = getNoteNumber(noteName, parseInt(octave));
-                        track.addNote({
-                            midi: noteNumber,
-                            time: currentTick / ticksPerBeat,
-                            duration: (ticksPerBeat / beats) / ticksPerBeat, // Duration of one beat
-                            velocity: 0.8,
-                        });
-                    }
-                }
-                currentTick += ticksPerBeat / beats; // Increment tick by the duration of one fret
-            }
-        }
-    });
-
-    try {
-        const buffer = await midi.toArray();
-        const blob = new Blob([buffer], { type: 'audio/midi' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'guitar_tab.mid';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        alert('MIDI file exported!');
-    } catch (error) {
-        console.error('Error exporting MIDI:', error);
-        alert('Error exporting MIDI. Check the console for more details.');
-    }
-}
-
-function getNoteNumber(noteName, octave) {
-    const notes = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 };
-    const noteValue = notes[noteName];
-    if (noteValue === undefined) {
-        return null; // Or handle invalid note names
-    }
-    return noteValue + (octave + 1) * 12;
+function exportMIDI() {
+    console.log("audio.js: exportMIDI called (placeholder)");
+    alert("MIDI export functionality is not yet implemented."); // Placeholder alert
+    // TODO: Implement MIDI export logic
 }
 
 
