@@ -49,7 +49,7 @@ export function renderTab(tabData) {
                 fretDiv.dataset.fret = fretIndex;
                 fretDiv.id = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
                 fretDiv.name = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
-                fretDiv.textContent = measure.strings[stringIndex][fretIndex] || ""; // Set the fret text content
+                fretDiv.textContent = measure.strings[stringIndex][fretIndex] || "-"; // Set the fret text content, default to '-'
                 fretDiv.setAttribute('tabindex', '0'); // Make the frets focusable
                 fretDiv.setAttribute('aria-label', `Fret ${fretDiv.textContent || 'empty'}`); // Provide accessible label
                 stringDiv.appendChild(fretDiv);
