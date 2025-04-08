@@ -50,5 +50,8 @@ function exportMIDI(tabData) {
 function handleExport(tabData) {
   // Placeholder function
   exportMIDI(tabData);
- }
+}
+
+setupAudioWorklet();
+
 export { playTab, stopPlayback, exportMIDI };
