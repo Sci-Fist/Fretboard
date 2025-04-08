@@ -74,14 +74,7 @@ export async function initializeAudio() { // Added export
     }
 
     await createAudioWorkletNode();
-
-    document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
-    document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
-    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
-    console.log("Audio resume listeners attached.");
-
-    console.log("Audio initialized successfully");
-
+ 
   } catch (error) {
     console.error("Failed to initialize audio:", error);
     alert(
@@ -93,6 +86,13 @@ export async function initializeAudio() { // Added export
       alert("AudioContext is not initialized. Please check the console for details.");
       return;
     }
+ 
+    document.addEventListener("click", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
+    document.addEventListener("touchstart", resumeAudioContextOnInteraction, { once: true });
+    console.log("Audio resume listeners attached.");
+ 
+    console.log("Audio initialized successfully");
 }
 
 /**
