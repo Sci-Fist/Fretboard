@@ -76,7 +76,7 @@ export async function initializeAudio() { // Added export
       console.log("Audio resume listeners attached.");
 
     } catch (error) {
-      console.error("Failed to add audio worklet module:", error.name, error.message, error.stack);
+      console.error(new Date().toISOString(), "Failed to add audio worklet module:", error.name, error.message, error.stack);
       alert(
         "Failed to add audio worklet module. Please check the console for details.",
       );
