@@ -44,7 +44,7 @@ export async function initializeAudio() { // Added export
     document.addEventListener("keydown", resumeAudioContextOnInteraction, { once: true });
     console.log("Audio resume listeners attached.");
 
-    if (!actx) {
+    if (!actx || actx === null) {
       console.error("AudioContext is not initialized.");
       alert("AudioContext is not initialized. Please check the console for details.");
       return;
@@ -76,7 +76,7 @@ export async function initializeAudio() { // Added export
       console.log("Audio resume listeners attached.");
 
     } catch (error) {
-      console.error("Failed to add audio worklet module:", error.name, error.message);
+      console.error("Failed to add audio worklet module:", error.name, error.message, error.stack);
       alert(
         "Failed to add audio worklet module. Please check the console for details.",
       );
