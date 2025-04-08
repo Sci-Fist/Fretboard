@@ -47,6 +47,12 @@ body {
     overflow-y: auto; /* Enable vertical scrolling for very long tabs if needed */
     color: #fff;
     border-radius: var(--config-tab-display-border-radius, 6px);
+    /* Flexbox for horizontal measures */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Allow measures to wrap if they exceed container width */
+    align-items: flex-start; /* Align items to the start of the container */
+    gap: 20px; /* Add some gap between measures (adjust as needed) */
 }
 
 /* Media query for screens smaller than 600px (very small phones) */
@@ -169,19 +175,34 @@ body {
     margin-bottom: var(--config-measure-margin-bottom, 10px);
     background-color: #333;
     border-radius: var(--config-measure-border-radius, 6px);
+    /* Flexbox for header and strings layout */
+    display: flex;
+    flex-direction: column; /* Stack header and strings vertically */
+    margin-bottom: 0px; /* Remove default bottom margin if any, as we are using flexbox now */
 }
 
-.string {
+.measure-header {
+    text-align: center; /* Center the measure header text */
+    margin-bottom: 5px; /* Add some space below the header */
+}
+
+.tab-string {
     display: flex;
     flex-direction: row;
     border-bottom: var(--config-string-border-bottom, 1.5px solid #333); /* Adjusted default */
     padding: var(--config-string-padding, 4px 0);
+    /* Flexbox for string label and frets */
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Vertically align string label and frets */
 }
 
 .string-label {
     width: 15px; /* Adjust width as needed */
     text-align: right;
     margin-right: 5px;
+    display: inline-block; /* Ensure label takes space */
+    width: 20px; /* Fixed width for string labels for alignment */
 }
 
 .string-line {
@@ -206,8 +227,18 @@ body {
     cursor: pointer; /* Ensure cursor is shown for frets */
     justify-content: center;
     align-items: center;
-    /* Removed duplicate border */
+    /* Styling for frets in horizontal layout */
+    min-width: 25px; /* Minimum width for frets */
+    text-align: center; /* Center text in frets */
+    padding: 0 5px; /* Add some horizontal padding */
+    border-left: 1px solid #ccc; /* Separator between frets */
 }
+
+/* Remove left border from the first fret in each string */
+.tab-string .fret:first-child {
+    border-left: none;
+}
+
 
 .string:last-child {
     border-right: none; /* No border for the last string in measure */
@@ -313,4 +344,17 @@ body {
 
 .rotated-string:last-child {
     border-right: none; /* No border for the last rotated string */
+}
+
+/* Active Fret Style */
+.fret.active-fret {
+    background-color: #777; /* Example: Slightly lighter background when active */
+    border-color: #aaa;      /* Example: Lighter border when active */
+    /* Add any other styles to visually indicate active fret */
+}
+
+/* Playing Measure Highlight */
+.measure.playing-measure {
+    background-color: #555; /* Example: Highlight color for playing measure */
+    /* Add any other styles to visually indicate playing measure */
 }

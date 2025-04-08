@@ -6,32 +6,34 @@
  * @param {object} tabData - The tab data object.
  */
 export function renderTab(tabData) {
-    console.log("rendering.js: renderTab called with data:", JSON.stringify(tabData)); // Log entry
-    console.log("rendering.js: tabData.isMeasureRotated:", tabData.isMeasureRotated); // ADDED LOG
+    console.log("rendering.js: renderTab called with data:", JSON.stringify(tabData));
+    console.log("rendering.js: tabData.isMeasureRotated:", tabData.isMeasureRotated);
+
     const tabDisplay = document.getElementById("tab-display");
     if (!tabDisplay) {
         console.error("rendering.js: tabDisplay element not found!");
         return;
     }
     tabDisplay.innerHTML = ""; // Clear the tab display
-    if (!tabData.measures || tabData.measures.length === 0) return; // Exit if there are no measures
+
+    if (!tabData.measures || tabData.measures.length === 0) return;
 
     tabData.measures.forEach((measure, measureIndex) => {
         const measureDiv = document.createElement('div');
         measureDiv.className = 'measure';
-        measureDiv.dataset.measureIndex = measureIndex; // Store measure index for later use
+        measureDiv.dataset.measureIndex = measureIndex;
 
         const measureHeader = document.createElement('div');
         measureHeader.className = 'measure-header';
         measureHeader.innerHTML = `<span>${measure.name}</span> - <span>${measure.timeSignature}</span>`;
         measureDiv.appendChild(measureHeader);
 
-        const beatsPerMeasure = parseInt(measure.timeSignature.split('/')[0], 10); // Get beats from time signature
+        const beatsPerMeasure = parseInt(measure.timeSignature.split('/')[0], 10);
 
         for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
             const stringDiv = document.createElement('div');
             stringDiv.className = 'tab-string';
-            stringDiv.dataset.stringIndex = stringIndex; // Store string index
+            stringDiv.dataset.stringIndex = stringIndex;
 
             // String label (E, A, D, G, B, e)
             const stringLabel = document.createElement('span');
@@ -43,13 +45,13 @@ export function renderTab(tabData) {
             for (let fretIndex = 0; fretIndex < beatsPerMeasure; fretIndex++) {
                 const fret = document.createElement('span');
                 fret.className = 'fret';
-                fret.textContent = measure.strings[stringIndex][fretIndex] || '-'; // Display fret value or default '-'
+                fret.textContent = measure.strings[stringIndex][fretIndex] || '-';
                 fret.contentEditable = 'true';
                 fret.dataset.measure = measureIndex;
                 fret.dataset.string = stringIndex;
                 fret.dataset.fret = fretIndex;
-                fret.id = `fret-${measureIndex}-${stringIndex}-${fretIndex}`; // Unique ID for fret
-                fret.tabIndex = 0; // Make fret focusable
+                fret.id = `fret-${measureIndex}-${stringIndex}-${fretIndex}`;
+                fret.tabIndex = 0;
                 stringDiv.appendChild(fret);
             }
             measureDiv.appendChild(stringDiv);
