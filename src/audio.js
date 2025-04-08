@@ -208,3 +208,5 @@ function resumeAudioContextOnInteraction() {
     export { playTab, stopPlayback, exportMIDI };
   }
 }
+
+export { initializeAudio, loadSound, playSound };
