@@ -1,5 +1,6 @@
+// src/app.js
 import { initializeTabData, getTabData, setTabData, addMeasure, clearTab, getNote } from './tab-data.js';
-import { handleFretInput, removeActiveFretClass, toggleMeasureRotation } from './ui-elements.js';
+import { handleFretInput, removeActiveFretClass, toggleMeasureRotation, showNumberCircle, removeOpenNumberCircle } from './ui-elements.js';
 import { initializeAudio, playTab, stopPlayback } from './audio.js';
 import config from '../config.js';
 import { renderTab } from './rendering.js'; // Import renderTab
@@ -408,6 +409,10 @@ async function setupUI() {
             e.preventDefault(); // Prevent the default context menu
 
             if (e.target.classList.contains('fret')) {
+                // Remove any existing number circles
+                const fretsWithCircles = document.querySelectorAll('.fret .number-circle');
+                fretsWithCircles.forEach(circle => circle.remove());
+                // Show the number circle on the clicked fret
                 showFretContextMenu(e);
             }
         });
@@ -528,7 +533,7 @@ function handleArrowKeyNavigation(key, currentFret) {
                 nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex + 1}-${fretIndex}`);
             }
             break;
-    }
+        }
 
     if (nextFret) {
         currentFret.classList.remove('active-fret');
