@@ -135,6 +135,33 @@ function setupToolBar(dependencies) {
   console.log("ui-elements.js: Toolbar setup complete");
 }
 
+function generateTablature(tabData) {
+  if (!tabData || !tabData.measures || tabData.measures.length === 0) {
+    return "No tab data.";
+  }
+
+  let tabString = "";
+  const tuning = tabData.tuning;
+  const stringLabels = tuning
+    .map((_, i) => ["E", "A", "D", "G", "B", "e"][i] || "")
+    .join("\n");
+
+  tabData.measures.forEach((measure, measureIndex) => {
+    tabString += `${measureIndex + 1}. Measure:\n`;
+    for (let stringIndex = 0; stringIndex < 6; stringIndex++) {
+      tabString += `${stringLabels.split("\n")[stringIndex]}|`;
+      for (let fretIndex = 0; fretIndex < 4; fretIndex++) {
+        tabString += measure.strings[stringIndex][fretIndex] || "-";
+        tabString += "|";
+      }
+      tabString += "\n";
+    }
+    tabString += "\n";
+  });
+
+  return tabString;
+}
+
 /**
  * Handles input events on fret elements.
  * @param {Event} e - The input event.
