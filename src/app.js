@@ -79,6 +79,39 @@ function loadTab() {
     });
     fileInput.click(); // Trigger the file selection dialog
 }
+/**
+ * Handles adding a measure with user input for time signature and measure name.
+ * @param {string} timeSignature - The time signature to use for the new measure.
+ * @param {string} measureName - The name of the measure.
+ */
+function handleAddMeasureWithInput(timeSignature, measureName) {
+    console.log("app.js: handleAddMeasureWithInput called with timeSignature:", timeSignature, "and measureName:", measureName);
+    const tabData = getTabData();
+
+    // Validate time signature format
+    const timeSignatureRegex = /^\d+\/\d+$/;
+    if (!timeSignatureRegex.test(timeSignature)) {
+        alert("Invalid time signature format. Please use the format 'X/Y'.");
+        return;
+    }
+
+    const [beats, noteValue] = timeSignature.split('/').map(Number);
+
+    if (isNaN(beats) || isNaN(noteValue) || beats <= 0 || noteValue <= 0) {
+        alert("Invalid time signature. Please enter positive numbers for beats and note value.");
+        return;
+    }
+
+    // Create a new measure with the specified time signature and name
+    const newMeasureOptions = {
+        timeSignature: timeSignature,
+        name: measureName
+    };
+    addMeasure(newMeasureOptions);
+
+    setTabData(tabData);
+    rendering.renderTab(getTabData());
+}
 
 /**
  * Generates tablature text from the tab data.
@@ -218,6 +251,7 @@ function handleTimeSignatureChange(event) {
     // TODO: Implement logic to change playback behavior based on time signature
 }
 
+
 // --- Playback Highlighting ---
 /**
  * Starts the playback highlighting.
@@ -312,9 +346,6 @@ function setupUI() {
                 tabData.bpm = newBPM;
                 setTabData(tabData);
                 console.log(`BPM set to ${tabData.bpm}`);
-            } else {
-                alert("Invalid BPM value. Please enter a number greater than 0.");
-                bpmInputElement.value = getTabData().bpm || 120; // Revert to previous value
             }
         });
     } else {
@@ -524,39 +555,6 @@ function handleArrowKeyNavigation(key, currentFret) {
     }
 }
 
-/**
- * Handles adding a measure with user input for time signature and measure name.
- * @param {string} timeSignature - The time signature to use for the new measure.
- * @param {string} measureName - The name of the measure.
- */
-function handleAddMeasureWithInput(timeSignature, measureName) {
-    console.log("app.js: handleAddMeasureWithInput called with timeSignature:", timeSignature, "and measureName:", measureName);
-    const tabData = getTabData();
-
-    // Validate time signature format
-    const timeSignatureRegex = /^\d+\/\d+$/;
-    if (!timeSignatureRegex.test(timeSignature)) {
-        alert("Invalid time signature format. Please use the format 'X/Y'.");
-        return;
-    }
-
-    const [beats, noteValue] = timeSignature.split('/').map(Number);
-
-    if (isNaN(beats) || isNaN(noteValue) || beats <= 0 || noteValue <= 0) {
-        alert("Invalid time signature. Please enter positive numbers for beats and note value.");
-        return;
-    }
-
-    // Create a new measure with the specified time signature and name
-    const newMeasureOptions = {
-        timeSignature: timeSignature,
-        name: measureName
-    };
-    addMeasure(newMeasureOptions);
-
-    setTabData(tabData);
-    rendering.renderTab(getTabData());
-}
 
 
 /**

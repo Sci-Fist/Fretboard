@@ -1,319 +1,247 @@
 // src/ui-elements.js
-// This module handles the user interface elements and their interactions.
-// It sets up the toolbar, handles fret input, and displays the number circle for fret selection.
-import { stopPlayback } from "./audio.js"; // Moved import to the top
+// UI elements and interactions
 
 /**
- * Sets up the tool bar by attaching event listeners to the tool bar buttons.
- * @param {object} dependencies - Object containing functions from other modules.
+ * Sets up the toolbar with action buttons and their event listeners.
+ * @param {object} dependencies - Object containing functions to handle actions.
  */
-function setupToolBar(dependencies) {
+export function setupToolBar(dependencies) {
+  console.log("ui-elements.js: setupToolBar called with dependencies:", dependencies);
   const {
-    addMeasure, // Now handleAddMeasureWithInput from app.js
+    addMeasure,
     clearTab,
     exportTab,
     playTab,
-    pauseTab, // ADDED pauseTab
-    stopPlayback, // Renamed to stopPlayback to match dependency name
+    pauseTab,
+    stopPlayback,
     saveTab,
     loadTab,
     renderTab,
     getTabData,
     setTabData,
-    toggleMeasureRotation, // ADDED toggleMeasureRotation from dependencies
+    toggleMeasureRotation,
   } = dependencies;
 
-  // Select buttons by their specific IDs
-  const addMeasureButton = document.getElementById("addMeasureBtn");
-  const clearTabButton = document.getElementById("clearTabBtn");
-  const exportTabButton = document.getElementById("exportTabBtn");
-  const playTabButton = document.getElementById("playTabBtn");
-  const pauseTabButton = document.getElementById("pauseTabBtn"); // Pause button
-  const stopTabButton = document.getElementById("stopTabBtn");
-  const saveTabButton = document.getElementById("saveTabBtn");
-  const loadTabButton = document.getElementById("loadTabBtn");
-  const rotateMeasureButton = document.getElementById("rotateMeasureBtn"); // Rotate measure button
-
-  // Add event listeners only if the button exists
+  // --- Button Event Listeners ---
+  // Add Measure Button
+  const addMeasureButton = document.getElementById('addMeasureBtn');
   if (addMeasureButton) {
-    addMeasureButton.addEventListener("click", addMeasure);
-    addMeasureButton.title = "Add a new measure (Ctrl+M)"; // Tooltip
-  }
-  // Removed duplicate Load Tab button logic block
-
-  if (clearTabButton) {
-    clearTabButton.addEventListener("click", () => {
-      clearTab();
-      addMeasure(); // Add an initial measure after clearing
-      renderTab(getTabData());
+    addMeasureButton.addEventListener('click', () => {
+      console.log("ui-elements.js: addMeasureButton clicked");
+      addMeasure(); // Call the addMeasure function from dependencies
     });
-    clearTabButton.title = "Clear the entire tab (Ctrl+Shift+C)"; // Tooltip
   } else {
-    console.error("Button with ID 'clearTabBtn' not found.");
+    console.error("ui-elements.js: addMeasureButton not found");
   }
 
-  if (exportTabButton) {
-    // Use the passed exportTab function directly
-    exportTabButton.addEventListener("click", exportTab);
-    exportTabButton.title = "Export tab as text file (Ctrl+E)"; // Tooltip
-  } else {
-    console.error("Button with ID 'exportTabBtn' not found.");
-  }
-
-  if (playTabButton) {
-    playTabButton.addEventListener("click", () => {
-      playTab(); // Use the playTab function passed as dependency
+  // Clear Tab Button
+  const clearButton = document.getElementById('clearTabBtn');
+  if (clearButton) {
+    clearButton.addEventListener('click', () => {
+      console.log("ui-elements.js: clearButton clicked");
+      clearTab(); // Call the clearTab function from dependencies
+      renderTab(getTabData()); // Re-render the tab after clearing data
     });
-    playTabButton.title = "Play the tab (Spacebar)"; // Tooltip
   } else {
-    console.error("Button with ID 'playTabBtn' not found.");
+    console.error("ui-elements.js: clearTabBtn not found");
   }
 
-  if (pauseTabButton) { // Event listener for PAUSE button
-    pauseTabButton.addEventListener("click", () => {
-      if (pauseTab) {
-        pauseTab(); // Call the pauseTab function passed as dependency
-      }
+  // Export Tab Button
+  const exportButton = document.getElementById('exportTabBtn');
+  if (exportButton) {
+    exportButton.addEventListener('click', () => {
+      console.log("ui-elements.js: exportButton clicked");
+      exportTab(); // Call the exportTab function from dependencies
     });
-    pauseTabButton.title = "Pause the tab (Spacebar)"; // Tooltip
   } else {
-    console.error("Button with ID 'pauseTabBtn' not found.");
+    console.error("ui-elements.js: exportTabBtn not found");
   }
 
-
-  if (stopTabButton) {
-    stopTabButton.addEventListener("click", () => {
-      if (stopPlayback) {
-        stopPlayback(); // Use the stopPlayback function passed as dependency
-      }
+  // Play Tab Button
+  const playButton = document.getElementById('playTabBtn');
+  if (playButton) {
+    playButton.addEventListener('click', () => {
+      console.log("ui-elements.js: playButton clicked");
+      playTab(); // Call the playTab function from dependencies
     });
-    stopTabButton.title = "Stop playback (Esc)"; // Tooltip
   } else {
-    console.error("Button with ID 'stopTabBtn' not found.");
+    console.error("ui-elements.js: playTabBtn not found");
   }
 
-  if (saveTabButton) {
-    // Use the passed saveTab function directly
-    saveTabButton.addEventListener("click", saveTab);
-    saveTabButton.title = "Save tab to local storage (Ctrl+S)"; // Tooltip
-  } else {
-    console.error("Button with ID 'saveTabBtn' not found.");
-  }
+    // Pause Tab Button
+    const pauseButton = document.getElementById('pauseTabBtn');
+    if (pauseButton) {
+        pauseButton.addEventListener('click', () => {
+            console.log("ui-elements.js: pauseButton clicked");
+            pauseTab(); // Call the pauseTab function from dependencies
+        });
+    } else {
+        console.error("ui-elements.js: pauseTabBtn not found");
+    }
 
-  if (loadTabButton) {
-    // Use the passed loadTab function directly
-    loadTabButton.addEventListener("click", loadTab);
-    loadTabButton.title = "Load tab from local storage (Ctrl+O)"; // Tooltip
-  } else {
-    console.error("Button with ID 'loadTabBtn' not found.");
-  }
-  // Removed duplicate Load Tab button logic block
-
-  if (rotateMeasureButton) {
-    rotateMeasureButton.addEventListener("click", () => {
-      toggleMeasureRotation(); // Call the toggle function from dependencies
-      renderTab(getTabData()); // Re-render to apply/remove rotation
+  // Stop Tab Button
+  const stopButton = document.getElementById('stopTabBtn');
+  if (stopButton) {
+    stopButton.addEventListener('click', () => {
+      console.log("ui-elements.js: stopButton clicked");
+      stopPlayback(); // Call the stopPlayback function from dependencies
     });
-    rotateMeasureButton.title = "Rotate measure (Ctrl+R)"; // Tooltip
   } else {
-    console.error("Button with ID 'rotateMeasureBtn' not found.");
+    console.error("ui-elements.js: stopTabBtn not found");
   }
 
+  // Save Tab Button
+  const saveButton = document.getElementById('saveTabBtn');
+  if (saveButton) {
+    saveButton.addEventListener('click', () => {
+      console.log("ui-elements.js: saveButton clicked");
+      saveTab(); // Call the saveTab function from dependencies
+    });
+  } else {
+    console.error("ui-elements.js: saveTabBtn not found");
+  }
 
-  console.log("ui-elements.js: Toolbar setup complete"); // DEBUG LOG
+  // Load Tab Button
+  const loadButton = document.getElementById('loadTabBtn');
+  if (loadButton) {
+    loadButton.addEventListener('click', () => {
+      console.log("ui-elements.js: loadButton clicked");
+      loadTab(); // Call the loadTab function from dependencies
+    });
+  } else {
+    console.error("ui-elements.js: loadTabBtn not found");
+  }
+
+  // Toggle Measure Rotation Button
+  const toggleRotationButton = document.getElementById('toggleRotationBtn');
+  if (toggleRotationButton) {
+    toggleRotationButton.addEventListener('click', () => {
+      console.log("ui-elements.js: toggleRotationButton clicked");
+      toggleMeasureRotation(); // Call the toggleMeasureRotation function
+    });
+  } else {
+    console.error("ui-elements.js: toggleRotationBtn not found");
+  }
 }
 
-
 /**
- * Handles input events on fret elements.
- * @param {Event} e - The input event.
+ * Handles fret input and updates tab data and rendering.
+ * @param {Event} event - The input event.
  * @param {function} getTabData - Function to get tab data.
  * @param {function} setTabData - Function to set tab data.
  * @param {function} renderTab - Function to render the tab.
  */
-function handleFretInput(e, getTabData, setTabData, renderTab) {
-    const fretElement = e.target;
-    const measureIndex = parseInt(fretElement.dataset.measure);
-    const stringIndex = parseInt(fretElement.dataset.string);
-    const fretIndex = parseInt(fretElement.dataset.fret);
-    let value = fretElement.textContent.replace(/[^0-9]/g, "").slice(0, 2); // Allow only numbers, max 2 digits
+export function handleFretInput(event, getTabData, setTabData, renderTab) {
+  const fretElement = event.target;
+  let fretValue = fretElement.textContent;
 
-    const tabData = getTabData();
-    if (tabData.measures[measureIndex]) {
-        tabData.measures[measureIndex].strings[stringIndex][fretIndex] = value;
-        setTabData(tabData);
-        renderTab(getTabData()); // Re-render after input
-    }
+  // Allow only numbers 0-9, 't', 'p', 'h', 'x', or backspace for clearing
+  if (!/^[0-9tp hx]*$/.test(fretValue)) {
+    // Revert to the last valid input or clear if invalid
+    fretElement.textContent = fretValue.slice(0, -1); // remove last char
+    return;
+  }
+
+  const measureIndex = parseInt(fretElement.dataset.measure);
+  const stringIndex = parseInt(fretElement.dataset.string);
+  const fretIndex = parseInt(fretElement.dataset.fret);
+
+  if (isNaN(measureIndex) || isNaN(stringIndex) || isNaN(fretIndex)) {
+    console.error("ui-elements.js: Dataset indices are not numbers", fretElement.dataset);
+    return; // Exit if indices are not valid numbers
+  }
+
+  const tabData = getTabData();
+
+  if (!tabData.measures[measureIndex] || !tabData.measures[measureIndex].strings[stringIndex]) {
+    console.error("ui-elements.js: Measure or string array is undefined at given index");
+    return; // Exit if measure or string is undefined
+  }
+
+  tabData.measures[measureIndex].strings[stringIndex][fretIndex] = fretValue;
+  setTabData(tabData);
+  renderTab(getTabData()); // Re-render the tab to reflect changes
 }
 
-
 /**
- * Displays the number circle for fret selection.
+ * Shows a number circle on a fret.
  * @param {HTMLElement} fret - The fret element.
  */
-function showNumberCircle(fret) {
-  // Remove any existing number circle
-  removeOpenNumberCircle();
+export function showNumberCircle(fret) {
+  const numberCircle = document.createElement('span');
+  numberCircle.className = 'number-circle';
+  numberCircle.textContent = fret.textContent;
+  fret.textContent = ''; // Clear the fret content
+  fret.appendChild(numberCircle); // Append the circle to the fret
+}
 
-  // Remove active class from any previously active fret
-  removeActiveFretClass();
-  // Add active class to the currently focused fret
-  fret.classList.add('active-fret');
-  // Store the active fret's ID in localStorage so it can be re-applied after re-render
-  localStorage.setItem('activeFretId', fret.id);
+/**
+ * Removes the number circle from a fret and restores the original text.
+ * @param {HTMLElement} fret - The fret element.
+ */
+export function removeOpenNumberCircle(fret) {
+  const numberCircle = fret.querySelector('.number-circle');
+  if (numberCircle) {
+    fret.textContent = numberCircle.textContent; // Restore the original text
+    numberCircle.remove(); // Remove the number circle
+  }
+}
+
+/**
+ * Shows a second number circle on a fret (used for double-digit frets).
+ * @param {HTMLElement} fret - The fret element.
+ */
+export function showSecondNumberCircle(fret) {
+  if (fret.childNodes.length > 0 && fret.childNodes[0].className === 'number-circle') {
+    const existingCircle = fret.childNodes[0];
+    const originalNumber = existingCircle.textContent;
+    const secondNumberCircle = document.createElement('span');
+    secondNumberCircle.className = 'number-circle second-circle';
+    secondNumberCircle.textContent = fret.textContent;
+    fret.textContent = ''; // Clear fret text again
+    existingCircle.textContent = originalNumber; // Restore first number to first circle
+    fret.appendChild(existingCircle);
+    fret.appendChild(secondNumberCircle);
+  } else {
+    showNumberCircle(fret); // If no existing circle, just show a normal one
+  }
+}
 
 
-  const circle = document.createElement("div");
-  circle.className = "number-circle";
-  const radius = 50;
-  const centerX = fret.offsetWidth / 2;
-  const centerY = fret.offsetHeight / 2;
-
-  const numbers = [
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "1x",
-    "2x",
-  ];
-
-  numbers.forEach((num, i) => {
-    const angle = (i / numbers.length) * 2 * Math.PI;
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY + radius * Math.sin(angle);
-
-    const number = document.createElement("div");
-    number.className = "number";
-    number.textContent = num;
-    number.style.left = `${x}px`;
-    number.style.top = `${y}px`;
-    number.style.animationDelay = `${i * 0.1}s`;
-
-    number.onclick = () => {
-      if (num === "1x" || num === "2x") {
-        removeOpenNumberCircle();
-        showSecondNumberCircle(fret, num);
-      } else {
-        fret.textContent = num; // Set the text first
-        // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
-        fret.dispatchEvent(
-          new Event("input", { bubbles: true, cancelable: true }),
-        );
-        removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
-        fret.focus(); // Re-focus the fret after input
-      }
-    };
-    circle.appendChild(number);
+/**
+ * Removes the active-fret class from all frets.
+ */
+export function removeActiveFretClass() {
+  document.querySelectorAll('.fret.active-fret').forEach(fret => {
+    fret.classList.remove('active-fret');
   });
-
-  if (typeof document !== "undefined") {
-    document.body.appendChild(circle);
-    positionNumberCircle(circle, fret);
-  }
 }
 
-/**
- * Removes any open number circle from the DOM.
- */
-function removeOpenNumberCircle() {
-  const openCircle = document.querySelector(".number-circle");
-  if (openCircle) {
-    openCircle.remove();
-  }
-}
 
 /**
- * Removes the 'active-fret' class from any fret that has it.
+ * Sets up event listeners for frets to handle focus and input.
  */
-function removeActiveFretClass() {
-    document.querySelectorAll('.fret.active-fret').forEach(fret => {
-        fret.classList.remove('active-fret');
+export function setupFretListeners() {
+  document.querySelectorAll('.fret').forEach(fret => {
+    fret.addEventListener('focus', function(event) {
+      console.log('Fret focused:', event.target.id);
+      removeActiveFretClass();
+      fret.classList.add('active-fret');
+      localStorage.setItem('activeFretId', fret.id);
     });
-    localStorage.removeItem('activeFretId'); // Clear stored active fret ID
-}
 
+    fret.addEventListener('blur', function(event) {
+      console.log('Fret blurred:', event.target.id);
+      fret.classList.remove('active-fret');
+      localStorage.removeItem('activeFretId');
+    });
 
-/**
- * Positions the number circle relative to the fret element.
- * @param {HTMLElement} circle - The number circle element.
- * @param {HTMLElement} fret - The fret element.
- */
-function positionNumberCircle(circle, fret) {
-  const fretRect = fret.getBoundingClientRect();
-  circle.style.top = `${fretRect.top + window.scrollY - circle.offsetHeight / 2 + fret.offsetHeight / 2}px`;
-  circle.style.left = `${fretRect.left + window.scrollX - circle.offsetWidth / 2 + fret.offsetWidth / 2}px`;
-}
-
-/**
- * Displays the second number circle for bends and slides.
- * @param {HTMLElement} fret - The fret element.
- * @param {string} firstDigit - The first digit selected ("1x" or "2x").
- */
-function showSecondNumberCircle(fret, firstDigit) {
-  removeOpenNumberCircle(); // Remove any existing number circle
-
-  const circle = document.createElement("div");
-  circle.className = "number-circle";
-  circle.classList.add("second-number-circle");
-  const radius = 50;
-  const centerX = fret.offsetWidth / 2;
-  const centerY = fret.offsetHeight / 2;
-
-  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
-  numbers.forEach((num, i) => {
-    const angle = (i / numbers.length) * 2 * Math.PI;
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY + radius * Math.sin(angle);
-
-    const number = document.createElement("div");
-    number.className = "number";
-    number.textContent = num;
-    number.style.left = `${x}px`;
-    number.style.top = `${y}px`;
-    number.style.animationDelay = `${i * 0.1}s`;
-
-    number.onclick = () => {
-      fret.textContent = firstDigit.replace(/x/, num); // Set the text first
-      // Dispatch an input event so handleFretInput updates the data model and handles re-rendering
-      fret.dispatchEvent(
-        new Event("input", { bubbles: true, cancelable: true }),
-      );
-      removeOpenNumberCircle(); // Remove the circle after dispatching, using the dedicated function
-      fret.focus(); // Re-focus the fret after input
-    };
-    circle.appendChild(number);
-  });
-
-  if (typeof document !== "undefined") {
-    document.body.appendChild(circle);
-    positionNumberCircle(circle, fret);
-  }
-}
-
-// Close number circle when clicking outside
-if (typeof document !== "undefined") {
-  document.addEventListener("click", function (event) {
-    const numberCircle = document.querySelector(".number-circle");
-    if (numberCircle) {
-      let isClickInside = numberCircle.contains(event.target);
-      let isClickOnFret = event.target.classList.contains("fret");
-
-      if (!isClickInside && !isClickOnFret) {
-        setTimeout(() => {
-          if (!event.target.closest(".number-circle")) {
-            removeOpenNumberCircle(); // Use dedicated function to remove
-          }
-        }, 100);
+    fret.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault(); // Prevent default arrow key behavior (scrolling)
+        handleArrowKeyNavigation(event.key, fret); // Call navigation handler from app.js
       }
-    }
+    });
   });
 
   // Remove active fret class when clicking outside of frets
@@ -324,12 +252,106 @@ if (typeof document !== "undefined") {
   });
 }
 
+/**
+ * Handles arrow key navigation between frets.
+ * @param {string} key - The arrow key pressed.
+ * @param {HTMLElement} currentFret - The currently focused fret element.
+ */
+function handleArrowKeyNavigation(key, currentFret) {
+  const measureIndex = parseInt(currentFret.dataset.measure);
+  const stringIndex = parseInt(currentFret.dataset.string);
+  const fretIndex = parseInt(currentFret.dataset.fret);
 
-export {
-  setupToolBar,
-  handleFretInput,
-  showNumberCircle,
-  showSecondNumberCircle,
-  removeOpenNumberCircle, // Add this export
-  removeActiveFretClass // Export the function
-};
+  let nextFret;
+
+  switch (key) {
+      case 'ArrowLeft':
+          if (fretIndex > 0) {
+              nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex - 1}`);
+          } else if (measureIndex > 0) {
+              nextFret = document.getElementById(`fret-${measureIndex - 1}-${stringIndex}-3`);
+          }
+          break;
+      case 'ArrowRight':
+          if (fretIndex < 3) {
+              nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex}-${fretIndex + 1}`);
+          } else {
+              const nextMeasureIndex = measureIndex + 1;
+              if (document.querySelector(`.fret[data-measure='${nextMeasureIndex}'][data-string='${stringIndex}'][data-fret='0']`)) {
+                  nextFret = document.getElementById(`fret-${nextMeasureIndex}-${stringIndex}-0`);
+              }
+          }
+          break;
+      case 'ArrowUp':
+          if (stringIndex > 0) {
+              nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex - 1}-${fretIndex}`);
+          }
+          break;
+      case 'ArrowDown':
+          if (stringIndex < 5) {
+              nextFret = document.getElementById(`fret-${measureIndex}-${stringIndex + 1}-${fretIndex}`);
+          }
+          break;
+  }
+
+  if (nextFret) {
+      currentFret.classList.remove('active-fret');
+      nextFret.classList.add('active-fret');
+      nextFret.focus();
+      localStorage.setItem('activeFretId', nextFret.id);
+  }
+}
+
+/**
+ * Shows the context menu for a fret element.
+ * @param {Event} e - The contextmenu event.
+ */
+export function showFretContextMenu(e) {
+  console.log("ui-elements.js: showFretContextMenu called");
+  // Create the context menu
+  const contextMenu = document.createElement('div');
+  contextMenu.className = 'context-menu';
+  contextMenu.style.position = 'absolute';
+  contextMenu.style.backgroundColor = '#333';
+  contextMenu.style.color = '#fff';
+  contextMenu.style.padding = '5px';
+  contextMenu.style.borderRadius = '5px';
+  contextMenu.style.zIndex = '1000'; // Ensure it's on top
+
+  // Get the fret element
+  const fretElement = e.target;
+
+  // Add menu items
+  const menuItems = [
+      { text: 'Clear Fret', action: () => { fretElement.textContent = ''; handleFretInput({ target: fretElement }, getTabData, setTabData, renderTab); } },
+      { text: 'Set to 0', action: () => { fretElement.textContent = '0'; handleFretInput({ target: fretElement }, getTabData, setTabData, renderTab); } },
+      { text: 'Set to 1', action: () => { fretElement.textContent = '1'; handleFretInput({ target: fretElement }, getTabData, setTabData, renderTab); } },
+      // Add more menu items as needed
+  ];
+
+  menuItems.forEach(item => {
+      const menuItem = document.createElement('div');
+      menuItem.textContent = item.text;
+      menuItem.style.padding = '5px';
+      menuItem.style.cursor = 'pointer';
+      menuItem.addEventListener('mouseover', () => { menuItem.style.backgroundColor = '#555'; });
+      menuItem.addEventListener('mouseout', () => { menuItem.style.backgroundColor = '#333'; });
+      menuItem.addEventListener('click', item.action);
+      contextMenu.appendChild(menuItem);
+  });
+
+  // Position the context menu
+  contextMenu.style.left = `${e.clientX}px`;
+  contextMenu.style.top = `${e.clientY}px`;
+
+  // Append the context menu to the body
+  document.body.appendChild(contextMenu);
+
+  // Remove the context menu when clicking outside, *except* when clicking on a fret
+  document.addEventListener('click', function removeContextMenu(event) {
+      if (!contextMenu.contains(event.target) && !event.target.classList.contains('fret')) {
+          contextMenu.remove();
+          document.removeEventListener('click', removeContextMenu); // Remove the listener after use
+      }
+  });
+}
