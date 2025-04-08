@@ -3,7 +3,7 @@ import { initializeTabData, getTabData, setTabData, addMeasure, clearTab } from 
 import { handleFretInput, removeActiveFretClass, showNumberCircle } from './ui-elements.js';
 import { initializeAudio, playNote, stopNote } from './audio.js';
 import config from '../config.js';
-import { renderTab, initializeRendering } from './rendering.js';
+import { renderTab, initializeRendering, resizeCanvas } from './rendering.js';
 
 console.log('app.js: Starting Fretboard app.');
 
@@ -99,6 +99,7 @@ async function setupApp() {
     setupUI();
     await initializeAudio();
     console.log('app.js: App setup complete.');
+    window.addEventListener('resize', resizeCanvas); // Add resize listener
 }
 
 function handlePlay() {
