@@ -249,7 +249,7 @@ body {
     display: flex;
     position: absolute;
     top: -50px; /* Relative positioning logic remains */
-    left: -50px; /* Relative positioning logic remains */
+    left: -50px; /* Relative positioning remains */
     width: var(--config-number-circle-width, 140px);
     height: var(--config-number-circle-height, 140px);
     justify-content: space-around;
