@@ -1,1 +1,2 @@
-src\fretboard-processor.js
+// Your Javascript code for fretboard-processor.js should go here.
+// ...
