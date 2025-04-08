@@ -204,9 +204,7 @@ function resumeAudioContextOnInteraction() {
       // Start playing the first measure
       playMeasure(0);
     }
-
-    export { playTab, stopPlayback, exportMIDI };
   }
 }
 
-export { initializeAudio, loadSound, playSound };
+export { initializeAudio, loadSound, playSound, playTab, stopPlayback, exportMIDI };
