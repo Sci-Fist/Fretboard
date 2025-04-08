@@ -41,8 +41,10 @@ function pauseTab() {
     }
 }
 /**
- * Exports the current tab as MIDI data.
+ * Placeholder for MIDI export functionality.
  */
 function exportMIDI() {
-    // Implementation details for exporting MIDI
+    console.warn("app.js: exportMIDI called (placeholder)");
+    // Implement MIDI export logic here
+    alert("MIDI export is not yet implemented.");
 }
