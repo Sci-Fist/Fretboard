@@ -130,7 +130,7 @@ export function stopPlayback() { // Added export
   currentFretIndex = 0;
 
   if (fretboardNode) {
-    fretboardNode.port.postMessage({ type: "noteOff" });
+    fretboardNode.port.postMessage({ type: "allNotesOff" }); // Send message to stop all notes
   }
 }
 
@@ -140,7 +140,25 @@ export function stopPlayback() { // Added export
 export function exportMIDI() { // Added export
   // Placeholder function for MIDI export
   // In a future version, this function would handle MIDI file generation and download.
-  alert("MIDI export not yet implemented.");
+  //alert("MIDI export not yet implemented.");
+
+  // Basic MIDI export implementation (placeholder)
+  const tabData = getTabData();
+  if (!tabData || !tabData.measures || tabData.measures.length === 0) {
+    alert("No tab data to export.");
+    return;
+  }
+
+  // Create a basic MIDI file (this is a simplified example and may not be fully functional)
+  let midiContent = "data:audio/midi;base64,TVRoZAAAAAYAAAABN..."; // Replace with actual MIDI data
+
+  // Create a download link
+  const link = document.createElement("a");
+  link.href = midiContent;
+  link.download = "guitar_tab.mid";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 /**

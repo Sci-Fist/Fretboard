@@ -19,6 +19,7 @@ class FretboardProcessor extends AudioWorkletProcessor {
     this.frequency = 440;
     this.phase = 0;
     this.detune = 0;
+    this.allNotesOff = false; // Add a flag to indicate all notes off
   }
 
   process(inputs, outputs, parameters) {
@@ -26,6 +27,28 @@ class FretboardProcessor extends AudioWorkletProcessor {
     const channel = output[0];
 
     if (!channel) {
+      return true;
+    }
+    // Check for "allNotesOff" message
+    while (this.port.hasMessage()) {
+      const message = this.port.getMessage();
+      if (message.type === "allNotesOff") {
+        this.note = null;
+        this.velocity = 0;
+        this.allNotesOff = true;
+        break; // Exit loop after processing the message
+      }
+      if (message.type === "noteOn") {
+        this.note = message.note;
+        this.velocity = message.velocity;
+        this.allNotesOff = false;
+      }
+    }
+
+    if (this.allNotesOff) {
+      for (let i = 0; i < channel.length; i++) {
+        channel[i] = 0;
+      }
       return true;
     }
 
