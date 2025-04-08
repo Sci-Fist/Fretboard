@@ -155,4 +155,50 @@ function handleFretInput(event, getTabData, setTabData, renderTab) {
     renderTab(tabData);
 }
 
-export { handleFretInput, removeActiveFretClass, toggleMeasureRotation };
+/**
+ * Displays a number circle on a fret.
+ * @param {HTMLElement} fretElement - The fret element.
+ */
+function showNumberCircle(fretElement) {
+    // Implementation for showing the number circle
+    console.log("ui-elements.js: showNumberCircle called");
+    // You'll need to add the logic to create and position the circle here.
+    // For example:
+    const circle = document.createElement('div');
+    circle.className = 'number-circle';
+    circle.textContent = fretElement.textContent;
+    fretElement.appendChild(circle);
+}
+
+/**
+ * Removes the number circle from a fret.
+ * @param {HTMLElement} fretElement - The fret element.
+ */
+function removeOpenNumberCircle(fretElement) {
+    // Implementation for removing the number circle
+    console.log("ui-elements.js: removeOpenNumberCircle called");
+    // You'll need to add the logic to remove the circle here.
+    // For example:
+    const circle = fretElement.querySelector('.number-circle');
+    if (circle) {
+        circle.remove();
+    }
+}
+
+// Add event listeners to fret elements
+document.addEventListener('DOMContentLoaded', () => {
+    const tabDisplay = document.getElementById('tab-display');
+    if (tabDisplay) {
+        tabDisplay.addEventListener('click', (event) => {
+            if (event.target.classList.contains('fret')) {
+                // Remove any existing number circles
+                const fretsWithCircles = document.querySelectorAll('.fret .number-circle');
+                fretsWithCircles.forEach(circle => circle.remove());
+                // Show the number circle on the clicked fret
+                showNumberCircle(event.target);
+            }
+        });
+    }
+});
+
+export { handleFretInput, removeActiveFretClass, toggleMeasureRotation, showNumberCircle, removeOpenNumberCircle };
