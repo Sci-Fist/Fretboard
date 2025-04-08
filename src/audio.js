@@ -2,7 +2,7 @@
 // This module handles audio playback using the Web Audio API.
 
 import { getTabData, getNote } from './tab-data.js'; // Import getTabData and getNote
-import { Midi } from '@tonejs/midi';
+import { Midi } from '@tonejs/midi/dist/Midi';
 
 let audioContext;
 let fretboardProcessorNode;
